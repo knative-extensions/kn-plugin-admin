@@ -15,14 +15,12 @@
 # ===============================================
 # Add you integration tests here
 
-source $TEST_INFRA_SCRIPTS/e2e-tests.sh
-
-export PATH=$PWD:$PATH
-
 dir=$(dirname "${BASH_SOURCE[0]}")
 base=$(cd "$dir/.." && pwd)
 
-echo "TEST_INFRA_SCRIPTS: $TEST_INFRA_SCRIPTS"
+source $(base)/scripts/test-infra/e2e-tests.sh
+export PATH=$PWD:$PATH
+
 echo "Testing kn-admin plugin"
 cd ${REPO_ROOT_DIR}
 
