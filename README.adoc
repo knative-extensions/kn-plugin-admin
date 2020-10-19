@@ -1,12 +1,24 @@
-## kn-admin
+# kn-admin
 
-`kn admin` helps for Knative configuration when running on a Kubernetes cluster.
-
-### Description
-
-This kn-admin plugin is designed to help administrators and operators better manage a Knative platform installation with kn CLI.
-The plugin’s main objective is to make administration and operation workflows easier, for instance by making it easy to accomplish
+The `kn admin` is a plugin of Knative client and it is designed to help administrators and operators better manage a Knative platform installation with kn CLI.
+This plugin’s main objective is to make administration and operation workflows easier, for instance by making it easy to accomplish
 tasks such as feature flags enablement or disablement with one command, instead of many manual steps like modifying ConfigMaps or yaml files.
+
+## Getting Started
+
+### Installation
+You can download latest binaries from the https://github.com/knative-sandbox/kn-plugin-admin/releases[Releases] page.
+
+Here are two ways to run `kn admin`:
+
+1. You can run it standalone, just put it on your system path, and make sure it is executable.
+2. You can install it as a plugin of `kn` client to run:
+
+- Following the https://github.com/knative/client/blob/master/docs/README.md[document] to install `kn client` if you don't have it.
+- Copy `kn admin` binary to `~/.config/kn/plugins/` folder and make sure its filename is `kn-admin`.
+- Run `kn plugin list` to assure the `kn-admin` plugin is installed successfully.
+
+After the plugin is installed, you can use `kn admin` to run its related subcommands. 
 
 ### Usage
 
@@ -253,3 +265,4 @@ Forwarding from [::1]:18008 -> 8008
 Handling connection for 18008
 -----
 =====
+After you get the profiling data file, you need to use https://blog.golang.org/pprof[pprof] to open it.
