@@ -51,6 +51,9 @@ func NewDomainSetCommand(p *pkg.AdminParams) *cobra.Command {
 			if domain == "" {
 				return errors.New("'domain set' requires the route name provided with the --custom-domain option")
 			}
+			if err := p.EnsureInstallMethodStandalone(); err != nil {
+				return err
+			}
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {

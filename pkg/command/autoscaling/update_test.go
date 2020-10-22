@@ -38,7 +38,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 
@@ -49,7 +50,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 	t.Run("config map not exist", func(t *testing.T) {
 		client := k8sfake.NewSimpleClientset()
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
@@ -68,7 +70,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
@@ -93,7 +96,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--no-scale-to-zero")
@@ -118,7 +122,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 

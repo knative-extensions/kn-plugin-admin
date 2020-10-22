@@ -56,7 +56,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 
@@ -67,7 +68,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 	t.Run("config map not exist", func(t *testing.T) {
 		client := k8sfake.NewSimpleClientset()
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
@@ -84,7 +86,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
@@ -111,7 +114,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 
@@ -136,7 +140,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 		o, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
@@ -164,7 +169,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 
@@ -201,7 +207,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 

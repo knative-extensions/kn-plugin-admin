@@ -38,7 +38,8 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainUnSetCommand(&p)
 
@@ -49,7 +50,8 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 	t.Run("config map not exist", func(t *testing.T) {
 		client := k8sfake.NewSimpleClientset()
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainUnSetCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
@@ -68,7 +70,8 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainUnSetCommand(&p)
 
@@ -89,7 +92,8 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainUnSetCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy1.domain")
