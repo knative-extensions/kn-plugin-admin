@@ -32,12 +32,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var username string
-var server string
-var serviceaccount string
-
 // NewRegistryRmCommand represents the remove command
 func NewRegistryRmCommand(p *pkg.AdminParams) *cobra.Command {
+	var (
+		username       string
+		server         string
+		serviceaccount string
+	)
+
 	var registryRmCmd = &cobra.Command{
 		Use:     "remove",
 		Aliases: []string{"rm"},

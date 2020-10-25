@@ -25,6 +25,7 @@ import (
 	testcommon "github.com/maximilien/kn-source-pkg/test/e2e"
 	"gotest.tools/assert"
 	"knative.dev/client/lib/test"
+	"knative.dev/client/pkg/util"
 )
 
 const pluginName string = "admin"
@@ -139,6 +140,11 @@ func (et *e2eTest) knAdminDomain(t *testing.T, r *test.KnRunResultCollector) {
 func (et *e2eTest) knAdminRegistry(t *testing.T, r *test.KnRunResultCollector) {
 	out := et.kn.Run(pluginName, "registry", "add", "--username", "custom-user", "--password", "dummy", "--server", "dummy.test.io")
 	r.AssertNoError(out)
+	out = et.kn.Run(pluginName, "registry", "list")
+	r.AssertNoError(out)
+	outRows := strings.Split(out.Stdout, "\n")
+	assert.Check(t, util.ContainsAll(outRows[0], "NAMESPACE", "SERVICEACCOUNT", "SECRET", "USERNAME", "SERVER", "EMAIL"))
+	assert.Check(t, util.ContainsAll(outRows[1], "custom-user", "dummy.test.io"))
 	out = et.kn.Run(pluginName, "registry", "remove", "--username", "custom-user", "--server", "dummy.test.io")
 	r.AssertNoError(out)
 }

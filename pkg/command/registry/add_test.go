@@ -89,6 +89,8 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		secret := secrets.Items[0]
 		assert.Equal(t, corev1.SecretTypeDockerConfigJson, secret.Type)
 		assert.Equal(t, "registry-secret-", secret.GenerateName)
+		assert.Equal(t, "default", secret.Labels[ImagePullServiceAccount])
+		assert.Equal(t, secret.Labels[pkg.LabelManagedBy], AdminRegistryCmdName)
 
 		saUpdated, err := client.CoreV1().ServiceAccounts(sa.Namespace).Get(sa.Name, metav1.GetOptions{})
 		assert.NilError(t, err)
@@ -140,6 +142,8 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		secret := secrets.Items[0]
 		assert.Equal(t, corev1.SecretTypeDockerConfigJson, secret.Type)
 		assert.Equal(t, "registry-secret-", secret.GenerateName)
+		assert.Equal(t, sa.Name, secret.Labels[ImagePullServiceAccount])
+		assert.Equal(t, secret.Labels[pkg.LabelManagedBy], AdminRegistryCmdName)
 
 		saUpdated, err := client.CoreV1().ServiceAccounts(ns.Name).Get(sa.Name, metav1.GetOptions{})
 		assert.NilError(t, err)
