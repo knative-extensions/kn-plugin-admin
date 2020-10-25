@@ -1,4 +1,4 @@
-module knative.dev/client-contrib/plugins/admin
+module knative.dev/kn-plugin-admin
 
 go 1.14
 

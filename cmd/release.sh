@@ -17,7 +17,7 @@ set -e
 GIT_REVISION=`git rev-parse --short HEAD`
 VERSION=`date -u '+v%Y%m%d'-`${GIT_REVISION}
 BUILD_DATE=`date -u '+%Y-%m-%d %H:%M:%S'`
-PKG="knative.dev/client-contrib/plugins/admin/pkg/command"
+PKG="knative.dev/kn-plugin-admin/pkg/command"
 LD_FLAGS="-X '${PKG}.Version=${VERSION}' -X '${PKG}.BuildDate=${BUILD_DATE}' -X '${PKG}.GitRevision=${GIT_REVISION}'"
 
 export GO111MODULE=on

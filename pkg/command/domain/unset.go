@@ -18,8 +18,8 @@ import (
 	"errors"
 	"fmt"
 
-	"knative.dev/client-contrib/plugins/admin/pkg"
-	"knative.dev/client-contrib/plugins/admin/pkg/command/utils"
+	"knative.dev/kn-plugin-admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg/command/utils"
 
 	"github.com/spf13/cobra"
 	corev1 "k8s.io/api/core/v1"
