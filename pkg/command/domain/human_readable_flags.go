@@ -38,7 +38,7 @@ func printKDomainList(domainCM *corev1.ConfigMap, options hprinters.PrintOptions
 	kDomainList := domainCM.Data
 	delete(kDomainList, "_example")
 
-	//sort the map output
+	//sort the map for output
 	sortedKeys := make([]string, 0, len(kDomainList))
 	for k := range kDomainList {
 		sortedKeys = append(sortedKeys, k)
@@ -59,10 +59,11 @@ func formatSelectorForPrint(selector string) string {
 	parts := strings.Split(strings.ReplaceAll(strings.TrimSpace(selector), ":", "="), "\n")
 	selectorForPrint := ""
 	for i, v := range parts {
-		//parts is from split by \n, so the first item i=0 will be start with selector=, we will need to skip it when print
+		//parts is from split by \n, so the first item i=0 will be start with "selector="", if not, return ""
 		if i == 0 && !strings.HasPrefix(v, "selector=") {
 			return ""
-		} else if i > 0 {
+
+		} else if i > 0 { //skip the first item i=0 "selector="
 			if strings.Contains(v, "=") {
 				selectorForPrint = strings.Join([]string{selectorForPrint, strings.ReplaceAll(v, " ", "")}, "")
 				//no ; for last selector entry
