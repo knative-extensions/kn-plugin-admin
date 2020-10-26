@@ -1,4 +1,4 @@
-// Copyright © 2019 The Knative Authors
+// Copyright © 2020 The Knative Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@ func Test_formatSelectorForPrint(t *testing.T) {
 		input  string
 		output string
 	}{
-		{"normal case with one selector key value", "selector:\n  key1: value1\n", "key1=value1; "},
-		{"normal case with two selector key value", "selector:\n  key1: value1\n  key2: value2\n", "key1=value1; key2=value2; "},
+		{"normal case with one selector key value", "selector:\n  key1: value1\n", "key1=value1"},
+		{"normal case with two selector key value", "selector:\n  key1: value1\n  key2: value2\n", "key1=value1; key2=value2"},
 		{"invalid input no selector", "notselector:\n  key1= value1\n", ""},
 		{"invalid input no selector value", "selector:\n", ""},
 		{"invalid input wrong selector value", "selector:\n  key1 value1\n", ""},
-		{"invalid input wrong selector values", "selector:\n  key1 value1\n  key2: value2", "key2=value2; "},
+		{"invalid input wrong selector values", "selector:\n  key1 value1\n  key2: value2", "key2=value2"},
 		{"empty selector", "", ""},
 	}
 	for _, tt := range tests {

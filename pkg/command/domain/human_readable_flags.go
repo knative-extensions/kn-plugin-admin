@@ -1,4 +1,4 @@
-// Copyright © 2019 The Knative Authors
+// Copyright © 2020 The Knative Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package domain
 
 import (
+	"sort"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
@@ -27,7 +28,7 @@ import (
 func DomainListHandlers(h hprinters.PrintHandler) {
 	kDomainColumnDefinitions := []metav1beta1.TableColumnDefinition{
 		{Name: "Custom-Domain", Type: "string", Description: "Name of Knative custom domain.", Priority: 1},
-		{Name: "Selector", Type: "string", Description: "Selector of the Knative custom domain.", Priority: 1},
+		{Name: "Selector", Type: "string", Description: "Selector of Knative custom domains.", Priority: 1},
 	}
 	h.TableHandler(kDomainColumnDefinitions, printKDomainList)
 }
@@ -36,10 +37,18 @@ func DomainListHandlers(h hprinters.PrintHandler) {
 func printKDomainList(domainCM *corev1.ConfigMap, options hprinters.PrintOptions) ([]metav1beta1.TableRow, error) {
 	kDomainList := domainCM.Data
 	delete(kDomainList, "_example")
+
+	//sort the map output
+	sortedKeys := make([]string, 0, len(kDomainList))
+	for k := range kDomainList {
+		sortedKeys = append(sortedKeys, k)
+	}
+	sort.Strings(sortedKeys)
+
 	rows := make([]metav1beta1.TableRow, 0, len(kDomainList))
-	for k, v := range kDomainList {
+	for _, k := range sortedKeys {
 		row := metav1beta1.TableRow{}
-		row.Cells = append(row.Cells, k, formatSelectorForPrint(v))
+		row.Cells = append(row.Cells, k, formatSelectorForPrint(kDomainList[k]))
 		rows = append(rows, []metav1beta1.TableRow{row}...)
 	}
 	return rows, nil
@@ -50,15 +59,18 @@ func formatSelectorForPrint(selector string) string {
 	parts := strings.Split(strings.ReplaceAll(strings.TrimSpace(selector), ":", "="), "\n")
 	selectorForPrint := ""
 	for i, v := range parts {
-		if i == 0 && strings.Compare(v, "selector=") != 0 {
+		//parts is from split by \n, so the first item i=0 will be start with selector=, we will need to skip it when print
+		if i == 0 && !strings.HasPrefix(v, "selector=") {
 			return ""
 		} else if i > 0 {
 			if strings.Contains(v, "=") {
 				selectorForPrint = strings.Join([]string{selectorForPrint, strings.ReplaceAll(v, " ", "")}, "")
-				selectorForPrint = strings.Join([]string{selectorForPrint, "; "}, "")
+				//no ; for last selector entry
+				if i < len(parts)-1 {
+					selectorForPrint = strings.Join([]string{selectorForPrint, "; "}, "")
+				}
 			}
 		}
-
 	}
 	return selectorForPrint
 }
