@@ -17,7 +17,7 @@ package registry
 import (
 	"testing"
 
-	"knative.dev/client-contrib/plugins/admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg"
 
 	"gotest.tools/assert"
 )

@@ -19,7 +19,7 @@ import (
 	"testing"
 
 	"gotest.tools/assert"
-	"knative.dev/client-contrib/plugins/admin/pkg/testutil"
+	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
 
 var versionOutputTemplate = `Version:      %s

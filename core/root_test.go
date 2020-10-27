@@ -20,7 +20,7 @@ import (
 
 	"gotest.tools/assert"
 
-	"knative.dev/client-contrib/plugins/admin/pkg/testutil"
+	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
 
 func TestNewAdminCommand(t *testing.T) {

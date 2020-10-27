@@ -16,7 +16,7 @@ package registry
 
 import (
 	"github.com/spf13/cobra"
-	"knative.dev/client-contrib/plugins/admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg"
 )
 
 var (

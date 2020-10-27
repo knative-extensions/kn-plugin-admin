@@ -18,7 +18,7 @@ import (
 
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
-	"knative.dev/client-contrib/plugins/admin/core"
+	"knative.dev/kn-plugin-admin/core"
 )
 
 func main() {
