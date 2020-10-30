@@ -38,7 +38,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 
@@ -46,10 +47,30 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		assert.ErrorContains(t, err, "'autoscaling update' requires flag(s)", err)
 	})
 
+	t.Run("operator mode should not be supported", func(t *testing.T) {
+		cm := &corev1.ConfigMap{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      configAutoscaler,
+				Namespace: knativeServing,
+			},
+			Data: make(map[string]string),
+		}
+		client := k8sfake.NewSimpleClientset(cm)
+		p := pkg.AdminParams{
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodOperator,
+		}
+		cmd := NewAutoscalingUpdateCommand(&p)
+
+		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
+		assert.ErrorContains(t, err, "Knative managed by operator is not supported yet", err)
+	})
+
 	t.Run("config map not exist", func(t *testing.T) {
 		client := k8sfake.NewSimpleClientset()
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
@@ -68,7 +89,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
@@ -93,7 +115,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--no-scale-to-zero")
@@ -118,7 +141,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 

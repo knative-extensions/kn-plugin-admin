@@ -52,6 +52,9 @@ func NewAutoscalingUpdateCommand(p *pkg.AdminParams) *cobra.Command {
 			if cmd.Flags().NFlag() == 0 {
 				return errors.New("'autoscaling update' requires flag(s)")
 			}
+			if err := p.EnsureInstallMethodStandalone(); err != nil {
+				return err
+			}
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
