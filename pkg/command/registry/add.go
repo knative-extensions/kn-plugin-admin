@@ -46,7 +46,7 @@ func NewRegistryAddCommand(p *pkg.AdminParams) *cobra.Command {
 		Short: "Add registry with credentials",
 		Long:  `Add registry with credentials and enable service deployments from this registry`,
 		Example: `
-  # add registry with credentials
+  # To add registry with credentials
   kn admin registry add \
     --secret=[SECRET_NAME] \
     --server=[REGISTRY_SERVER_URL] \
@@ -120,6 +120,19 @@ func NewRegistryAddCommand(p *pkg.AdminParams) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to add registry secret in serviceaccount '%s' in namespace '%s': %v", registryFlags.ServiceAccount, namespace, err)
 			}
+
+			// update label to record the service account that using this secret as image pull secret
+			updateLabel := map[string]string{
+				pkg.LabelManagedBy:      AdminRegistryCmdName,
+				ImagePullServiceAccount: desiredSa.Name,
+			}
+
+			secret.ObjectMeta.Labels = updateLabel
+			_, err = p.ClientSet.CoreV1().Secrets(namespace).Update(secret)
+			if err != nil {
+				return fmt.Errorf("failed to update secret label in namespace '%s': %v", namespace, err)
+			}
+
 			cmd.Printf("Private registry '%s' is added for serviceaccount '%s' in namespace '%s'\n", registryFlags.Server, registryFlags.ServiceAccount, namespace)
 			return nil
 		},
