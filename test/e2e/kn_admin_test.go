@@ -86,6 +86,11 @@ func TestKnAdminPlugin(t *testing.T) {
 	err = e2eTest.backupConfigMap("config-observability")
 	assert.NilError(t, err)
 
+	t.Log("test kn admin autoscaling subcommand")
+	e2eTest.knAdminAutoscaling(t, r)
+	err = e2eTest.backupConfigMap("config-autoscaler")
+	assert.NilError(t, err)
+
 	t.Log("test kn admin profiling subcommand")
 	e2eTest.knAdminProfiling(t, r)
 	err = e2eTest.restoreConfigMap("config-observability")
@@ -134,6 +139,15 @@ func (et *e2eTest) knAdminDomain(t *testing.T, r *test.KnRunResultCollector) {
 	out = et.kn.Run(pluginName, "domain", "set", "--custom-domain", domain, "--selector", "app=v1")
 	r.AssertNoError(out)
 	out = et.kn.Run(pluginName, "domain", "unset", "--custom-domain", domain)
+	r.AssertNoError(out)
+}
+
+func (et *e2eTest) knAdminAutoscaling(t *testing.T, r *test.KnRunResultCollector) {
+	out := et.kn.Run(pluginName, "autoscaling", "update", "--max-scale-up-rate", "2.5")
+	r.AssertNoError(out)
+	out = et.kn.Run(pluginName, "autoscaling", "update", "--stable-window", "2m", "--activator-capacity", "300")
+	r.AssertNoError(out)
+	out = et.kn.Run(pluginName, "autoscaling", "update", "--scale-to-zero")
 	r.AssertNoError(out)
 }
 
