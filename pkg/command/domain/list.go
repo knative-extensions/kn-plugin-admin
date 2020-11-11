@@ -19,8 +19,8 @@ import (
 
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"knative.dev/client-contrib/plugins/admin/pkg"
 	"knative.dev/client/pkg/kn/commands/flags"
+	"knative.dev/kn-plugin-admin/pkg"
 )
 
 // NewDomainListCommand represents 'kn-admin domain list' command
