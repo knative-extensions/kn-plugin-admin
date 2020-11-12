@@ -58,9 +58,9 @@ func TestDomainListCommand(t *testing.T) {
 				Namespace: knativeServing,
 			},
 			Data: map[string]string{
-				"dummy1.domain":  "",
-				"a-dummy.domain": "selector:\n  app1: helloworld1\n app2: helloworld2\n",
-				"dummy2.domain":  "selector:\n  app: helloworld\n",
+				"test1.domain":  "",
+				"a-test.domain": "selector:\n  app1: helloworld1\n app2: helloworld2\n",
+				"test2.domain":  "selector:\n  app: helloworld\n",
 			},
 		}
 		client := k8sfake.NewSimpleClientset(cm)
@@ -73,9 +73,9 @@ func TestDomainListCommand(t *testing.T) {
 		rowsOfOutput := strings.Split(output, "\n")
 		//Domain will be listed with order by domain name
 		assert.Check(t, util.ContainsAll(rowsOfOutput[0], "CUSTOM-DOMAIN", "SELECTOR"))
-		assert.Check(t, util.ContainsAll(rowsOfOutput[1], "a-dummy.domain", "app1=helloworld1; app2=helloworld2"))
-		assert.Check(t, util.ContainsAll(rowsOfOutput[2], "dummy1.domain"))
-		assert.Check(t, util.ContainsAll(rowsOfOutput[3], "dummy2.domain", "app=helloworld"))
+		assert.Check(t, util.ContainsAll(rowsOfOutput[1], "a-test.domain", "app1=helloworld1; app2=helloworld2"))
+		assert.Check(t, util.ContainsAll(rowsOfOutput[2], "test1.domain"))
+		assert.Check(t, util.ContainsAll(rowsOfOutput[3], "test2.domain", "app=helloworld"))
 	})
 }
 
@@ -88,8 +88,8 @@ func TestDomainListCommandNoHeader(t *testing.T) {
 				Namespace: knativeServing,
 			},
 			Data: map[string]string{
-				"dummy1.domain": "",
-				"dummy2.domain": "selector:\n  app: helloworld\n",
+				"test1.domain": "",
+				"test2.domain": "selector:\n  app: helloworld\n",
 			},
 		}
 		client := k8sfake.NewSimpleClientset(cm)
@@ -100,7 +100,7 @@ func TestDomainListCommandNoHeader(t *testing.T) {
 		output, err := testutil.ExecuteCommand(cmd, "--no-headers")
 		assert.NilError(t, err)
 		rowsOfOutput := strings.Split(output, "\n")
-		assert.Check(t, util.ContainsAll(rowsOfOutput[0], "dummy1.domain"))
-		assert.Check(t, util.ContainsAll(rowsOfOutput[1], "dummy2.domain", "app=helloworld"))
+		assert.Check(t, util.ContainsAll(rowsOfOutput[0], "test1.domain"))
+		assert.Check(t, util.ContainsAll(rowsOfOutput[1], "test2.domain", "app=helloworld"))
 	})
 }
