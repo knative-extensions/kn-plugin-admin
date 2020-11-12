@@ -55,8 +55,8 @@ func NewAutoscalingUpdateCommand(p *pkg.AdminParams) *cobra.Command {
   # To enable scale-to-zero
   kn admin autoscaling update --scale-to-zero
 
-  # To disable scale-to-zero
-  kn admin autoscaling update --no-scale-to-zero`,
+  # To update stable window
+  kn admin autoscaling update --stable-window 2m`,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if cmd.Flags().NFlag() == 0 {
 				return errors.New("'autoscaling update' requires flag(s)")

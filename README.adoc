@@ -233,13 +233,13 @@ $ kn admin registry remove \
 -----
 =====
 
-#### As a Knative administrator, I want to enable scale-to-zero for autoscaling.
+#### As a Knative administrator, I want to update global configs for autoscaling.
 
-.Enable scale-to-zero for autoscaling.
+.Enable scale-to-zero and update stable-window for autoscaling.
 =====
 -----
-$ kn admin autoscaling update --scale-to-zero
-Updated Knative autoscaling config enable-scale-to-zero: true
+$ kn admin autoscaling update --scale-to-zero --stable-window 2m
+Updated Knative autoscaling config
 -----
 =====
 
