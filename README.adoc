@@ -107,6 +107,7 @@ Usage:
   kn admin autoscaling [command]
 
 Available Commands:
+  list        List autoscaling config
   update      update autoscaling config
 
 Flags:
@@ -240,6 +241,19 @@ $ kn admin registry remove \
 -----
 $ kn admin autoscaling update --scale-to-zero --stable-window 2m
 Updated Knative autoscaling config
+-----
+=====
+
+#### As a Knative administrator, I want to list autoscaling configs which apply to overall Knative platform.
+
+.List autoscaling configs.
+=====
+-----
+$ kn admin autoscaling list
+NAME                         VALUE
+enable-scale-to-zero         false
+max-scale-down-rate          3
+panic-threshold-percentage   10
 -----
 =====
 
