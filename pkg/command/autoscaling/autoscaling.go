@@ -27,6 +27,7 @@ func NewAutoscalingCmd(p *pkg.AdminParams) *cobra.Command {
 		Long:  `Manage autoscaling provided by Knative Pod Autoscaler (KPA)`,
 	}
 	AutoscalingCmd.AddCommand(NewAutoscalingUpdateCommand(p))
+	AutoscalingCmd.AddCommand(NewAutoscalingListCommand(p))
 	AutoscalingCmd.InitDefaultHelpFlag()
 	return AutoscalingCmd
 }
