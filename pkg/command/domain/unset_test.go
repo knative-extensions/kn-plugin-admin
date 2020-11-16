@@ -54,7 +54,7 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainUnSetCommand(&p)
-		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.ErrorContains(t, err, "failed to get configmaps", err)
 	})
 
@@ -65,7 +65,7 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 				Namespace: knativeServing,
 			},
 			Data: map[string]string{
-				"dummy.domain": "",
+				"test.domain": "",
 			},
 		}
 		client := k8sfake.NewSimpleClientset(cm)
@@ -75,8 +75,8 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 		}
 		cmd := NewDomainUnSetCommand(&p)
 
-		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "not-dummy.domain")
-		assert.ErrorContains(t, err, "Knative route domain not-dummy.domain not found", err)
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "not-test.domain")
+		assert.ErrorContains(t, err, "Knative route domain not-test.domain not found", err)
 	})
 
 	t.Run("unset domain", func(t *testing.T) {
@@ -86,8 +86,8 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 				Namespace: knativeServing,
 			},
 			Data: map[string]string{
-				"dummy1.domain": "",
-				"dummy2.domain": "",
+				"test1.domain": "",
+				"test2.domain": "",
 			},
 		}
 		client := k8sfake.NewSimpleClientset(cm)
@@ -96,20 +96,20 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainUnSetCommand(&p)
-		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy1.domain")
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test1.domain")
 		assert.NilError(t, err)
 
 		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 1, "expected configmap lengh to be 1")
 
-		_, ok := cm.Data["dummy1.domain"]
-		assert.Check(t, !ok, "domain key %q should not exists", "dummy1.domain")
+		_, ok := cm.Data["test1.domain"]
+		assert.Check(t, !ok, "domain key %q should not exists", "test1.domain")
 
-		_, ok = cm.Data["dummy2.domain"]
-		assert.Check(t, ok, "domain key %q should exists", "dummy2.domain")
+		_, ok = cm.Data["test2.domain"]
+		assert.Check(t, ok, "domain key %q should exists", "test2.domain")
 
-		_, err = testutil.ExecuteCommand(cmd, "--custom-domain", "dummy2.domain")
+		_, err = testutil.ExecuteCommand(cmd, "--custom-domain", "test2.domain")
 		assert.NilError(t, err)
 
 		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
