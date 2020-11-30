@@ -15,8 +15,10 @@
 package autoscaling
 
 import (
+	"sort"
 	"strings"
 	"testing"
+	"time"
 
 	"gotest.tools/assert"
 	corev1 "k8s.io/api/core/v1"
@@ -24,11 +26,50 @@ import (
 	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"knative.dev/client/pkg/util"
 	"knative.dev/kn-plugin-admin/pkg"
-
 	"knative.dev/kn-plugin-admin/pkg/testutil"
+	autoscalerconfig "knative.dev/serving/pkg/autoscaler/config"
 )
 
-func TestAutoscalingListEmpty(t *testing.T) {
+func checkListOutput(t *testing.T, data map[string]string, output string, noHeaders bool) {
+	config, err := autoscalerconfig.NewConfigFromMap(data)
+	assert.NilError(t, err)
+
+	lines := strings.Split(output, "\n")
+	if !noHeaders {
+		assert.Check(t, util.ContainsAll(lines[0], "NAME", "VALUE"))
+	}
+
+	names := make([]string, 0, len(configNameValueOfMap))
+	for key := range configNameValueOfMap {
+		names = append(names, key)
+	}
+	sort.Strings(names)
+
+	start := 1
+	if noHeaders {
+		start = 0
+	}
+	for i, name := range names {
+		value := configNameValueOfMap[name](config)
+		assert.Check(t, util.ContainsAll(lines[i+start], name, value))
+	}
+}
+
+func TestDescribesDuration(t *testing.T) {
+	t0 := 123 * time.Second
+	assert.Equal(t, t0.String(), describeDuration(t0))
+
+	t1 := 60 * time.Second
+	assert.Equal(t, "1m", describeDuration(t1))
+
+	t2 := 3600 * time.Second
+	assert.Equal(t, "1h", describeDuration(t2))
+
+	t3 := 1238548 * time.Second
+	assert.Equal(t, t3.String(), describeDuration(t3))
+}
+
+func TestAutoscalingListDefaultValues(t *testing.T) {
 	t.Run("no flags", func(t *testing.T) {
 		cm := &corev1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{
@@ -42,8 +83,7 @@ func TestAutoscalingListEmpty(t *testing.T) {
 		cmd := NewAutoscalingListCommand(&p)
 		output, err := testutil.ExecuteCommand(cmd)
 		assert.NilError(t, err)
-		lines := strings.Split(output, "\n")
-		assert.Check(t, util.ContainsAll(lines[0], "NAME", "VALUE"))
+		checkListOutput(t, cm.Data, output, false)
 	})
 }
 
@@ -65,11 +105,7 @@ func TestAutoscalingListCommand(t *testing.T) {
 		cmd := NewAutoscalingListCommand(&p)
 		output, err := testutil.ExecuteCommand(cmd)
 		assert.NilError(t, err)
-		lines := strings.Split(output, "\n")
-		assert.Check(t, util.ContainsAll(lines[0], "NAME", "VALUE"))
-		assert.Check(t, util.ContainsAll(lines[1], "enable-scale-to-zero", "true"))
-		assert.Check(t, util.ContainsAll(lines[2], "max-scale-up-rate", "100"))
-		assert.Check(t, util.ContainsAll(lines[3], "panic-window-percentage", "10"))
+		checkListOutput(t, cm.Data, output, false)
 	})
 }
 
@@ -89,7 +125,6 @@ func TestAutoscalingListCommandNoHeader(t *testing.T) {
 		cmd := NewAutoscalingListCommand(&p)
 		output, err := testutil.ExecuteCommand(cmd, "--no-headers")
 		assert.NilError(t, err)
-		lines := strings.Split(output, "\n")
-		assert.Check(t, util.ContainsAll(lines[0], "enable-scale-to-zero", "true"))
+		checkListOutput(t, cm.Data, output, true)
 	})
 }

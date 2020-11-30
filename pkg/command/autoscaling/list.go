@@ -16,6 +16,9 @@ package autoscaling
 
 import (
 	"fmt"
+	"sort"
+	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 	corev1 "k8s.io/api/core/v1"
@@ -25,25 +28,67 @@ import (
 	"knative.dev/client/pkg/kn/commands/flags"
 	hprinters "knative.dev/client/pkg/printers"
 	"knative.dev/kn-plugin-admin/pkg"
+	autoscalerconfig "knative.dev/serving/pkg/autoscaler/config"
 )
 
+// A function for getting specific field value from autoscaler config
+type valueOfConfig func(*autoscalerconfig.Config) string
+
 var (
-	configNameList = []string{
-		"activator-capacity",
-		"container-concurrency-target-default",
-		"enable-scale-to-zero",
-		"max-scale-up-rate",
-		"max-scale-down-rate",
-		"panic-window-percentage",
-		"panic-threshold-percentage",
-		"pod-autoscaler-class",
-		"requests-per-second-target-default",
-		"stable-window",
-		"scale-to-zero-grace-period",
-		"scale-to-zero-pod-retention-period",
-		"target-burst-capacity",
+	configNameValueOfMap = map[string]valueOfConfig{
+		"activator-capacity": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.ActivatorCapacity)
+		},
+		"container-concurrency-target-default": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.ContainerConcurrencyTargetDefault)
+		},
+		"enable-scale-to-zero": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%+v", config.EnableScaleToZero)
+		},
+		"max-scale-up-rate": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.MaxScaleUpRate)
+		},
+		"max-scale-down-rate": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.MaxScaleDownRate)
+		},
+		"panic-window-percentage": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.PanicWindowPercentage)
+		},
+		"panic-threshold-percentage": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.PanicThresholdPercentage)
+		},
+		"pod-autoscaler-class": func(config *autoscalerconfig.Config) string {
+			return config.PodAutoscalerClass
+		},
+		"requests-per-second-target-default": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.RPSTargetDefault)
+		},
+		"stable-window": func(config *autoscalerconfig.Config) string {
+			return describeDuration(config.StableWindow)
+		},
+		"scale-to-zero-grace-period": func(config *autoscalerconfig.Config) string {
+			return describeDuration(config.ScaleToZeroGracePeriod)
+		},
+		"scale-to-zero-pod-retention-period": func(config *autoscalerconfig.Config) string {
+			return describeDuration(config.ScaleToZeroPodRetentionPeriod)
+		},
+		"target-burst-capacity": func(config *autoscalerconfig.Config) string {
+			return fmt.Sprintf("%.1f", config.TargetBurstCapacity)
+		},
 	}
 )
+
+// describeDuration describes time.duration without 'm0s' and 'h0m'
+func describeDuration(d time.Duration) string {
+	s := d.String()
+	if strings.HasSuffix(s, "m0s") {
+		s = s[:len(s)-2]
+	}
+	if strings.HasSuffix(s, "h0m") {
+		s = s[:len(s)-2]
+	}
+	return s
+}
 
 // autoscalingListHandlers handles for `kn autoscaling list` command's output
 func autoscalingListHandlers(h hprinters.PrintHandler) {
@@ -56,13 +101,23 @@ func autoscalingListHandlers(h hprinters.PrintHandler) {
 
 // printAutoscalingConfigs builds autoscaling config list table rows
 func printAutoscalingConfigs(cm *corev1.ConfigMap, options hprinters.PrintOptions) ([]metav1beta1.TableRow, error) {
-	rows := make([]metav1beta1.TableRow, 0, len(configNameList))
-	for _, name := range configNameList {
+	rows := make([]metav1beta1.TableRow, 0, len(configNameValueOfMap))
+	config, err := autoscalerconfig.NewConfigFromMap(cm.Data)
+	if err != nil {
+		return rows, fmt.Errorf("failed to get autoscaling config: %+v", err)
+	}
+
+	// sort config names
+	names := make([]string, 0, len(configNameValueOfMap))
+	for key := range configNameValueOfMap {
+		names = append(names, key)
+	}
+	sort.Strings(names)
+
+	for _, name := range names {
 		row := metav1beta1.TableRow{}
-		if value := cm.Data[name]; value != "" {
-			row.Cells = append(row.Cells, name, value)
-			rows = append(rows, []metav1beta1.TableRow{row}...)
-		}
+		row.Cells = append(row.Cells, name, configNameValueOfMap[name](config))
+		rows = append(rows, []metav1beta1.TableRow{row}...)
 	}
 	return rows, nil
 }
