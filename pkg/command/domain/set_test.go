@@ -26,9 +26,9 @@ import (
 	"k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
-	"knative.dev/client-contrib/plugins/admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg"
 
-	"knative.dev/client-contrib/plugins/admin/pkg/testutil"
+	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
 
 type domainSelector struct {
@@ -56,7 +56,8 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 
@@ -64,13 +65,33 @@ func TestNewDomainSetCommand(t *testing.T) {
 		assert.ErrorContains(t, err, "requires the route name", err)
 	})
 
+	t.Run("operator mode should not be supported", func(t *testing.T) {
+		cm := &corev1.ConfigMap{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      configDomain,
+				Namespace: knativeServing,
+			},
+			Data: make(map[string]string),
+		}
+		client := k8sfake.NewSimpleClientset(cm)
+		p := pkg.AdminParams{
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodOperator,
+		}
+		cmd := NewDomainSetCommand(&p)
+
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
+		assert.ErrorContains(t, err, "Knative managed by operator is not supported yet", err)
+	})
+
 	t.Run("config map not exist", func(t *testing.T) {
 		client := k8sfake.NewSimpleClientset()
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
-		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.ErrorContains(t, err, "failed to get ConfigMap", err)
 	})
 
@@ -84,18 +105,19 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
-		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.NilError(t, err)
 
 		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 1, "expected configmap lengh to be 1")
 
-		v, ok := cm.Data["dummy.domain"]
-		assert.Check(t, ok, "domain key %q should exists", "dummy.domain")
+		v, ok := cm.Data["test.domain"]
+		assert.Check(t, ok, "domain key %q should exists", "test.domain")
 		assert.Equal(t, "", v, "value of key domain should be empty")
 	})
 
@@ -106,16 +128,17 @@ func TestNewDomainSetCommand(t *testing.T) {
 				Namespace: knativeServing,
 			},
 			Data: map[string]string{
-				"dummy.domain": "",
+				"test.domain": "",
 			},
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 
-		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.NilError(t, err)
 
 		updated, err := client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
@@ -136,19 +159,20 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
-		o, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain")
+		o, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.NilError(t, err)
-		assert.Check(t, strings.Contains(o, "Set knative route domain \"dummy.domain\""), "expected update information in standard output")
+		assert.Check(t, strings.Contains(o, "Set knative route domain \"test.domain\""), "expected update information in standard output")
 
 		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 1, "expected configmap lengh to be 1, actual %d", len(cm.Data))
 
-		v, ok := cm.Data["dummy.domain"]
-		assert.Check(t, ok, "domain key %q should exists", "dummy.domain")
+		v, ok := cm.Data["test.domain"]
+		assert.Check(t, ok, "domain key %q should exists", "test.domain")
 		assert.Equal(t, "", v, "value of key domain should be empty")
 	})
 
@@ -164,20 +188,21 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 
-		o, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain", "--selector", "app=dummy")
+		o, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain", "--selector", "app=test")
 		assert.NilError(t, err)
-		assert.Check(t, strings.Contains(o, "Set knative route domain \"dummy.domain\" with selector [app=dummy]"), "invalid output %q", o)
+		assert.Check(t, strings.Contains(o, "Set knative route domain \"test.domain\" with selector [app=test]"), "invalid output %q", o)
 
 		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 2, "expected configmap lengh to be 2, actual %d", len(cm.Data))
 
-		v, ok := cm.Data["dummy.domain"]
-		assert.Check(t, ok, "domain key %q should exists", "dummy.domain")
+		v, ok := cm.Data["test.domain"]
+		assert.Check(t, ok, "domain key %q should exists", "test.domain")
 
 		var s domainSelector
 		err = yaml.Unmarshal([]byte(v), &s)
@@ -186,7 +211,7 @@ func TestNewDomainSetCommand(t *testing.T) {
 
 		v, ok = s.Selector["app"]
 		assert.Check(t, ok, "key %q should exist", "app")
-		assert.Equal(t, "dummy", v)
+		assert.Equal(t, "test", v)
 	})
 
 	t.Run("adding domain config with invalid selector", func(t *testing.T) {
@@ -201,11 +226,12 @@ func TestNewDomainSetCommand(t *testing.T) {
 		}
 		client := k8sfake.NewSimpleClientset(cm)
 		p := pkg.AdminParams{
-			ClientSet: client,
+			ClientSet:          client,
+			InstallationMethod: pkg.InstallationMethodStandalone,
 		}
 		cmd := NewDomainSetCommand(&p)
 
-		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "dummy.domain", "--selector", "app")
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain", "--selector", "app")
 		assert.ErrorContains(t, err, "expecting the selector format 'name=value', found 'app'", err)
 	})
 }

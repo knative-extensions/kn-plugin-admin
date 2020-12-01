@@ -25,8 +25,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"knative.dev/client-contrib/plugins/admin/pkg"
-	"knative.dev/client-contrib/plugins/admin/pkg/testutil"
+	"knative.dev/kn-plugin-admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg/testutil"
 
 	k8srand "k8s.io/apimachinery/pkg/util/rand"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
@@ -45,10 +45,10 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--username", "")
 		assert.ErrorContains(t, err, "requires the registry username")
 
-		_, err = testutil.ExecuteCommand(cmd, "--username", "dummy")
+		_, err = testutil.ExecuteCommand(cmd, "--username", "test")
 		assert.ErrorContains(t, err, "requires the registry password")
 
-		_, err = testutil.ExecuteCommand(cmd, "--username", "dummy", "--password", "dummy")
+		_, err = testutil.ExecuteCommand(cmd, "--username", "test", "--password", "test")
 		assert.ErrorContains(t, err, "requires the registry server")
 	})
 
@@ -59,7 +59,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		}
 
 		cmd := NewRegistryAddCommand(p)
-		_, err := testutil.ExecuteCommand(cmd, "--username", "user", "--password", "dummy", "--server", "docker.io")
+		_, err := testutil.ExecuteCommand(cmd, "--username", "user", "--password", "test", "--server", "docker.io")
 		assert.ErrorContains(t, err, "failed to get serviceaccount")
 	})
 
@@ -78,7 +78,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		}
 
 		cmd := NewRegistryAddCommand(p)
-		o, err := testutil.ExecuteCommand(cmd, "--username", "user", "--password", "dummy", "--server", "docker.io")
+		o, err := testutil.ExecuteCommand(cmd, "--username", "user", "--password", "test", "--server", "docker.io")
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Private registry 'docker.io' is added for serviceaccount 'default' in namespace 'default'"), "unexpected output: %s", o)
 
@@ -89,6 +89,8 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		secret := secrets.Items[0]
 		assert.Equal(t, corev1.SecretTypeDockerConfigJson, secret.Type)
 		assert.Equal(t, "registry-secret-", secret.GenerateName)
+		assert.Equal(t, "default", secret.Labels[ImagePullServiceAccount])
+		assert.Equal(t, secret.Labels[pkg.LabelManagedBy], AdminRegistryCmdName)
 
 		saUpdated, err := client.CoreV1().ServiceAccounts(sa.Namespace).Get(sa.Name, metav1.GetOptions{})
 		assert.NilError(t, err)
@@ -105,7 +107,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		rc, ok := r.Auths["docker.io"]
 		assert.Check(t, ok)
 		assert.Equal(t, "user", rc.Username)
-		assert.Equal(t, "dummy", rc.Password)
+		assert.Equal(t, "test", rc.Password)
 		assert.Equal(t, "user@default.email.com", rc.Email)
 	})
 
@@ -129,7 +131,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		}
 
 		cmd := NewRegistryAddCommand(p)
-		o, err := testutil.ExecuteCommand(cmd, "add", "--username", "user", "--password", "dummy", "--server", "docker.io", "--namespace", "custom-namespace", "--serviceaccount", "custom-serviceaccount")
+		o, err := testutil.ExecuteCommand(cmd, "add", "--username", "user", "--password", "test", "--server", "docker.io", "--namespace", "custom-namespace", "--serviceaccount", "custom-serviceaccount")
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Private registry 'docker.io' is added for serviceaccount 'custom-serviceaccount' in namespace 'custom-namespace'"), "unexpected output: %s", o)
 
@@ -140,6 +142,8 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		secret := secrets.Items[0]
 		assert.Equal(t, corev1.SecretTypeDockerConfigJson, secret.Type)
 		assert.Equal(t, "registry-secret-", secret.GenerateName)
+		assert.Equal(t, sa.Name, secret.Labels[ImagePullServiceAccount])
+		assert.Equal(t, secret.Labels[pkg.LabelManagedBy], AdminRegistryCmdName)
 
 		saUpdated, err := client.CoreV1().ServiceAccounts(ns.Name).Get(sa.Name, metav1.GetOptions{})
 		assert.NilError(t, err)
@@ -156,7 +160,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		rc, ok := r.Auths["docker.io"]
 		assert.Check(t, ok)
 		assert.Equal(t, "user", rc.Username)
-		assert.Equal(t, "dummy", rc.Password)
+		assert.Equal(t, "test", rc.Password)
 		assert.Equal(t, "user@default.email.com", rc.Email)
 
 	})
@@ -169,7 +173,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 			},
 			ImagePullSecrets: []corev1.LocalObjectReference{
 				{
-					Name: "dummy-secret",
+					Name: "test-secret",
 				},
 			},
 		}
@@ -181,7 +185,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		}
 
 		cmd := NewRegistryAddCommand(p)
-		o, err := testutil.ExecuteCommand(cmd, "--username", "user", "--password", "dummy", "--server", "docker.io")
+		o, err := testutil.ExecuteCommand(cmd, "--username", "user", "--password", "test", "--server", "docker.io")
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Private registry 'docker.io' is added for serviceaccount 'default' in namespace 'default'"), "unexpected output: %s", o)
 

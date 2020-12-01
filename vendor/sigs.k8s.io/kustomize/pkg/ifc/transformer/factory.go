@@ -1,9 +1,12 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2018 The Kubernetes Authors.
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-    https://www.apache.org/licenses/LICENSE-2.0
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -11,13 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package scripts
+// Package patch holds miscellaneous interfaces used by kustomize.
+package transformer
 
 import (
-	"fmt"
+	"sigs.k8s.io/kustomize/pkg/resource"
+	"sigs.k8s.io/kustomize/pkg/transformers"
 )
 
-func main() {
-	fmt.Println("This is a dummy go file so `go dep` can be used with knative/test-infra/scripts")
-	fmt.Println("This file can be safely removed if one day this directory contains real, useful go code")
+// Factory makes transformers
+type Factory interface {
+	MakePatchTransformer(slice []*resource.Resource, rf *resource.Factory) (transformers.Transformer, error)
+	MakeHashTransformer() transformers.Transformer
 }

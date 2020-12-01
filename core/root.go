@@ -21,12 +21,12 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"knative.dev/client-contrib/plugins/admin/pkg"
-	"knative.dev/client-contrib/plugins/admin/pkg/command"
-	"knative.dev/client-contrib/plugins/admin/pkg/command/autoscaling"
-	"knative.dev/client-contrib/plugins/admin/pkg/command/domain"
-	"knative.dev/client-contrib/plugins/admin/pkg/command/profiling"
-	private_registry "knative.dev/client-contrib/plugins/admin/pkg/command/registry"
+	"knative.dev/kn-plugin-admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg/command"
+	"knative.dev/kn-plugin-admin/pkg/command/autoscaling"
+	"knative.dev/kn-plugin-admin/pkg/command/domain"
+	"knative.dev/kn-plugin-admin/pkg/command/profiling"
+	private_registry "knative.dev/kn-plugin-admin/pkg/command/registry"
 )
 
 var cfgFile string

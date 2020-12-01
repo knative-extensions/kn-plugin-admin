@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"strings"
 
-	"knative.dev/client-contrib/plugins/admin/pkg"
-	"knative.dev/client-contrib/plugins/admin/pkg/command/utils"
+	"knative.dev/kn-plugin-admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg/command/utils"
 
 	"github.com/spf13/cobra"
 	corev1 "k8s.io/api/core/v1"
@@ -50,6 +50,9 @@ func NewDomainSetCommand(p *pkg.AdminParams) *cobra.Command {
 			domain = strings.TrimSpace(domain)
 			if domain == "" {
 				return errors.New("'domain set' requires the route name provided with the --custom-domain option")
+			}
+			if err := p.EnsureInstallMethodStandalone(); err != nil {
+				return err
 			}
 			return nil
 		},

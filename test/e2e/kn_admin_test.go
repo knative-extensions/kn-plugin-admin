@@ -25,6 +25,7 @@ import (
 	testcommon "github.com/maximilien/kn-source-pkg/test/e2e"
 	"gotest.tools/assert"
 	"knative.dev/client/lib/test"
+	"knative.dev/client/pkg/util"
 )
 
 const pluginName string = "admin"
@@ -85,6 +86,11 @@ func TestKnAdminPlugin(t *testing.T) {
 	err = e2eTest.backupConfigMap("config-observability")
 	assert.NilError(t, err)
 
+	t.Log("test kn admin autoscaling subcommand")
+	e2eTest.knAdminAutoscaling(t, r)
+	err = e2eTest.backupConfigMap("config-autoscaler")
+	assert.NilError(t, err)
+
 	t.Log("test kn admin profiling subcommand")
 	e2eTest.knAdminProfiling(t, r)
 	err = e2eTest.restoreConfigMap("config-observability")
@@ -127,7 +133,7 @@ func (et *e2eTest) restoreConfigMap(cm string) error {
 }
 
 func (et *e2eTest) knAdminDomain(t *testing.T, r *test.KnRunResultCollector) {
-	domain := "dummy.domain.test"
+	domain := "test.domain.test"
 	out := et.kn.Run(pluginName, "domain", "set", "--custom-domain", domain)
 	r.AssertNoError(out)
 	out = et.kn.Run(pluginName, "domain", "set", "--custom-domain", domain, "--selector", "app=v1")
@@ -136,10 +142,24 @@ func (et *e2eTest) knAdminDomain(t *testing.T, r *test.KnRunResultCollector) {
 	r.AssertNoError(out)
 }
 
-func (et *e2eTest) knAdminRegistry(t *testing.T, r *test.KnRunResultCollector) {
-	out := et.kn.Run(pluginName, "registry", "add", "--username", "custom-user", "--password", "dummy", "--server", "dummy.test.io")
+func (et *e2eTest) knAdminAutoscaling(t *testing.T, r *test.KnRunResultCollector) {
+	out := et.kn.Run(pluginName, "autoscaling", "update", "--max-scale-up-rate", "2.5")
 	r.AssertNoError(out)
-	out = et.kn.Run(pluginName, "registry", "remove", "--username", "custom-user", "--server", "dummy.test.io")
+	out = et.kn.Run(pluginName, "autoscaling", "update", "--stable-window", "2m", "--activator-capacity", "300")
+	r.AssertNoError(out)
+	out = et.kn.Run(pluginName, "autoscaling", "update", "--scale-to-zero")
+	r.AssertNoError(out)
+}
+
+func (et *e2eTest) knAdminRegistry(t *testing.T, r *test.KnRunResultCollector) {
+	out := et.kn.Run(pluginName, "registry", "add", "--username", "custom-user", "--password", "test", "--server", "test.test.io")
+	r.AssertNoError(out)
+	out = et.kn.Run(pluginName, "registry", "list")
+	r.AssertNoError(out)
+	outRows := strings.Split(out.Stdout, "\n")
+	assert.Check(t, util.ContainsAll(outRows[0], "NAMESPACE", "SERVICEACCOUNT", "SECRET", "USERNAME", "SERVER", "EMAIL"))
+	assert.Check(t, util.ContainsAll(outRows[1], "custom-user", "test.test.io"))
+	out = et.kn.Run(pluginName, "registry", "remove", "--username", "custom-user", "--server", "test.test.io")
 	r.AssertNoError(out)
 }
 

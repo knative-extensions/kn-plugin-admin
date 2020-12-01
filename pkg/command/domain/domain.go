@@ -16,7 +16,7 @@ package domain
 
 import (
 	"github.com/spf13/cobra"
-	"knative.dev/client-contrib/plugins/admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg"
 )
 
 // NewDomainCmd return the domain root command
@@ -28,6 +28,7 @@ func NewDomainCmd(p *pkg.AdminParams) *cobra.Command {
 	}
 	domainCmd.AddCommand(NewDomainSetCommand(p))
 	domainCmd.AddCommand(NewDomainUnSetCommand(p))
+	domainCmd.AddCommand(NewDomainListCommand(p))
 	domainCmd.InitDefaultHelpCmd()
 	return domainCmd
 }

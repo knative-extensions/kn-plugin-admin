@@ -27,8 +27,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"knative.dev/client-contrib/plugins/admin/pkg"
-	"knative.dev/client-contrib/plugins/admin/pkg/command/utils"
+	"knative.dev/kn-plugin-admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg/command/utils"
 )
 
 const (

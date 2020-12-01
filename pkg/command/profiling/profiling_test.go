@@ -32,8 +32,8 @@ import (
 	k8sfake "k8s.io/client-go/kubernetes/fake"
 	k8sfakecorev1 "k8s.io/client-go/kubernetes/typed/core/v1/fake"
 	k8stesting "k8s.io/client-go/testing"
-	"knative.dev/client-contrib/plugins/admin/pkg"
-	"knative.dev/client-contrib/plugins/admin/pkg/testutil"
+	"knative.dev/kn-plugin-admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
 
 func newProfilingCommand() *cobra.Command {

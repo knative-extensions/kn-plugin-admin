@@ -29,7 +29,7 @@ SOURCE_DIRS="cmd pkg core"
 MAIN_SOURCE_DIR="cmd"
 
 # Package which holds the version variables
-VERSION_PACKAGE="knative.dev/client-contrib/plugins/admin/pkg/command"
+VERSION_PACKAGE="knative.dev/kn-plugin-admin/pkg/command"
 
 # =================================================
 

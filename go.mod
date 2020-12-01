@@ -1,4 +1,4 @@
-module knative.dev/client-contrib/plugins/admin
+module knative.dev/kn-plugin-admin
 
 go 1.14
 
@@ -13,4 +13,5 @@ require (
 	k8s.io/apimachinery v0.17.4
 	k8s.io/client-go v0.17.4
 	knative.dev/client v0.14.0
+	knative.dev/serving v0.14.0
 )

@@ -16,7 +16,7 @@ package registry
 
 import (
 	"github.com/spf13/cobra"
-	"knative.dev/client-contrib/plugins/admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg"
 )
 
 var (
@@ -24,6 +24,9 @@ var (
 	AdminRegistryCmdName = "kn-admin-registry"
 	// DockerJSONName is used to represent ".dockerconfigjson" in secret data
 	DockerJSONName = ".dockerconfigjson"
+	// ImagePullServiceAccount is used to store service account name which use this secret
+	// as ImagePullSecret in this secret's label
+	ImagePullServiceAccount = "image-pull-service-account"
 )
 
 // AdminRegistryLabels is a set of labels which will be added to the registry resources to indicate
@@ -56,6 +59,7 @@ func NewPrivateRegistryCmd(p *pkg.AdminParams) *cobra.Command {
 	}
 	privateRegistryCmd.AddCommand(NewRegistryAddCommand(p))
 	privateRegistryCmd.AddCommand(NewRegistryRmCommand(p))
+	privateRegistryCmd.AddCommand(NewRegistryListCommand(p))
 	privateRegistryCmd.InitDefaultHelpCmd()
 	return privateRegistryCmd
 }
