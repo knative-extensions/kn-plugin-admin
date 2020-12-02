@@ -15,6 +15,7 @@
 package autoscaling
 
 import (
+	"context"
 	"testing"
 
 	"gotest.tools/assert"
@@ -85,7 +86,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 		assert.NilError(t, err)
 		v, ok := cm.Data["enable-scale-to-zero"]
 		assert.Check(t, ok, "key %q should exists", "enable-scale-to-zero")
@@ -105,7 +106,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--no-scale-to-zero")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 		assert.NilError(t, err)
 		v, ok := cm.Data["enable-scale-to-zero"]
 		assert.Check(t, ok, "key %q should exists", "enable-scale-to-zero")
@@ -126,7 +127,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
 		assert.NilError(t, err)
 
-		updated, err := client.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+		updated, err := client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, equality.Semantic.DeepEqual(updated, cm), "configmap should not be changed")
 
@@ -145,7 +146,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--container-concurrency-target-percentage", "0.7")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 		assert.NilError(t, err)
 		v, ok := cm.Data["container-concurrency-target-percentage"]
 		assert.Check(t, ok, "key %q should exists", "container-concurrency-target-percentage")
@@ -165,7 +166,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--stable-window", "2m")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 		assert.NilError(t, err)
 		v, ok := cm.Data["stable-window"]
 		assert.Check(t, ok, "key %q should exists", "stable-window")
@@ -255,7 +256,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero-pod-retention-period", "1m")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 		assert.NilError(t, err)
 		v, ok := cm.Data["scale-to-zero-pod-retention-period"]
 		assert.Check(t, ok, "key %q should exists", "scale-to-zero-pod-retention-period")
@@ -289,7 +290,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--pod-autoscaler-class", "new.class")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 		assert.NilError(t, err)
 		v, ok := cm.Data["pod-autoscaler-class"]
 		assert.Check(t, ok, "key %q should exists", "pod-autoscaler-class")

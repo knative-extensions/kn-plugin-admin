@@ -15,6 +15,7 @@
 package registry
 
 import (
+	"context"
 	"fmt"
 	"sort"
 
@@ -90,7 +91,7 @@ func NewRegistryListCommand(p *pkg.AdminParams) *cobra.Command {
 }
 
 func searchNamespace(kubeclient kubernetes.Interface, expectNamespace string) (*corev1.NamespaceList, error) {
-	list, err := kubeclient.CoreV1().Namespaces().List(metav1.ListOptions{})
+	list, err := kubeclient.CoreV1().Namespaces().List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +109,7 @@ func searchNamespace(kubeclient kubernetes.Interface, expectNamespace string) (*
 }
 
 func addSecrets(kubeclient kubernetes.Interface, ns string, sa string, secretList *corev1.SecretList) error {
-	secrets, err := kubeclient.CoreV1().Secrets(ns).List(metav1.ListOptions{
+	secrets, err := kubeclient.CoreV1().Secrets(ns).List(context.TODO(), metav1.ListOptions{
 		LabelSelector: labels.SelectorFromSet(AdminRegistryLabels).String(),
 	})
 	if err != nil {

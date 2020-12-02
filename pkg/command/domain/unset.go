@@ -15,6 +15,7 @@
 package domain
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -43,7 +44,7 @@ func NewDomainUnSetCommand(p *pkg.AdminParams) *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentCm := &corev1.ConfigMap{}
-			currentCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
+			currentCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get configmaps: %+v", err)
 			}

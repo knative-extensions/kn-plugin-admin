@@ -15,6 +15,7 @@
 package registry
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -67,7 +68,7 @@ func NewRegistryRmCommand(p *pkg.AdminParams) *cobra.Command {
 				namespace = "default"
 			}
 			// get all credential secrets which have the label managed-by=kn-admin-registry
-			secrets, err := p.ClientSet.CoreV1().Secrets(namespace).List(metav1.ListOptions{
+			secrets, err := p.ClientSet.CoreV1().Secrets(namespace).List(context.TODO(), metav1.ListOptions{
 				LabelSelector: labels.SelectorFromSet(AdminRegistryLabels).String(),
 			})
 			if err != nil {
@@ -93,7 +94,7 @@ func NewRegistryRmCommand(p *pkg.AdminParams) *cobra.Command {
 				return nil
 			}
 
-			sa, err := p.ClientSet.CoreV1().ServiceAccounts(namespace).Get(serviceaccount, metav1.GetOptions{})
+			sa, err := p.ClientSet.CoreV1().ServiceAccounts(namespace).Get(context.TODO(), serviceaccount, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get serviceaccount '%s' in namespace '%s': %v", serviceaccount, namespace, err)
 			}
@@ -109,7 +110,7 @@ func NewRegistryRmCommand(p *pkg.AdminParams) *cobra.Command {
 			}
 
 			desiredSa.ImagePullSecrets = imagePullSecrets
-			_, err = p.ClientSet.CoreV1().ServiceAccounts(namespace).Update(desiredSa)
+			_, err = p.ClientSet.CoreV1().ServiceAccounts(namespace).Update(context.TODO(), desiredSa, metav1.UpdateOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to remove registry secret in serviceaccount '%s' in namespace '%s': %v", serviceaccount, namespace, err)
 			}
@@ -151,7 +152,7 @@ func deleteSecrets(cmd *cobra.Command, clientset kubernetes.Interface, secretsMa
 	for _, s := range secretsMap {
 		go func(secret corev1.Secret) {
 			defer w.Done()
-			err := clientset.CoreV1().Secrets(secret.Namespace).Delete(secret.Name, &metav1.DeleteOptions{})
+			err := clientset.CoreV1().Secrets(secret.Namespace).Delete(context.TODO(), secret.Name, metav1.DeleteOptions{})
 			if err != nil {
 				if apierrors.IsNotFound(err) {
 					cmd.Printf("Secret '%s' in namespace '%s' is not found, skipped\n", secret.Name, secret.Namespace)

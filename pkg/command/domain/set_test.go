@@ -16,6 +16,7 @@ package domain
 
 import (
 	"bytes"
+	"context"
 	"strings"
 	"testing"
 
@@ -112,7 +113,7 @@ func TestNewDomainSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 1, "expected configmap lengh to be 1")
 
@@ -141,7 +142,7 @@ func TestNewDomainSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.NilError(t, err)
 
-		updated, err := client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
+		updated, err := client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, equality.Semantic.DeepEqual(updated, cm), "configmap should not changed")
 
@@ -167,7 +168,7 @@ func TestNewDomainSetCommand(t *testing.T) {
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Set knative route domain \"test.domain\""), "expected update information in standard output")
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 1, "expected configmap lengh to be 1, actual %d", len(cm.Data))
 
@@ -197,7 +198,7 @@ func TestNewDomainSetCommand(t *testing.T) {
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Set knative route domain \"test.domain\" with selector [app=test]"), "invalid output %q", o)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 2, "expected configmap lengh to be 2, actual %d", len(cm.Data))
 

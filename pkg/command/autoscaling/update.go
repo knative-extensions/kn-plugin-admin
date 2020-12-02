@@ -15,6 +15,7 @@
 package autoscaling
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
@@ -87,7 +88,7 @@ func NewAutoscalingUpdateCommand(p *pkg.AdminParams) *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentCm := &corev1.ConfigMap{}
-			currentCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+			currentCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get ConfigMaps: %+v", err)
 			}

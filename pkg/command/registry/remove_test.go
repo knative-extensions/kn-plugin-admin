@@ -15,6 +15,7 @@
 package registry
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 	"testing"
@@ -109,9 +110,9 @@ func TestNewRegistryRmCommand(t *testing.T) {
 		assert.Check(t, strings.Contains(o, "ImagePullSecrets of serviceaccount 'default' in namespace 'default' is updated"), "unexpected output: %s", o)
 		assert.Check(t, strings.Contains(o, "Secret 'test-secret' in namespace 'default' is deleted"), "unexpected output: %s", o)
 
-		_, err = client.CoreV1().Secrets("default").Get("test-secret", metav1.GetOptions{})
+		_, err = client.CoreV1().Secrets("default").Get(context.TODO(), "test-secret", metav1.GetOptions{})
 		assert.ErrorContains(t, err, "not found")
-		saUpdated, err := client.CoreV1().ServiceAccounts("default").Get("default", metav1.GetOptions{})
+		saUpdated, err := client.CoreV1().ServiceAccounts("default").Get(context.TODO(), "default", metav1.GetOptions{})
 		assert.NilError(t, err)
 		isContain := false
 		for _, imagePullSecret := range saUpdated.ImagePullSecrets {
@@ -178,9 +179,9 @@ func TestNewRegistryRmCommand(t *testing.T) {
 		assert.Check(t, strings.Contains(o, "ImagePullSecrets of serviceaccount 'custom-serviceaccount' in namespace 'custom-namespace' is updated"), "unexpected output: %s", o)
 		assert.Check(t, strings.Contains(o, "Secret 'test-secret' in namespace 'custom-namespace' is deleted"), "unexpected output: %s", o)
 
-		_, err = client.CoreV1().Secrets(ns.Name).Get("test-secret", metav1.GetOptions{})
+		_, err = client.CoreV1().Secrets(ns.Name).Get(context.TODO(), "test-secret", metav1.GetOptions{})
 		assert.ErrorContains(t, err, "not found")
-		saUpdated, err := client.CoreV1().ServiceAccounts(ns.Name).Get("custom-serviceaccount", metav1.GetOptions{})
+		saUpdated, err := client.CoreV1().ServiceAccounts(ns.Name).Get(context.TODO(), "custom-serviceaccount", metav1.GetOptions{})
 		assert.NilError(t, err)
 		isContain := false
 		for _, imagePullSecret := range saUpdated.ImagePullSecrets {

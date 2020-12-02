@@ -15,6 +15,7 @@
 package utils
 
 import (
+	"context"
 	"testing"
 
 	"gotest.tools/assert"
@@ -59,7 +60,7 @@ func TestUtils(t *testing.T) {
 		err := UpdateConfigMap(client, desiredCm)
 		assert.NilError(t, err)
 
-		cm, err := client.CoreV1().ConfigMaps("knative-serving").Get("config-domain", metav1.GetOptions{})
+		cm, err := client.CoreV1().ConfigMaps("knative-serving").Get(context.TODO(), "config-domain", metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 1, "expected configmap lengh to be 1")
 	})
@@ -87,7 +88,7 @@ func TestUtils(t *testing.T) {
 		err := UpdateConfigMap(client, desiredCm)
 		assert.NilError(t, err)
 
-		updated, err := client.CoreV1().ConfigMaps("knative-serving").Get("config-domain", metav1.GetOptions{})
+		updated, err := client.CoreV1().ConfigMaps("knative-serving").Get(context.TODO(), "config-domain", metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, equality.Semantic.DeepEqual(updated, oriCm), "configmap should not changed")
 	})

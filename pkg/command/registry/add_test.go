@@ -15,6 +15,7 @@
 package registry
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -82,7 +83,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Private registry 'docker.io' is added for serviceaccount 'default' in namespace 'default'"), "unexpected output: %s", o)
 
-		secrets, err := client.CoreV1().Secrets(sa.Namespace).List(metav1.ListOptions{})
+		secrets, err := client.CoreV1().Secrets(sa.Namespace).List(context.TODO(), metav1.ListOptions{})
 		assert.NilError(t, err)
 		assert.Equal(t, 1, len(secrets.Items), "got secrets: %#v", secrets)
 
@@ -92,7 +93,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		assert.Equal(t, "default", secret.Labels[ImagePullServiceAccount])
 		assert.Equal(t, secret.Labels[pkg.LabelManagedBy], AdminRegistryCmdName)
 
-		saUpdated, err := client.CoreV1().ServiceAccounts(sa.Namespace).Get(sa.Name, metav1.GetOptions{})
+		saUpdated, err := client.CoreV1().ServiceAccounts(sa.Namespace).Get(context.TODO(), sa.Name, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Equal(t, 1, len(saUpdated.ImagePullSecrets))
 		assert.Equal(t, secret.Name, saUpdated.ImagePullSecrets[0].Name)
@@ -135,7 +136,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Private registry 'docker.io' is added for serviceaccount 'custom-serviceaccount' in namespace 'custom-namespace'"), "unexpected output: %s", o)
 
-		secrets, err := client.CoreV1().Secrets(ns.Name).List(metav1.ListOptions{})
+		secrets, err := client.CoreV1().Secrets(ns.Name).List(context.TODO(), metav1.ListOptions{})
 		assert.NilError(t, err)
 		assert.Equal(t, 1, len(secrets.Items), "got secrets: %#v", secrets)
 
@@ -145,7 +146,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		assert.Equal(t, sa.Name, secret.Labels[ImagePullServiceAccount])
 		assert.Equal(t, secret.Labels[pkg.LabelManagedBy], AdminRegistryCmdName)
 
-		saUpdated, err := client.CoreV1().ServiceAccounts(ns.Name).Get(sa.Name, metav1.GetOptions{})
+		saUpdated, err := client.CoreV1().ServiceAccounts(ns.Name).Get(context.TODO(), sa.Name, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Equal(t, 1, len(saUpdated.ImagePullSecrets))
 		assert.Equal(t, secret.Name, saUpdated.ImagePullSecrets[0].Name)
@@ -189,7 +190,7 @@ func TestNewRegistryAddCommand(t *testing.T) {
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(o, "Private registry 'docker.io' is added for serviceaccount 'default' in namespace 'default'"), "unexpected output: %s", o)
 
-		saUpdated, err := client.CoreV1().ServiceAccounts(sa.Namespace).Get(sa.Name, metav1.GetOptions{})
+		saUpdated, err := client.CoreV1().ServiceAccounts(sa.Namespace).Get(context.TODO(), sa.Name, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Equal(t, 2, len(saUpdated.ImagePullSecrets))
 	})
