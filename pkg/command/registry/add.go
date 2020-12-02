@@ -15,6 +15,7 @@
 package registry
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -102,12 +103,12 @@ func NewRegistryAddCommand(p *pkg.AdminParams) *cobra.Command {
 				Data: secretData,
 			}
 
-			secret, err = p.ClientSet.CoreV1().Secrets(namespace).Create(secret)
+			secret, err = p.ClientSet.CoreV1().Secrets(namespace).Create(context.TODO(), secret, metav1.CreateOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to create secret in namespace '%s': %v", namespace, err)
 			}
 
-			sa, err := p.ClientSet.CoreV1().ServiceAccounts(namespace).Get(registryFlags.ServiceAccount, metav1.GetOptions{})
+			sa, err := p.ClientSet.CoreV1().ServiceAccounts(namespace).Get(context.TODO(), registryFlags.ServiceAccount, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get serviceaccount '%s' in namespace '%s': %v", registryFlags.ServiceAccount, namespace, err)
 			}
@@ -116,7 +117,7 @@ func NewRegistryAddCommand(p *pkg.AdminParams) *cobra.Command {
 				Name: secret.Name,
 			})
 
-			_, err = p.ClientSet.CoreV1().ServiceAccounts(namespace).Update(desiredSa)
+			_, err = p.ClientSet.CoreV1().ServiceAccounts(namespace).Update(context.TODO(), desiredSa, metav1.UpdateOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to add registry secret in serviceaccount '%s' in namespace '%s': %v", registryFlags.ServiceAccount, namespace, err)
 			}
@@ -128,7 +129,7 @@ func NewRegistryAddCommand(p *pkg.AdminParams) *cobra.Command {
 			}
 
 			secret.ObjectMeta.Labels = updateLabel
-			_, err = p.ClientSet.CoreV1().Secrets(namespace).Update(secret)
+			_, err = p.ClientSet.CoreV1().Secrets(namespace).Update(context.TODO(), secret, metav1.UpdateOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to update secret label in namespace '%s': %v", namespace, err)
 			}

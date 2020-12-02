@@ -15,6 +15,7 @@
 package domain
 
 import (
+	"context"
 	"testing"
 
 	"gotest.tools/assert"
@@ -99,7 +100,7 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test1.domain")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 1, "expected configmap lengh to be 1")
 
@@ -112,7 +113,7 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 		_, err = testutil.ExecuteCommand(cmd, "--custom-domain", "test2.domain")
 		assert.NilError(t, err)
 
-		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(configDomain, metav1.GetOptions{})
+		cm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Check(t, len(cm.Data) == 0, "expected configmap lengh to be 0")
 	})

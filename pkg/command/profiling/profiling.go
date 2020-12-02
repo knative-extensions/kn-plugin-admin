@@ -15,6 +15,7 @@
 package profiling
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -183,7 +184,7 @@ func NewProfilingCommand(p *pkg.AdminParams) *cobra.Command {
 // configProfiling enables or disables knative profiling
 func configProfiling(c kubernetes.Interface, cmd *cobra.Command, enable bool) error {
 	currentCm := &corev1.ConfigMap{}
-	currentCm, err := c.CoreV1().ConfigMaps(knNamespace).Get(obsConfigMap, metav1.GetOptions{})
+	currentCm, err := c.CoreV1().ConfigMaps(knNamespace).Get(context.TODO(), obsConfigMap, metav1.GetOptions{})
 	if err != nil {
 		return fmt.Errorf("failed to get ConfigMap %s in namespace %s: %+v", obsConfigMap, knNamespace, err)
 	}
@@ -211,7 +212,7 @@ func configProfiling(c kubernetes.Interface, cmd *cobra.Command, enable bool) er
 // isProfilingEnabled checks if the profiling is enabled
 func isProfilingEnabled(c kubernetes.Interface) (bool, error) {
 	currentCm := &corev1.ConfigMap{}
-	currentCm, err := c.CoreV1().ConfigMaps(knNamespace).Get(obsConfigMap, metav1.GetOptions{})
+	currentCm, err := c.CoreV1().ConfigMaps(knNamespace).Get(context.TODO(), obsConfigMap, metav1.GetOptions{})
 	if err != nil {
 		return false, fmt.Errorf("failed to get ConfigMap %s in namespace %s: %+v", obsConfigMap, knNamespace, err)
 	}
@@ -384,13 +385,13 @@ func downloadProfileData(p *pkg.AdminParams, cmd *cobra.Command, pflags *profili
 	}
 
 	// try to find target as a knative component name
-	pods, err := p.ClientSet.CoreV1().Pods(knNamespace).List(metav1.ListOptions{LabelSelector: "app=" + pflags.target})
+	pods, err := p.ClientSet.CoreV1().Pods(knNamespace).List(context.TODO(), metav1.ListOptions{LabelSelector: "app=" + pflags.target})
 	if err != nil {
 		return err
 	}
 	// if no pod found, try to find target as a pod name in knative namespace
 	if len(pods.Items) < 1 {
-		pods, err = p.ClientSet.CoreV1().Pods(knNamespace).List(metav1.ListOptions{})
+		pods, err = p.ClientSet.CoreV1().Pods(knNamespace).List(context.TODO(), metav1.ListOptions{})
 		if err != nil {
 			return err
 		}

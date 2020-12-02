@@ -15,6 +15,7 @@
 package profiling
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -253,7 +254,7 @@ func TestNewProfilingCommand(t *testing.T) {
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(out, "Knative Serving profiling is enabled"))
 
-		newCm, err := client.CoreV1().ConfigMaps(knNamespace).Get(obsConfigMap, metav1.GetOptions{})
+		newCm, err := client.CoreV1().ConfigMaps(knNamespace).Get(context.TODO(), obsConfigMap, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Equal(t, "true", newCm.Data["profiling.enable"])
 	})
@@ -268,7 +269,7 @@ func TestNewProfilingCommand(t *testing.T) {
 		assert.NilError(t, err)
 		assert.Check(t, strings.Contains(out, "Knative Serving profiling is disabled"))
 
-		newCm, err := client.CoreV1().ConfigMaps(knNamespace).Get(obsConfigMap, metav1.GetOptions{})
+		newCm, err := client.CoreV1().ConfigMaps(knNamespace).Get(context.TODO(), obsConfigMap, metav1.GetOptions{})
 		assert.NilError(t, err)
 		assert.Equal(t, "false", newCm.Data["profiling.enable"])
 	})

@@ -15,6 +15,7 @@
 package pkg
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -84,7 +85,7 @@ func (params *AdminParams) Initialize() error {
 
 // installationMethod retrives the installation method
 func (params *AdminParams) installationMethod() (InstallationMethod, error) {
-	cm, err := params.ClientSet.CoreV1().ConfigMaps("knative-serving").Get("config-domain", metav1.GetOptions{})
+	cm, err := params.ClientSet.CoreV1().ConfigMaps("knative-serving").Get(context.TODO(), "config-domain", metav1.GetOptions{})
 	if err != nil {
 		return InstallationMethodUnknown, err
 	}

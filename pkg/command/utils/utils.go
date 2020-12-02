@@ -15,6 +15,8 @@
 package utils
 
 import (
+	"context"
+
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -24,14 +26,14 @@ import (
 
 func UpdateConfigMap(client kubernetes.Interface, desiredCm *corev1.ConfigMap) error {
 	return retry.RetryOnConflict(retry.DefaultRetry, func() error {
-		currentCm, err := client.CoreV1().ConfigMaps(desiredCm.Namespace).Get(desiredCm.Name, metav1.GetOptions{})
+		currentCm, err := client.CoreV1().ConfigMaps(desiredCm.Namespace).Get(context.TODO(), desiredCm.Name, metav1.GetOptions{})
 		if err != nil {
 			return err
 		}
 		if equality.Semantic.DeepEqual(desiredCm, currentCm) {
 			return nil
 		}
-		_, err = client.CoreV1().ConfigMaps(desiredCm.Namespace).Update(desiredCm)
+		_, err = client.CoreV1().ConfigMaps(desiredCm.Namespace).Update(context.TODO(), desiredCm, metav1.UpdateOptions{})
 		return err
 	})
 }
