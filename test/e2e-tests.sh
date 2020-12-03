@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,39 +14,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# ===============================================
-# Add you integration tests here
+source $(dirname $0)/common.sh
 
-dir=$(dirname "${BASH_SOURCE[0]}")
-base=$(cd "$dir/.." && pwd)
+# Add local dir to have access to built kn
+export PATH=$PATH:${REPO_ROOT_DIR}
 
-source $(base)/scripts/test-infra/e2e-tests.sh
-export PATH=$PWD:$PATH
+# Will create and delete this namespace (used for all tests, modify if you want a different one)
+export KN_E2E_NAMESPACE=kne2etests
 
-echo "Testing kn-admin plugin"
-cd ${REPO_ROOT_DIR}
+export KNATIVE_EVENTING_VERSION="0.19.2"
+export KNATIVE_SERVING_VERSION="0.19.0"
 
-function plugin_test_setup() {
-  header "Setting up plugin kn-admin"
-  # TODO: add setup steps
+run() {
+  # Create cluster
+  initialize $@
+
+  # Integration tests
+  eval integration_test || fail_test
+
+  success
 }
 
-function run() {
-
-  header "Running plugin kn-admin e2e tests for Knative Serving $KNATIVE_SERVING_VERSION and Eventing $KNATIVE_EVENTING_VERSION"
-
-  # Will create and delete this namespace (used for all tests, modify if you want a different one used)
-  export KN_E2E_NAMESPACE=kne2etests
-
-  echo "🧪  Setup"
-  plugin_test_setup
-  echo "🧪  Build"
-  ./hack/build.sh -f
-  echo "🧪  Testing"
-  go_test_e2e -timeout=45m ./test/e2e || fail_test
-  echo "🧪  Teardown"
-  plugin_test_teardown
-  success
+integration_test() {
+  header "Running kn-plugin-admin e2e tests for Knative Serving $KNATIVE_SERVING_VERSION and Eventing $KNATIVE_EVENTING_VERSION"
+  go_test_e2e -timeout=45m ./test/e2e || return 1
 }
 
 # Fire up
