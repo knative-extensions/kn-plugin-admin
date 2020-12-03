@@ -631,6 +631,9 @@ knative.dev/eventing/pkg/client/clientset/versioned/typed/eventing/v1beta1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/messaging/v1beta1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1alpha2
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1alpha2/fake
+# knative.dev/hack v0.0.0-20201201234937-fddbf732e450
+## explicit
+knative.dev/hack
 # knative.dev/networking v0.0.0-20200922180040-a71b40c69b15
 knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
