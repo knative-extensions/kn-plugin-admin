@@ -198,8 +198,7 @@ check_license() {
 
 update_deps() {
   echo "🚒 Update"
-  go mod tidy
-  go mod vendor
+  $(basedir)/hack/update-deps.sh
 }
 
 watch() {
