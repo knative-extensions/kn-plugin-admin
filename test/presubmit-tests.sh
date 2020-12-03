@@ -25,7 +25,6 @@ export DISABLE_MD_LINK_CHECK=1
 export PRESUBMIT_TEST_FAIL_FAST=1
 export GO111MODULE=on
 source $(dirname $0)/../vendor/knative.dev/hack/presubmit-tests.sh
-source $(dirname $0)/common.sh
 
 # Run the unit tests with an additional flag '-mod=vendor' to avoid
 # downloading the deps in unit tests CI job
