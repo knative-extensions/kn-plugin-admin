@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -67,10 +67,6 @@ func (source *RevisionSpec) ConvertTo(ctx context.Context, sink *v1.RevisionSpec
 	default:
 		return apis.ErrMissingOneOf("container", "containers")
 	}
-	if source.DeprecatedBuildRef != nil {
-		return ConvertErrorf("buildRef",
-			"buildRef cannot be migrated forward, got: %#v", source.DeprecatedBuildRef)
-	}
 	return nil
 }
 
@@ -79,6 +75,16 @@ func (source *RevisionStatus) ConvertTo(ctx context.Context, sink *v1.RevisionSt
 	source.Status.ConvertTo(ctx, &sink.Status, v1.IsRevisionCondition)
 	sink.ServiceName = source.ServiceName
 	sink.LogURL = source.LogURL
+	sink.DeprecatedImageDigest = source.DeprecatedImageDigest
+	sink.ContainerStatuses = make([]v1.ContainerStatus, len(source.ContainerStatuses))
+	for i := range source.ContainerStatuses {
+		source.ContainerStatuses[i].ConvertTo(ctx, &sink.ContainerStatuses[i])
+	}
+}
+
+// ConvertTo helps implement apis.Convertible
+func (source *ContainerStatus) ConvertTo(ctx context.Context, sink *v1.ContainerStatus) {
+	sink.Name = source.Name
 	sink.ImageDigest = source.ImageDigest
 }
 
@@ -111,5 +117,15 @@ func (sink *RevisionStatus) ConvertFrom(ctx context.Context, source v1.RevisionS
 	source.Status.ConvertTo(ctx, &sink.Status, v1.IsRevisionCondition)
 	sink.ServiceName = source.ServiceName
 	sink.LogURL = source.LogURL
+	sink.DeprecatedImageDigest = source.DeprecatedImageDigest
+	sink.ContainerStatuses = make([]ContainerStatus, len(source.ContainerStatuses))
+	for i := range sink.ContainerStatuses {
+		sink.ContainerStatuses[i].ConvertFrom(ctx, &source.ContainerStatuses[i])
+	}
+}
+
+// ConvertFrom helps implement apis.Convertible
+func (sink *ContainerStatus) ConvertFrom(ctx context.Context, source *v1.ContainerStatus) {
+	sink.Name = source.Name
 	sink.ImageDigest = source.ImageDigest
 }

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@ var serviceCondSet = apis.NewLivingConditionSet(
 	ServiceConditionConfigurationsReady,
 	ServiceConditionRoutesReady,
 )
+
+// GetConditionSet retrieves the ConditionSet of the Service. Implements the KRShaped interface.
+func (*Service) GetConditionSet() apis.ConditionSet {
+	return serviceCondSet
+}
 
 // GetGroupVersionKind returns the GetGroupVersionKind.
 func (s *Service) GetGroupVersionKind() schema.GroupVersionKind {

@@ -15,6 +15,7 @@
 package flags
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -25,46 +26,57 @@ import (
 	duckv1 "knative.dev/pkg/apis/duck/v1"
 
 	clientdynamic "knative.dev/client/pkg/dynamic"
-	"knative.dev/client/pkg/kn/commands"
+	"knative.dev/client/pkg/kn/config"
 )
 
 type SinkFlags struct {
 	sink string
 }
 
-func (i *SinkFlags) Add(cmd *cobra.Command) {
-	cmd.Flags().StringVarP(&i.sink, "sink", "s", "", "Addressable sink for events")
-}
+// AddWithFlagName configures sink flag with given flag name and a short flag name
+// pass empty short flag name if you dont want to set one
+func (i *SinkFlags) AddWithFlagName(cmd *cobra.Command, fname, short string) {
+	flag := "--" + fname
+	if short == "" {
+		cmd.Flags().StringVar(&i.sink, fname, "", "")
+	} else {
+		cmd.Flags().StringVarP(&i.sink, fname, short, "", "")
+	}
+	cmd.Flag(fname).Usage = "Addressable sink for events. " +
+		"You can specify a broker, Knative service or URI. " +
+		"Examples: '" + flag + " broker:nest' for a broker 'nest', " +
+		"'" + flag + " https://event.receiver.uri' for an URI with an 'http://' or 'https://' schema, " +
+		"'" + flag + " ksvc:receiver' or simply '" + flag + " receiver' for a Knative service 'receiver'. " +
+		"If a prefix is not provided, it is considered as a Knative service."
 
-// SinkPrefixes maps prefixes used for sinks to their GroupVersionResources.
-var SinkPrefixes = map[string]schema.GroupVersionResource{
-	"broker": {
-		Resource: "brokers",
-		Group:    "eventing.knative.dev",
-		Version:  "v1alpha1",
-	},
-	"service": {
-		Resource: "services",
-		Group:    "serving.knative.dev",
-		Version:  "v1",
-	},
-	// Shorthand alias for service
-	"svc": {
-		Resource: "services",
-		Group:    "serving.knative.dev",
-		Version:  "v1",
-	},
-}
-
-func ConfigSinkPrefixes(prefixes []commands.SinkPrefixConfig) {
-	for _, p := range prefixes {
+	for _, p := range config.GlobalConfig.SinkMappings() {
 		//user configration might override the default configuration
-		SinkPrefixes[p.Prefix] = schema.GroupVersionResource{
+		sinkMappings[p.Prefix] = schema.GroupVersionResource{
 			Resource: p.Resource,
 			Group:    p.Group,
 			Version:  p.Version,
 		}
 	}
+}
+
+// Add configures sink flag with name 'sink' amd short name 's'
+func (i *SinkFlags) Add(cmd *cobra.Command) {
+	i.AddWithFlagName(cmd, "sink", "s")
+}
+
+// sinkPrefixes maps prefixes used for sinks to their GroupVersionResources.
+var sinkMappings = map[string]schema.GroupVersionResource{
+	"broker": {
+		Resource: "brokers",
+		Group:    "eventing.knative.dev",
+		Version:  "v1beta1",
+	},
+	// Shorthand alias for service
+	"ksvc": {
+		Resource: "services",
+		Group:    "serving.knative.dev",
+		Version:  "v1",
+	},
 }
 
 // ResolveSink returns the Destination referred to by the flags in the acceptor.
@@ -84,11 +96,14 @@ func (i *SinkFlags) ResolveSink(knclient clientdynamic.KnDynamicClient, namespac
 		}
 		return &duckv1.Destination{URI: uri}, nil
 	}
-	typ, ok := SinkPrefixes[prefix]
+	typ, ok := sinkMappings[prefix]
 	if !ok {
-		return nil, fmt.Errorf("unsupported sink type: %s", i.sink)
+		if prefix == "svc" || prefix == "service" {
+			return nil, fmt.Errorf("unsupported sink prefix: '%s', please use prefix 'ksvc' for knative service", prefix)
+		}
+		return nil, fmt.Errorf("unsupported sink prefix: '%s'", prefix)
 	}
-	obj, err := client.Resource(typ).Namespace(namespace).Get(name, metav1.GetOptions{})
+	obj, err := client.Resource(typ).Namespace(namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +125,7 @@ func (i *SinkFlags) ResolveSink(knclient clientdynamic.KnDynamicClient, namespac
 func parseSink(sink string) (string, string) {
 	parts := strings.SplitN(sink, ":", 2)
 	if len(parts) == 1 {
-		return "svc", parts[0]
+		return "ksvc", parts[0]
 	} else if parts[0] == "http" || parts[0] == "https" {
 		return "", sink
 	} else {
@@ -122,7 +137,7 @@ func parseSink(sink string) (string, string) {
 func SinkToString(sink duckv1.Destination) string {
 	if sink.Ref != nil {
 		if sink.Ref.Kind == "Service" {
-			return fmt.Sprintf("svc:%s", sink.Ref.Name)
+			return fmt.Sprintf("ksvc:%s", sink.Ref.Name)
 		} else {
 			return fmt.Sprintf("%s:%s", strings.ToLower(sink.Ref.Kind), sink.Ref.Name)
 		}

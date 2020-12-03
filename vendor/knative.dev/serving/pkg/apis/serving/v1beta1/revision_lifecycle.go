@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,4 +28,20 @@ const (
 // GetGroupVersionKind returns the GroupVersionKind.
 func (r *Revision) GetGroupVersionKind() schema.GroupVersionKind {
 	return SchemeGroupVersion.WithKind("Revision")
+}
+
+// IsReady returns if the revision is ready to serve the requested revision
+// and the revision resource has been observed.
+func (r *Revision) IsReady() bool {
+	rs := r.Status
+	return rs.ObservedGeneration == r.Generation &&
+		rs.GetCondition(RevisionConditionReady).IsTrue()
+}
+
+// IsFailed returns true if the resource has observed the latest generation
+// and ready is false.
+func (r *Revision) IsFailed() bool {
+	rs := r.Status
+	return rs.ObservedGeneration == r.Generation &&
+		rs.GetCondition(RevisionConditionReady).IsFalse()
 }

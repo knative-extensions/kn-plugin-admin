@@ -21,19 +21,27 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"go.uber.org/zap"
+
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"knative.dev/eventing/pkg/logging"
+
 	"knative.dev/pkg/apis"
 	"knative.dev/pkg/apis/duck"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
+	"knative.dev/pkg/logging"
 	"knative.dev/pkg/tracker"
 )
 
 var sbCondSet = apis.NewLivingConditionSet()
 
+// GetConditionSet retrieves the condition set for this resource. Implements the KRShaped interface.
+func (*SinkBinding) GetConditionSet() apis.ConditionSet {
+	return sbCondSet
+}
+
 // GetGroupVersionKind returns the GroupVersionKind.
-func (s *SinkBinding) GetGroupVersionKind() schema.GroupVersionKind {
+func (*SinkBinding) GetGroupVersionKind() schema.GroupVersionKind {
 	return SchemeGroupVersion.WithKind("SinkBinding")
 }
 
@@ -81,14 +89,14 @@ func (sb *SinkBinding) Do(ctx context.Context, ps *duckv1.WithPod) {
 
 	uri := GetSinkURI(ctx)
 	if uri == nil {
-		logging.FromContext(ctx).Error(fmt.Sprintf("No sink URI associated with context for %+v", sb))
+		logging.FromContext(ctx).Errorf("No sink URI associated with context for %+v", sb)
 		return
 	}
 
 	var ceOverrides string
 	if sb.Spec.CloudEventOverrides != nil {
 		if co, err := json.Marshal(sb.Spec.SourceSpec.CloudEventOverrides); err != nil {
-			logging.FromContext(ctx).Error(fmt.Sprintf("Failed to marshal CloudEventOverrides into JSON for %+v, %v", sb, err))
+			logging.FromContext(ctx).Errorw(fmt.Sprintf("Failed to marshal CloudEventOverrides into JSON for %+v", sb), zap.Error(err))
 		} else if len(co) > 0 {
 			ceOverrides = string(co)
 		}

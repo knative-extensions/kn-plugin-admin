@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,6 +23,11 @@ import (
 )
 
 var confCondSet = apis.NewLivingConditionSet()
+
+// GetConditionSet retrieves the ConditionSet of the Configuration. Implements the KRShaped interface.
+func (*Configuration) GetConditionSet() apis.ConditionSet {
+	return confCondSet
+}
 
 func (r *Configuration) GetGroupVersionKind() schema.GroupVersionKind {
 	return SchemeGroupVersion.WithKind("Configuration")

@@ -20,13 +20,14 @@ import (
 	"context"
 	"strings"
 
+	network "knative.dev/networking/pkg"
 	"knative.dev/pkg/apis"
 	"knative.dev/serving/pkg/apis/serving"
 )
 
 // Validate makes sure that Route is properly configured.
 func (r *Route) Validate(ctx context.Context) *apis.FieldError {
-	errs := serving.ValidateObjectMetadata(r.GetObjectMeta()).Also(
+	errs := serving.ValidateObjectMetadata(ctx, r.GetObjectMeta()).Also(
 		r.validateLabels().ViaField("labels")).ViaField("metadata")
 	errs = errs.Also(r.Spec.Validate(apis.WithinSpec(ctx)).ViaField("spec"))
 	errs = errs.Also(r.Status.Validate(apis.WithinStatus(ctx)).ViaField("status"))
@@ -46,13 +47,15 @@ func (r *Route) Validate(ctx context.Context) *apis.FieldError {
 // validateLabels function validates route labels.
 func (r *Route) validateLabels() (errs *apis.FieldError) {
 	for key, val := range r.GetLabels() {
-		switch {
-		case key == serving.VisibilityLabelKey:
-			errs = errs.Also(serving.ValidateClusterVisibilityLabel(val))
-		case key == serving.ServiceLabelKey:
+		switch key {
+		case network.VisibilityLabelKey, serving.VisibilityLabelKeyObsolete:
+			errs = errs.Also(serving.ValidateClusterVisibilityLabel(val, key))
+		case serving.ServiceLabelKey:
 			errs = errs.Also(verifyLabelOwnerRef(val, serving.ServiceLabelKey, "Service", r.GetOwnerReferences()))
-		case strings.HasPrefix(key, serving.GroupNamePrefix):
-			errs = errs.Also(apis.ErrInvalidKeyName(key, apis.CurrentField))
+		default:
+			if strings.HasPrefix(key, serving.GroupNamePrefix) {
+				errs = errs.Also(apis.ErrInvalidKeyName(key, apis.CurrentField))
+			}
 		}
 	}
 	return
