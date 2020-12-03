@@ -27,11 +27,11 @@ import (
 	"knative.dev/client/pkg/util"
 	"knative.dev/kn-plugin-admin/pkg"
 	"knative.dev/kn-plugin-admin/pkg/testutil"
-	autoscalerconfig "knative.dev/serving/pkg/autoscaler/config"
+	"knative.dev/serving/pkg/autoscaler/config"
 )
 
 func checkListOutput(t *testing.T, data map[string]string, output string, noHeaders bool) {
-	config, err := autoscalerconfig.NewConfigFromMap(data)
+	config, err := config.NewConfigFromMap(data)
 	assert.NilError(t, err)
 
 	lines := strings.Split(output, "\n")

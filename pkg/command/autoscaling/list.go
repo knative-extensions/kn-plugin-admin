@@ -15,6 +15,7 @@
 package autoscaling
 
 import (
+	"context"
 	"fmt"
 	"sort"
 	"strings"
@@ -28,7 +29,8 @@ import (
 	"knative.dev/client/pkg/kn/commands/flags"
 	hprinters "knative.dev/client/pkg/printers"
 	"knative.dev/kn-plugin-admin/pkg"
-	autoscalerconfig "knative.dev/serving/pkg/autoscaler/config"
+	"knative.dev/serving/pkg/autoscaler/config"
+	"knative.dev/serving/pkg/autoscaler/config/autoscalerconfig"
 )
 
 // A function for getting specific field value from autoscaler config
@@ -102,7 +104,7 @@ func autoscalingListHandlers(h hprinters.PrintHandler) {
 // printAutoscalingConfigs builds autoscaling config list table rows
 func printAutoscalingConfigs(cm *corev1.ConfigMap, options hprinters.PrintOptions) ([]metav1beta1.TableRow, error) {
 	rows := make([]metav1beta1.TableRow, 0, len(configNameValueOfMap))
-	config, err := autoscalerconfig.NewConfigFromMap(cm.Data)
+	config, err := config.NewConfigFromMap(cm.Data)
 	if err != nil {
 		return rows, fmt.Errorf("failed to get autoscaling config: %+v", err)
 	}
@@ -135,7 +137,7 @@ func NewAutoscalingListCommand(p *pkg.AdminParams) *cobra.Command {
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			currentCm := &corev1.ConfigMap{}
-			currentCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(configAutoscaler, metav1.GetOptions{})
+			currentCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get ConfigMaps: %+v", err)
 			}
