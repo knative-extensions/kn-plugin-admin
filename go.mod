@@ -3,7 +3,7 @@ module knative.dev/kn-plugin-admin
 go 1.14
 
 require (
-	github.com/maximilien/kn-source-pkg v0.5.0
+	github.com/maximilien/kn-source-pkg v0.4.8
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.0.1-0.20200715031239-b95db644ed1c
 	github.com/spf13/viper v1.7.0
