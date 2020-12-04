@@ -158,7 +158,7 @@ func (et *e2eTest) knAdminAutoscaling(t *testing.T, r *test.KnRunResultCollector
 	outLines := strings.Split(out.Stdout, "\n")
 	for _, line := range outLines {
 		if strings.Contains(line, "panic-threshold-percentage") {
-			assert.Check(t, strings.HasSuffix(line, "100.0"))
+			assert.Check(t, strings.HasSuffix(line, "200.0"))
 		} else if strings.Contains(line, "max-scale-up-rate") {
 			assert.Check(t, strings.HasSuffix(line, "2.5"))
 		} else if strings.Contains(line, "stable-window") {
