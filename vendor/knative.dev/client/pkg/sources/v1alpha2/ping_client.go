@@ -15,6 +15,7 @@
 package v1alpha2
 
 import (
+	"context"
 	"fmt"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -72,26 +73,26 @@ func (c *pingSourcesClient) CreatePingSource(pingsource *v1alpha2.PingSource) er
 	if pingsource.Spec.Sink.Ref == nil && pingsource.Spec.Sink.URI == nil {
 		return fmt.Errorf("a sink is required for creating a source")
 	}
-	_, err := c.client.Create(pingsource)
+	_, err := c.client.Create(context.TODO(), pingsource, metav1.CreateOptions{})
 	return err
 }
 
 func (c *pingSourcesClient) UpdatePingSource(pingSource *v1alpha2.PingSource) error {
-	_, err := c.client.Update(pingSource)
+	_, err := c.client.Update(context.TODO(), pingSource, metav1.UpdateOptions{})
 	return err
 }
 
 func (c *pingSourcesClient) DeletePingSource(name string) error {
-	return c.client.Delete(name, &metav1.DeleteOptions{})
+	return c.client.Delete(context.TODO(), name, metav1.DeleteOptions{})
 }
 
 func (c *pingSourcesClient) GetPingSource(name string) (*v1alpha2.PingSource, error) {
-	return c.client.Get(name, metav1.GetOptions{})
+	return c.client.Get(context.TODO(), name, metav1.GetOptions{})
 }
 
 // ListPingSource returns the available Ping sources
 func (c *pingSourcesClient) ListPingSource() (*v1alpha2.PingSourceList, error) {
-	sourceList, err := c.client.List(metav1.ListOptions{})
+	sourceList, err := c.client.List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -148,6 +149,27 @@ func (b *PingSourceBuilder) JsonData(data string) *PingSourceBuilder {
 
 func (b *PingSourceBuilder) Sink(sink duckv1.Destination) *PingSourceBuilder {
 	b.pingSource.Spec.Sink = sink
+	return b
+}
+
+// CloudEventOverrides adds given Cloud Event override extensions map to source spec
+func (b *PingSourceBuilder) CloudEventOverrides(ceo map[string]string, toRemove []string) *PingSourceBuilder {
+	if ceo == nil && len(toRemove) == 0 {
+		return b
+	}
+
+	ceOverrides := b.pingSource.Spec.CloudEventOverrides
+	if ceOverrides == nil {
+		ceOverrides = &duckv1.CloudEventOverrides{Extensions: map[string]string{}}
+		b.pingSource.Spec.CloudEventOverrides = ceOverrides
+	}
+	for k, v := range ceo {
+		ceOverrides.Extensions[k] = v
+	}
+	for _, r := range toRemove {
+		delete(ceOverrides.Extensions, r)
+	}
+
 	return b
 }
 

@@ -117,32 +117,32 @@ codegen() {
   check_license
 }
 
-go_fmt() {
-  echo "🧹 ${S}Format"
-  find $(echo $SOURCE_DIRS) -name "*.go" -print0 | xargs -0 gofmt -s -w
+# Run a go tool, get it first if necessary.
+run_go_tool() {
+  local tool=$2
+  local install_failed=0
+  if [ -z "$(which ${tool})" ]; then
+    local temp_dir="$(mktemp -d)"
+    pushd "${temp_dir}" > /dev/null 2>&1
+    GOFLAGS="" go get "$1" || install_failed=1
+    popd > /dev/null 2>&1
+    rm -rf "${temp_dir}"
+  fi
+  (( install_failed )) && return ${install_failed}
+  shift 2
+  ${tool} "$@"
 }
 
 source_format() {
   set +e
-  which goimports >/dev/null 2>&1
-  if [ $? -ne 0 ]; then
-     echo "✋ No 'goimports' found. Please use"
-     echo "✋   go install golang.org/x/tools/cmd/goimports"
-     echo "✋ to enable import cleanup. Import cleanup skipped."
-
-     # Run go fmt instead
-     go_fmt
-  else
-     echo "🧽 ${X}Format"
-     goimports -w $(echo $SOURCE_DIRS)
-     find $(echo $SOURCE_DIRS) -name "*.go" -print0 | xargs -0 gofmt -s -w
-  fi
+  run_go_tool golang.org/x/tools/cmd/goimports goimports -w $(echo $SOURCE_DIRS)
+  find $(echo $SOURCE_DIRS) -name "*.go" -print0 | xargs -0 gofmt -s -w
   set -e
 }
 
 go_build() {
   echo "🚧 Compile"
-  go build -ldflags "$(build_flags $(basedir))" -o $PLUGIN "./$MAIN_SOURCE_DIR/..."
+  go build -mod=vendor -ldflags "$(build_flags $(basedir))" -o $PLUGIN "./$MAIN_SOURCE_DIR/..."
 }
 
 go_test() {
@@ -176,7 +176,7 @@ check_license() {
 
   local check_output=$(mktemp /tmp/${PLUGIN}-licence-check.XXXXXX)
   for ext in "${extensions_to_check[@]}"; do
-    find . -name "*.$ext" -a \! -path "./vendor/*" -a \! -path "./.*" -print0 |
+    find . -name "*.$ext" -a \! -path "./vendor/*" -a \! -path "./.*" -a \! -path "./third_party/*" -print0 |
       while IFS= read -r -d '' path; do
         for rword in "${required_keywords[@]}"; do
           if ! grep -q "$rword" "$path"; then
@@ -198,8 +198,7 @@ check_license() {
 
 update_deps() {
   echo "🚒 Update"
-  go mod tidy
-  go mod vendor
+  $(basedir)/hack/update-deps.sh
 }
 
 watch() {
@@ -274,11 +273,11 @@ cross_build() {
 
   export CGO_ENABLED=0
   echo "   🐧 ${PLUGIN}-linux-amd64"
-  GOOS=linux GOARCH=amd64 go build -ldflags "${ld_flags}" -o ./${PLUGIN}-linux-amd64 "./$MAIN_SOURCE_DIR/..."|| failed=1
+  GOOS=linux GOARCH=amd64 go build -mod=vendor -ldflags "${ld_flags}" -o ./${PLUGIN}-linux-amd64 "./$MAIN_SOURCE_DIR/..."|| failed=1
   echo "   🍏 ${PLUGIN}-darwin-amd64"
-  GOOS=darwin GOARCH=amd64 go build -ldflags "${ld_flags}" -o ./${PLUGIN}-darwin-amd64 "./$MAIN_SOURCE_DIR/..." || failed=1
+  GOOS=darwin GOARCH=amd64 go build -mod=vendor -ldflags "${ld_flags}" -o ./${PLUGIN}-darwin-amd64 "./$MAIN_SOURCE_DIR/..." || failed=1
   echo "   🎠 ${PLUGIN}-windows-amd64.exe"
-  GOOS=windows GOARCH=amd64 go build -ldflags "${ld_flags}" -o ./${PLUGIN}-windows-amd64.exe "./$MAIN_SOURCE_DIR/..." || failed=1
+  GOOS=windows GOARCH=amd64 go build -mod=vendor -ldflags "${ld_flags}" -o ./${PLUGIN}-windows-amd64.exe "./$MAIN_SOURCE_DIR/..." || failed=1
 
   return ${failed}
 }

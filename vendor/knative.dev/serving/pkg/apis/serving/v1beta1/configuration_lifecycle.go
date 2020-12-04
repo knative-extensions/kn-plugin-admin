@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,9 +16,27 @@ limitations under the License.
 
 package v1beta1
 
-import "k8s.io/apimachinery/pkg/runtime/schema"
+import (
+	"k8s.io/apimachinery/pkg/runtime/schema"
+)
 
 // GetGroupVersionKind returns the GroupVersionKind.
-func (r *Configuration) GetGroupVersionKind() schema.GroupVersionKind {
+func (*Configuration) GetGroupVersionKind() schema.GroupVersionKind {
 	return SchemeGroupVersion.WithKind("Configuration")
+}
+
+// IsReady returns if the configuration is ready to serve the requested
+// configuration and the configuration resource has been observed.
+func (c *Configuration) IsReady() bool {
+	cs := c.Status
+	return cs.ObservedGeneration == c.Generation &&
+		cs.GetCondition(ConfigurationConditionReady).IsTrue()
+}
+
+// IsFailed returns true if the resource has observed
+// the latest generation and ready is false.
+func (c *Configuration) IsFailed() bool {
+	cs := c.Status
+	return cs.ObservedGeneration == c.Generation &&
+		cs.GetCondition(ConfigurationConditionReady).IsFalse()
 }

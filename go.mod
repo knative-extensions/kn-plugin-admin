@@ -13,6 +13,7 @@ require (
 	k8s.io/apimachinery v0.18.8
 	k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible
 	knative.dev/client v0.18.0
+	knative.dev/hack v0.0.0-20201201234937-fddbf732e450
 	knative.dev/serving v0.18.0
 )
 
