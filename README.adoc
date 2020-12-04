@@ -107,6 +107,7 @@ Usage:
   kn admin autoscaling [command]
 
 Available Commands:
+  list        List autoscaling config
   update      update autoscaling config
 
 Flags:
@@ -240,6 +241,29 @@ $ kn admin registry remove \
 -----
 $ kn admin autoscaling update --scale-to-zero --stable-window 2m
 Updated Knative autoscaling config
+-----
+=====
+
+#### As a Knative administrator, I want to list autoscaling configs which apply to overall Knative platform.
+
+.List autoscaling configs.
+=====
+-----
+$ kn admin autoscaling list
+NAME                                   VALUE
+activator-capacity                     100.0
+container-concurrency-target-default   100.0
+enable-scale-to-zero                   false
+max-scale-down-rate                    3.0
+max-scale-up-rate                      1000.0
+panic-threshold-percentage             100.0
+panic-window-percentage                10.0
+pod-autoscaler-class                   kpa.autoscaling.knative.dev
+requests-per-second-target-default     200.0
+scale-to-zero-grace-period             30s
+scale-to-zero-pod-retention-period     0s
+stable-window                          1m
+target-burst-capacity                  200.0
 -----
 =====
 

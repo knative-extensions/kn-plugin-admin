@@ -89,8 +89,10 @@ func TestKnAdminPlugin(t *testing.T) {
 	assert.NilError(t, err)
 
 	t.Log("test kn admin autoscaling subcommand")
-	e2eTest.knAdminAutoscaling(t, r)
 	err = e2eTest.backupConfigMap("config-autoscaler")
+	assert.NilError(t, err)
+	e2eTest.knAdminAutoscaling(t, r)
+	err = e2eTest.restoreConfigMap("config-autoscaler")
 	assert.NilError(t, err)
 
 	t.Log("test kn admin profiling subcommand")
@@ -151,6 +153,22 @@ func (et *e2eTest) knAdminAutoscaling(t *testing.T, r *test.KnRunResultCollector
 	r.AssertNoError(out)
 	out = et.kn.Run(pluginName, "autoscaling", "update", "--scale-to-zero")
 	r.AssertNoError(out)
+	out = et.kn.Run(pluginName, "autoscaling", "list")
+	r.AssertNoError(out)
+	outLines := strings.Split(out.Stdout, "\n")
+	for _, line := range outLines {
+		if strings.Contains(line, "panic-threshold-percentage") {
+			assert.Check(t, strings.HasSuffix(line, "100.0"))
+		} else if strings.Contains(line, "max-scale-up-rate") {
+			assert.Check(t, strings.HasSuffix(line, "2.5"))
+		} else if strings.Contains(line, "stable-window") {
+			assert.Check(t, strings.HasSuffix(line, "2m"))
+		} else if strings.Contains(line, "activator-capacity") {
+			assert.Check(t, strings.HasSuffix(line, "300.0"))
+		} else if strings.Contains(line, "enable-scale-to-zero") {
+			assert.Check(t, strings.HasSuffix(line, "true"))
+		}
+	}
 }
 
 func (et *e2eTest) knAdminRegistry(t *testing.T, r *test.KnRunResultCollector) {
