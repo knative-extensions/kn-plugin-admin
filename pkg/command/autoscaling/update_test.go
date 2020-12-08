@@ -240,7 +240,7 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		}
 		cmd := NewAutoscalingUpdateCommand(&p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero-grace-period", "60")
-		assert.ErrorContains(t, err, "missing unit in duration 60", err)
+		assert.ErrorContains(t, err, "missing unit in duration \"60\"", err)
 	})
 
 	t.Run("update scale-to-zero-pod-retention-period successfully", func(t *testing.T) {

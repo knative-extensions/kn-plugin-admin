@@ -20,6 +20,17 @@ Here are two ways to run `kn admin`:
 
 After the plugin is installed, you can use `kn admin` to run its related subcommands. 
 
+### Build
+```
+# go 1.5 and above is required
+# format, test and build kn-admin
+$ cd ${your-workspace}/src/knative.dev/kn-plugin-admin
+$ export GOPATH={your-workspace}
+$ export PATH=$PATH:$GOPATH/bin
+$ ./hack/build.sh
+$ ls | grep kn-admin
+kn-admin
+```
 ### Usage
 
 ----
