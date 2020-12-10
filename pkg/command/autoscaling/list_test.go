@@ -34,12 +34,16 @@ func checkListOutput(t *testing.T, data map[string]string, output string, noHead
 	config, err := config.NewConfigFromMap(data)
 	assert.NilError(t, err)
 
-	lines := strings.Split(output, "\n")
+	count := len(ConfigNameValueOfMap)
+	lines := strings.Split(strings.Trim(output, "\n"), "\n")
 	if !noHeaders {
 		assert.Check(t, util.ContainsAll(lines[0], "NAME", "VALUE"))
+		assert.Equal(t, len(lines), count+1)
+	} else {
+		assert.Equal(t, len(lines), count)
 	}
 
-	names := make([]string, 0, len(ConfigNameValueOfMap))
+	names := make([]string, 0, count)
 	for key := range ConfigNameValueOfMap {
 		names = append(names, key)
 	}
