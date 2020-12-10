@@ -160,10 +160,10 @@ func (et *e2eTest) knAdminAutoscaling(t *testing.T, r *test.KnRunResultCollector
 
 	// build autoscaler config data
 	data := map[string]string{
-		"max-scale-up-rate":          "2.5",
-		"stable-window":              "2m",
-		"activator-capacity":         "300",
-		"scale-to-zero-grace-period": "true",
+		"max-scale-up-rate":    "2.5",
+		"stable-window":        "2m",
+		"activator-capacity":   "300",
+		"enable-scale-to-zero": "true",
 	}
 	cfg, err := config.NewConfigFromMap(data)
 	assert.NilError(t, err)
