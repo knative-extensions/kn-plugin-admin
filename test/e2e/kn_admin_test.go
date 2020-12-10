@@ -28,6 +28,8 @@ import (
 	"gotest.tools/assert"
 	"knative.dev/client/lib/test"
 	"knative.dev/client/pkg/util"
+	"knative.dev/kn-plugin-admin/pkg/command/autoscaling"
+	"knative.dev/serving/pkg/autoscaler/config"
 )
 
 const pluginName string = "admin"
@@ -155,18 +157,24 @@ func (et *e2eTest) knAdminAutoscaling(t *testing.T, r *test.KnRunResultCollector
 	r.AssertNoError(out)
 	out = et.kn.Run(pluginName, "autoscaling", "list")
 	r.AssertNoError(out)
-	outLines := strings.Split(out.Stdout, "\n")
-	for _, line := range outLines {
-		if strings.Contains(line, "panic-threshold-percentage") {
-			assert.Check(t, strings.HasSuffix(line, "200.0"))
-		} else if strings.Contains(line, "max-scale-up-rate") {
-			assert.Check(t, strings.HasSuffix(line, "2.5"))
-		} else if strings.Contains(line, "stable-window") {
-			assert.Check(t, strings.HasSuffix(line, "2m"))
-		} else if strings.Contains(line, "activator-capacity") {
-			assert.Check(t, strings.HasSuffix(line, "300.0"))
-		} else if strings.Contains(line, "enable-scale-to-zero") {
-			assert.Check(t, strings.HasSuffix(line, "true"))
+
+	// build autoscaler config data
+	data := map[string]string{
+		"max-scale-up-rate":          "2.5",
+		"stable-window":              "2m",
+		"activator-capacity":         "300",
+		"scale-to-zero-grace-period": "true",
+	}
+	cfg, err := config.NewConfigFromMap(data)
+	assert.NilError(t, err)
+
+	// check config values in output
+	lines := strings.Split(out.Stdout, "\n")
+	for _, line := range lines {
+		items := strings.Split(line, " ")
+		if len(items) == 2 && items[0] != "NAME" {
+			value := autoscaling.ConfigNameValueOfMap[items[0]](cfg)
+			assert.Equal(t, value, items[1])
 		}
 	}
 }

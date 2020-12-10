@@ -39,8 +39,8 @@ func checkListOutput(t *testing.T, data map[string]string, output string, noHead
 		assert.Check(t, util.ContainsAll(lines[0], "NAME", "VALUE"))
 	}
 
-	names := make([]string, 0, len(configNameValueOfMap))
-	for key := range configNameValueOfMap {
+	names := make([]string, 0, len(ConfigNameValueOfMap))
+	for key := range ConfigNameValueOfMap {
 		names = append(names, key)
 	}
 	sort.Strings(names)
@@ -50,7 +50,7 @@ func checkListOutput(t *testing.T, data map[string]string, output string, noHead
 		start = 0
 	}
 	for i, name := range names {
-		value := configNameValueOfMap[name](config)
+		value := ConfigNameValueOfMap[name](config)
 		assert.Check(t, util.ContainsAll(lines[i+start], name, value))
 	}
 }

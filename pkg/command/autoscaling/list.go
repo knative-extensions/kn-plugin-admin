@@ -37,7 +37,7 @@ import (
 type valueOfConfig func(*autoscalerconfig.Config) string
 
 var (
-	configNameValueOfMap = map[string]valueOfConfig{
+	ConfigNameValueOfMap = map[string]valueOfConfig{
 		"activator-capacity": func(config *autoscalerconfig.Config) string {
 			return fmt.Sprintf("%.1f", config.ActivatorCapacity)
 		},
@@ -103,22 +103,22 @@ func autoscalingListHandlers(h hprinters.PrintHandler) {
 
 // printAutoscalingConfigs builds autoscaling config list table rows
 func printAutoscalingConfigs(cm *corev1.ConfigMap, options hprinters.PrintOptions) ([]metav1beta1.TableRow, error) {
-	rows := make([]metav1beta1.TableRow, 0, len(configNameValueOfMap))
+	rows := make([]metav1beta1.TableRow, 0, len(ConfigNameValueOfMap))
 	config, err := config.NewConfigFromMap(cm.Data)
 	if err != nil {
 		return rows, fmt.Errorf("failed to get autoscaling config: %+v", err)
 	}
 
 	// sort config names
-	names := make([]string, 0, len(configNameValueOfMap))
-	for key := range configNameValueOfMap {
+	names := make([]string, 0, len(ConfigNameValueOfMap))
+	for key := range ConfigNameValueOfMap {
 		names = append(names, key)
 	}
 	sort.Strings(names)
 
 	for _, name := range names {
 		row := metav1beta1.TableRow{}
-		row.Cells = append(row.Cells, name, configNameValueOfMap[name](config))
+		row.Cells = append(row.Cells, name, ConfigNameValueOfMap[name](config))
 		rows = append(rows, []metav1beta1.TableRow{row}...)
 	}
 	return rows, nil
