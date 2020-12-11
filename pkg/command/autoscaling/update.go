@@ -223,7 +223,7 @@ func NewAutoscalingUpdateCommand(p *pkg.AdminParams) *cobra.Command {
 	AutoscalingUpdateCommand.Flags().StringVarP(&config.PanicThresholdPercentage, "panic-threshold-percentage", "", "200", "This threshold defines when the autoscaler will move from stable mode into panic mode")
 	AutoscalingUpdateCommand.Flags().StringVarP(&config.MaxScaleUpRate, "max-scale-up-rate", "", "1000", "Maximum ratio of desired vs. observed pods")
 	AutoscalingUpdateCommand.Flags().StringVarP(&config.MaxScaleDownRate, "max-scale-down-rate", "", "2", "Maximum ratio of observed vs. desired pods")
-	AutoscalingUpdateCommand.Flags().DurationVarP(&config.ScaleToZeroGracePeriod, "scale-to-zero-grace-period", "", 30*time.Second, " the maximum seconds of time that the last pod will remain active after the Autoscaler has decided to scale pods to zero")
+	AutoscalingUpdateCommand.Flags().DurationVarP(&config.ScaleToZeroGracePeriod, "scale-to-zero-grace-period", "", 30*time.Second, "the maximum seconds of time that the last pod will remain active after the Autoscaler has decided to scale pods to zero")
 	AutoscalingUpdateCommand.Flags().DurationVarP(&config.ScaleToZeroPodRetentionPeriod, "scale-to-zero-pod-retention-period", "", 0*time.Second, "the minimum seconds of time that the last pod will remain active after the Autoscaler has decided to scale pods to zero")
 	AutoscalingUpdateCommand.Flags().StringVarP(&config.TargetBurstCapacity, "target-burst-capacity", "", "200", "the desired burst capacity for the revision")
 	AutoscalingUpdateCommand.Flags().StringVarP(&config.PodAutoscalerClass, "pod-autoscaler-class", "", "kpa.autoscaling.knative.dev", "the config of Knative autoscaling to work with either the default KPA or a CPU based metric, i.e. Horizontal Pod Autoscaler (HPA)")
