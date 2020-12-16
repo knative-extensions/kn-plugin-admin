@@ -23,7 +23,7 @@ set -o pipefail
 PLUGIN="kn-admin"
 
 # Directories containing go code which needs to be formatted
-SOURCE_DIRS="cmd pkg core"
+SOURCE_DIRS="cmd pkg core plugin"
 
 # Directory which should be compiled
 MAIN_SOURCE_DIR="cmd"

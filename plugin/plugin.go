@@ -15,46 +15,46 @@
 package plugin
 
 import (
-    "os"
+	"os"
 
-    "knative.dev/kn-plugin-admin/core"
+	"knative.dev/kn-plugin-admin/core"
 
-    "knative.dev/client/pkg/kn/plugin"
+	"knative.dev/client/pkg/kn/plugin"
 )
 
 func init() {
-    plugin.InternalPlugins = append(plugin.InternalPlugins, &inlinedPlugin{})
+	plugin.InternalPlugins = append(plugin.InternalPlugins, &inlinedPlugin{})
 }
 
 type inlinedPlugin struct{}
 
 // Name is a plugin's name
 func (l *inlinedPlugin) Name() string {
-    return "kn-admin"
+	return "kn-admin"
 }
 
 // Execute represents the plugin's entrypoint when called through kn
 func (l *inlinedPlugin) Execute(args []string) error {
-    cmd := core.NewAdminCommand()
-    oldArgs := os.Args
-    defer (func() {
-        os.Args = oldArgs
-    })()
-    os.Args = append([]string{"kn-admin"}, args...)
-    return cmd.Execute()
+	cmd := core.NewAdminCommand()
+	oldArgs := os.Args
+	defer (func() {
+		os.Args = oldArgs
+	})()
+	os.Args = append([]string{"kn-admin"}, args...)
+	return cmd.Execute()
 }
 
 // Description is displayed in kn's plugin section
 func (l *inlinedPlugin) Description() (string, error) {
-    return "Manage Knative platform installation", nil
+	return "Manage Knative platform installation", nil
 }
 
 // CommandParts defines for plugin is executed from kn
 func (l *inlinedPlugin) CommandParts() []string {
-    return []string{"admin"}
+	return []string{"admin"}
 }
 
 // Path is empty because its an internal plugins
 func (l *inlinedPlugin) Path() string {
-    return ""
+	return ""
 }
