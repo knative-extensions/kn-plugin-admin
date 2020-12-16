@@ -597,6 +597,7 @@ knative.dev/client/pkg/kn/commands
 knative.dev/client/pkg/kn/commands/flags
 knative.dev/client/pkg/kn/config
 knative.dev/client/pkg/kn/flags
+knative.dev/client/pkg/kn/plugin
 knative.dev/client/pkg/messaging/v1beta1
 knative.dev/client/pkg/printers
 knative.dev/client/pkg/serving
