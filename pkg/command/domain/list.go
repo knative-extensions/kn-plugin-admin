@@ -37,7 +37,12 @@ func NewDomainListCommand(p *pkg.AdminParams) *cobra.Command {
   kn admin domain list`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
-			domainCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
+			client, err := p.NewKubeClient()
+			if err != nil {
+				return err
+			}
+
+			domainCm, err := client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configDomain, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get ConfigMap %s in namespace %s: %+v", configDomain, knativeServing, err)
 			}

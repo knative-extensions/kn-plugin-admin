@@ -22,7 +22,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"knative.dev/kn-plugin-admin/pkg"
 
 	"knative.dev/kn-plugin-admin/pkg/testutil"
@@ -38,37 +37,30 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 	}
 
 	t.Run("no flags", func(t *testing.T) {
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 
 		_, err := testutil.ExecuteCommand(cmd)
 		assert.ErrorContains(t, err, "'autoscaling update' requires flag(s)", err)
 	})
 
 	t.Run("operator mode should not be supported", func(t *testing.T) {
-		client := k8sfake.NewSimpleClientset(cm)
-
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodOperator,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodOperator
+		cmd := NewAutoscalingUpdateCommand(p)
 
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
 		assert.ErrorContains(t, err, "Knative managed by operator is not supported yet", err)
 	})
 
 	t.Run("config map not exist", func(t *testing.T) {
-		client := k8sfake.NewSimpleClientset()
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams()
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
 		assert.ErrorContains(t, err, "failed to get ConfigMaps", err)
 	})
@@ -77,12 +69,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"enable-scale-to-zero": "false",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
 		assert.NilError(t, err)
 
@@ -97,12 +87,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"enable-scale-to-zero": "true",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--no-scale-to-zero")
 		assert.NilError(t, err)
 
@@ -117,12 +105,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"enable-scale-to-zero": "true",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
 		assert.NilError(t, err)
@@ -137,12 +123,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"container-concurrency-target-percentage": "0.5",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--container-concurrency-target-percentage", "0.7")
 		assert.NilError(t, err)
 
@@ -157,12 +141,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"stable-window": "60",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--stable-window", "2m")
 		assert.NilError(t, err)
 
@@ -177,12 +159,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"stable-window": "60",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--stable-window", "2s")
 		assert.ErrorContains(t, err, "stable-window = 2s, must be in", err)
 	})
@@ -191,12 +171,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"max-scale-up-rate": "2.0",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--max-scale-up-rate", "0.5")
 		assert.ErrorContains(t, err, "max-scale-up-rate = 0.5, must be greater than 1.0", err)
 	})
@@ -205,12 +183,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"max-scale-down-rate": "2.0",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--max-scale-up-rate", "0.5")
 		assert.ErrorContains(t, err, "max-scale-up-rate = 0.5, must be greater than 1.0", err)
 	})
@@ -219,12 +195,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"scale-to-zero-grace-period": "30s",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero-grace-period", "1s")
 		assert.ErrorContains(t, err, "scale-to-zero-grace-period must be at least 6s, got 1s", err)
 	})
@@ -233,12 +207,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"scale-to-zero-grace-period": "30s",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero-grace-period", "60")
 		assert.ErrorContains(t, err, "missing unit in duration 60", err)
 	})
@@ -247,12 +219,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"scale-to-zero-pod-retention-period": "30s",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero-pod-retention-period", "1m")
 		assert.NilError(t, err)
 
@@ -267,12 +237,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"target-burst-capacity": "-1",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--target-burst-capacity", "-5")
 		assert.ErrorContains(t, err, "target-burst-capacity must be either non-negative or -1 (for unlimited), got -5", err)
 	})
@@ -281,12 +249,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"pod-autoscaler-class": "old.class",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--pod-autoscaler-class", "new.class")
 		assert.NilError(t, err)
 
@@ -301,12 +267,10 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		cm.Data = map[string]string{
 			"activator-capacity": "2",
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewAutoscalingUpdateCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--activator-capacity", "0.5")
 		assert.ErrorContains(t, err, "activator-capacity = 0.5, must be at least 1", err)
 	})

@@ -19,6 +19,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
 )
 
@@ -44,7 +45,9 @@ func TestAdminParams_installationMethod(t *testing.T) {
 		client := k8sfake.NewSimpleClientset(domainCM)
 
 		params := &AdminParams{
-			ClientSet: client,
+			NewKubeClient: func() (kubernetes.Interface, error) {
+				return client, nil
+			},
 		}
 		got, err := params.installationMethod()
 		if err != nil {
@@ -66,7 +69,9 @@ func TestAdminParams_installationMethod(t *testing.T) {
 		client := k8sfake.NewSimpleClientset(domainCM)
 
 		params := &AdminParams{
-			ClientSet: client,
+			NewKubeClient: func() (kubernetes.Interface, error) {
+				return client, nil
+			},
 		}
 		got, err := params.installationMethod()
 		if err != nil {

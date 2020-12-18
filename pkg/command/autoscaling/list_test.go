@@ -23,9 +23,7 @@ import (
 	"gotest.tools/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"knative.dev/client/pkg/util"
-	"knative.dev/kn-plugin-admin/pkg"
 	"knative.dev/kn-plugin-admin/pkg/testutil"
 	"knative.dev/serving/pkg/autoscaler/config"
 )
@@ -82,9 +80,10 @@ func TestAutoscalingListDefaultValues(t *testing.T) {
 			},
 			Data: map[string]string{},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{ClientSet: client}
-		cmd := NewAutoscalingListCommand(&p)
+
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		cmd := NewAutoscalingListCommand(p)
 		output, err := testutil.ExecuteCommand(cmd)
 		assert.NilError(t, err)
 		checkListOutput(t, cm.Data, output, false)
@@ -104,9 +103,9 @@ func TestAutoscalingListCommand(t *testing.T) {
 				"max-scale-up-rate":       "100",
 			},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{ClientSet: client}
-		cmd := NewAutoscalingListCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		cmd := NewAutoscalingListCommand(p)
 		output, err := testutil.ExecuteCommand(cmd)
 		assert.NilError(t, err)
 		checkListOutput(t, cm.Data, output, false)
@@ -124,9 +123,9 @@ func TestAutoscalingListCommandNoHeader(t *testing.T) {
 				"enable-scale-to-zero": "true",
 			},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{ClientSet: client}
-		cmd := NewAutoscalingListCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		cmd := NewAutoscalingListCommand(p)
 		output, err := testutil.ExecuteCommand(cmd, "--no-headers")
 		assert.NilError(t, err)
 		checkListOutput(t, cm.Data, output, true)

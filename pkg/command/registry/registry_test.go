@@ -17,14 +17,15 @@ package registry
 import (
 	"testing"
 
-	"knative.dev/kn-plugin-admin/pkg"
+	"knative.dev/kn-plugin-admin/pkg/testutil"
 
 	"gotest.tools/assert"
 )
 
 func TestNewPrivateRegistryCmd(t *testing.T) {
-	p := pkg.AdminParams{}
-	cmd := NewPrivateRegistryCmd(&p)
+	p, client := testutil.NewTestAdminParams()
+	assert.Check(t, client != nil)
+	cmd := NewPrivateRegistryCmd(p)
 	assert.Check(t, cmd.HasSubCommands(), "cmd registry should have subcommands")
 	assert.Equal(t, 4, len(cmd.Commands()), "registry command should have 4 subcommands")
 

@@ -35,7 +35,7 @@ var LabelManagedBy = "app.kubernetes.io/managed-by"
 type AdminParams struct {
 	KubeCfgPath        string
 	ClientConfig       clientcmd.ClientConfig
-	ClientSet          kubernetes.Interface
+	NewKubeClient      func() (kubernetes.Interface, error)
 	InstallationMethod InstallationMethod
 }
 
@@ -59,23 +59,13 @@ var ErrorInstallationMethodUnknown = errors.New("Cannot detect current installat
 
 // Initialize generate the clientset for params
 func (params *AdminParams) Initialize() error {
-	if params.ClientSet == nil {
-		restConfig, err := params.RestConfig()
-		if err != nil {
-			return err
-		}
-
-		params.ClientSet, err = kubernetes.NewForConfig(restConfig)
-		if err != nil {
-			fmt.Println("failed to create client:", err)
-			os.Exit(1)
-		}
+	if params.NewKubeClient == nil {
+		params.NewKubeClient = params.newKubeClient
 	}
 	if params.InstallationMethod == InstallationMethodUnknown {
 		im, err := params.installationMethod()
 		if err != nil {
-			fmt.Println("failed to get installation method:", err)
-			os.Exit(1)
+			return err
 		}
 		params.InstallationMethod = im
 	}
@@ -85,7 +75,12 @@ func (params *AdminParams) Initialize() error {
 
 // installationMethod retrives the installation method
 func (params *AdminParams) installationMethod() (InstallationMethod, error) {
-	cm, err := params.ClientSet.CoreV1().ConfigMaps("knative-serving").Get(context.TODO(), "config-domain", metav1.GetOptions{})
+	client, err := params.NewKubeClient()
+	if err != nil {
+		return InstallationMethodUnknown, err
+	}
+
+	cm, err := client.CoreV1().ConfigMaps("knative-serving").Get(context.TODO(), "config-domain", metav1.GetOptions{})
 	if err != nil {
 		return InstallationMethodUnknown, err
 	}
@@ -150,4 +145,14 @@ func (params *AdminParams) GetClientConfig() (clientcmd.ClientConfig, error) {
 			"Please use the env var KUBECONFIG if you want to check for multiple configuration files", params.KubeCfgPath)
 	}
 	return nil, fmt.Errorf("Config file '%s' can not be found", params.KubeCfgPath)
+}
+
+// newKubeClient creates a kubenetes clientset from kubenetes config
+func (params *AdminParams) newKubeClient() (kubernetes.Interface, error) {
+	restConfig, err := params.RestConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	return kubernetes.NewForConfig(restConfig)
 }
