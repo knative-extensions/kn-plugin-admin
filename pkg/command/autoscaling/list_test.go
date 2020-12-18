@@ -71,6 +71,15 @@ func TestDescribesDuration(t *testing.T) {
 	assert.Equal(t, t3.String(), describeDuration(t3))
 }
 
+func TestAutoscalingListWithoutKubeContext(t *testing.T) {
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		cmd := NewAutoscalingListCommand(p)
+		_, err := testutil.ExecuteCommand(cmd)
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+}
+
 func TestAutoscalingListDefaultValues(t *testing.T) {
 	t.Run("no flags", func(t *testing.T) {
 		cm := &corev1.ConfigMap{

@@ -36,6 +36,14 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		Data: make(map[string]string),
 	}
 
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewAutoscalingUpdateCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero")
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+
 	t.Run("no flags", func(t *testing.T) {
 		p, client := testutil.NewTestAdminParams(cm)
 		assert.Check(t, client != nil)

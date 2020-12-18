@@ -46,6 +46,14 @@ func executeCommandC(root *cobra.Command, args ...string) (c *cobra.Command, out
 
 func TestNewDomainSetCommand(t *testing.T) {
 
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewDomainSetCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+
 	t.Run("incompleted args", func(t *testing.T) {
 		cm := &corev1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{

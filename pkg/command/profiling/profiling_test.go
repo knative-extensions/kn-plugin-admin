@@ -83,6 +83,14 @@ func removeProfileDataFiles(nameFilter string) {
 
 // TestNewProfilingCommand tests the profiling command
 func TestNewProfilingCommand(t *testing.T) {
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewProfilingCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--enable")
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+
 	t.Run("runs profiling without args", func(t *testing.T) {
 		out, err := testutil.ExecuteCommand(newProfilingCommand(), "", "")
 		assert.NilError(t, err)

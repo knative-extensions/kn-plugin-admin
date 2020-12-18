@@ -30,6 +30,13 @@ import (
 )
 
 func TestNewRegistryRmCommand(t *testing.T) {
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		cmd := NewRegistryRmCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--username", "user", "--server", "docker.io")
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+
 	t.Run("incompleted args for registry remove", func(t *testing.T) {
 		p, client := testutil.NewTestAdminParams()
 		assert.Check(t, client != nil)

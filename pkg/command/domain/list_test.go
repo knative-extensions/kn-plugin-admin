@@ -26,6 +26,15 @@ import (
 	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
 
+func TestDomainListWithoutKubeContext(t *testing.T) {
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		cmd := NewDomainListCommand(p)
+		_, err := testutil.ExecuteCommand(cmd)
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+}
+
 func TestDomainListEmpty(t *testing.T) {
 	t.Run("list domain", func(t *testing.T) {
 		cm := &corev1.ConfigMap{
