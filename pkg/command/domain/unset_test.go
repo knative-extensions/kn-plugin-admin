@@ -21,13 +21,20 @@ import (
 	"gotest.tools/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"knative.dev/kn-plugin-admin/pkg"
 
 	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
 
 func TestNewDomainUnSetCommand(t *testing.T) {
+
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewDomainUnSetCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
 
 	t.Run("incompleted args", func(t *testing.T) {
 		cm := &corev1.ConfigMap{
@@ -37,24 +44,20 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 			},
 			Data: make(map[string]string),
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewDomainUnSetCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewDomainUnSetCommand(p)
 
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "")
 		assert.ErrorContains(t, err, "requires the route name", err)
 	})
 
 	t.Run("config map not exist", func(t *testing.T) {
-		client := k8sfake.NewSimpleClientset()
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewDomainUnSetCommand(&p)
+		p, client := testutil.NewTestAdminParams()
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewDomainUnSetCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test.domain")
 		assert.ErrorContains(t, err, "failed to get configmaps", err)
 	})
@@ -69,12 +72,10 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 				"test.domain": "",
 			},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewDomainUnSetCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewDomainUnSetCommand(p)
 
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "not-test.domain")
 		assert.ErrorContains(t, err, "Knative route domain not-test.domain not found", err)
@@ -91,12 +92,10 @@ func TestNewDomainUnSetCommand(t *testing.T) {
 				"test2.domain": "",
 			},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet:          client,
-			InstallationMethod: pkg.InstallationMethodStandalone,
-		}
-		cmd := NewDomainUnSetCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewDomainUnSetCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--custom-domain", "test1.domain")
 		assert.NilError(t, err)
 

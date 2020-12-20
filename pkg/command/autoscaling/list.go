@@ -136,8 +136,13 @@ func NewAutoscalingListCommand(p *pkg.AdminParams) *cobra.Command {
   kn admin autoscaling list`,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
+			client, err := p.NewKubeClient()
+			if err != nil {
+				return err
+			}
+
 			currentCm := &corev1.ConfigMap{}
-			currentCm, err := p.ClientSet.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
+			currentCm, err = client.CoreV1().ConfigMaps(knativeServing).Get(context.TODO(), configAutoscaler, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get ConfigMaps: %+v", err)
 			}

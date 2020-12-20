@@ -21,12 +21,19 @@ import (
 	"gotest.tools/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"knative.dev/client/pkg/util"
-	"knative.dev/kn-plugin-admin/pkg"
 
 	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
+
+func TestDomainListWithoutKubeContext(t *testing.T) {
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		cmd := NewDomainListCommand(p)
+		_, err := testutil.ExecuteCommand(cmd)
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+}
 
 func TestDomainListEmpty(t *testing.T) {
 	t.Run("list domain", func(t *testing.T) {
@@ -37,11 +44,9 @@ func TestDomainListEmpty(t *testing.T) {
 			},
 			Data: map[string]string{},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet: client,
-		}
-		cmd := NewDomainListCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		cmd := NewDomainListCommand(p)
 		output, err := testutil.ExecuteCommand(cmd)
 		assert.NilError(t, err)
 		rowsOfOutput := strings.Split(output, "\n")
@@ -63,11 +68,9 @@ func TestDomainListCommand(t *testing.T) {
 				"test2.domain":  "selector:\n  app: helloworld\n",
 			},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet: client,
-		}
-		cmd := NewDomainListCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		cmd := NewDomainListCommand(p)
 		output, err := testutil.ExecuteCommand(cmd)
 		assert.NilError(t, err)
 		rowsOfOutput := strings.Split(output, "\n")
@@ -92,11 +95,9 @@ func TestDomainListCommandNoHeader(t *testing.T) {
 				"test2.domain": "selector:\n  app: helloworld\n",
 			},
 		}
-		client := k8sfake.NewSimpleClientset(cm)
-		p := pkg.AdminParams{
-			ClientSet: client,
-		}
-		cmd := NewDomainListCommand(&p)
+		p, client := testutil.NewTestAdminParams(cm)
+		assert.Check(t, client != nil)
+		cmd := NewDomainListCommand(p)
 		output, err := testutil.ExecuteCommand(cmd, "--no-headers")
 		assert.NilError(t, err)
 		rowsOfOutput := strings.Split(output, "\n")

@@ -16,8 +16,18 @@ package testutil
 
 import (
 	"bytes"
+	"errors"
 
 	"github.com/spf13/cobra"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
+	k8sfake "k8s.io/client-go/kubernetes/fake"
+
+	"knative.dev/kn-plugin-admin/pkg"
+)
+
+const (
+	ErrNoKubeConfiguration = "invalid configuration: no configuration has been provided"
 )
 
 // ExecuteCommandC execute cobra.command and catch the output
@@ -34,4 +44,23 @@ func ExecuteCommandC(root *cobra.Command, args ...string) (c *cobra.Command, out
 func ExecuteCommand(root *cobra.Command, args ...string) (output string, err error) {
 	_, o, err := ExecuteCommandC(root, args...)
 	return o, err
+}
+
+// NewTestAdminParams creates an AdminParams and kubernetes clientset for testing
+func NewTestAdminParams(objects ...runtime.Object) (*pkg.AdminParams, *k8sfake.Clientset) {
+	client := k8sfake.NewSimpleClientset(objects...)
+	return &pkg.AdminParams{
+		NewKubeClient: func() (kubernetes.Interface, error) {
+			return client, nil
+		},
+	}, client
+}
+
+// NewTestAdminWithoutKubeConfig creates an AdminParams without kube config when create kubernetes clientset
+func NewTestAdminWithoutKubeConfig() *pkg.AdminParams {
+	return &pkg.AdminParams{
+		NewKubeClient: func() (kubernetes.Interface, error) {
+			return nil, errors.New(ErrNoKubeConfiguration)
+		},
+	}
 }

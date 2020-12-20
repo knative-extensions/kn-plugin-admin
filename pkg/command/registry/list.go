@@ -51,14 +51,19 @@ func NewRegistryListCommand(p *pkg.AdminParams) *cobra.Command {
 				return fmt.Errorf("cannot specifiy service account with empty namespace")
 			}
 
-			namespacesList, err := searchNamespace(p.ClientSet, namespace)
+			client, err := p.NewKubeClient()
+			if err != nil {
+				return err
+			}
+
+			namespacesList, err := searchNamespace(client, namespace)
 			if err != nil {
 				return fmt.Errorf("failed to search specified namespaces: %v", err)
 			}
 
 			secretList := &corev1.SecretList{}
 			for _, ns := range namespacesList.Items {
-				err = addSecrets(p.ClientSet, ns.Name, serviceaccount, secretList)
+				err = addSecrets(client, ns.Name, serviceaccount, secretList)
 			}
 
 			// empty namespace indicates all-namespaces flag is specified

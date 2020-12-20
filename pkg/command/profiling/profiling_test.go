@@ -30,6 +30,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8srt "k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
 	k8sfakecorev1 "k8s.io/client-go/kubernetes/typed/core/v1/fake"
 	k8stesting "k8s.io/client-go/testing"
@@ -39,14 +40,22 @@ import (
 
 func newProfilingCommand() *cobra.Command {
 	client := k8sfake.NewSimpleClientset(&corev1.ConfigMap{})
-	p := pkg.AdminParams{ClientSet: client}
-	return NewProfilingCommand(&p)
+	p := &pkg.AdminParams{
+		NewKubeClient: func() (kubernetes.Interface, error) {
+			return client, nil
+		},
+	}
+	return NewProfilingCommand(p)
 }
 
 func newProfilingCommandWith(cm *corev1.ConfigMap) (*cobra.Command, *k8sfake.Clientset) {
 	client := k8sfake.NewSimpleClientset(cm)
-	p := pkg.AdminParams{ClientSet: client}
-	return NewProfilingCommand(&p), client
+	p := &pkg.AdminParams{
+		NewKubeClient: func() (kubernetes.Interface, error) {
+			return client, nil
+		},
+	}
+	return NewProfilingCommand(p), client
 }
 
 type fakeDownloader struct {
@@ -74,6 +83,14 @@ func removeProfileDataFiles(nameFilter string) {
 
 // TestNewProfilingCommand tests the profiling command
 func TestNewProfilingCommand(t *testing.T) {
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		p.InstallationMethod = pkg.InstallationMethodStandalone
+		cmd := NewProfilingCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--enable")
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+
 	t.Run("runs profiling without args", func(t *testing.T) {
 		out, err := testutil.ExecuteCommand(newProfilingCommand(), "", "")
 		assert.NilError(t, err)

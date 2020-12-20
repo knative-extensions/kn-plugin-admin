@@ -62,13 +62,16 @@ var (
 )
 
 func TestNewRegistryListCommand(t *testing.T) {
+	t.Run("kubectl context is not set", func(t *testing.T) {
+		p := testutil.NewTestAdminWithoutKubeConfig()
+		cmd := NewRegistryListCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--serviceaccount", fakeServiceAccount, "--namespace", fakeNamespace)
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
+	})
+
 	t.Run("list registries with service account only but no namespace specified", func(t *testing.T) {
-		client := k8sfake.NewSimpleClientset()
-
-		p := &pkg.AdminParams{
-			ClientSet: client,
-		}
-
+		p, client := testutil.NewTestAdminParams()
+		assert.Check(t, client != nil)
 		cmd := NewRegistryListCommand(p)
 
 		_, err := testutil.ExecuteCommand(cmd, "--serviceaccount", "fakeServiceAccount")
@@ -79,7 +82,9 @@ func TestNewRegistryListCommand(t *testing.T) {
 		client := fakeRegistry()
 
 		p := &pkg.AdminParams{
-			ClientSet: client,
+			NewKubeClient: func() (kubernetes.Interface, error) {
+				return client, nil
+			},
 		}
 
 		cmd := NewRegistryListCommand(p)
@@ -97,7 +102,9 @@ func TestNewRegistryListCommand(t *testing.T) {
 		client := fakeRegistry()
 
 		p := &pkg.AdminParams{
-			ClientSet: client,
+			NewKubeClient: func() (kubernetes.Interface, error) {
+				return client, nil
+			},
 		}
 
 		cmd := NewRegistryListCommand(p)
@@ -116,7 +123,9 @@ func TestNewRegistryListCommand(t *testing.T) {
 		client := fakeRegistry()
 
 		p := &pkg.AdminParams{
-			ClientSet: client,
+			NewKubeClient: func() (kubernetes.Interface, error) {
+				return client, nil
+			},
 		}
 
 		cmd := NewRegistryListCommand(p)

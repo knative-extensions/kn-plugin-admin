@@ -67,8 +67,14 @@ func NewRegistryRmCommand(p *pkg.AdminParams) *cobra.Command {
 			if namespace == "" {
 				namespace = "default"
 			}
+
+			client, err := p.NewKubeClient()
+			if err != nil {
+				return err
+			}
+
 			// get all credential secrets which have the label managed-by=kn-admin-registry
-			secrets, err := p.ClientSet.CoreV1().Secrets(namespace).List(context.TODO(), metav1.ListOptions{
+			secrets, err := client.CoreV1().Secrets(namespace).List(context.TODO(), metav1.ListOptions{
 				LabelSelector: labels.SelectorFromSet(AdminRegistryLabels).String(),
 			})
 			if err != nil {
@@ -94,7 +100,7 @@ func NewRegistryRmCommand(p *pkg.AdminParams) *cobra.Command {
 				return nil
 			}
 
-			sa, err := p.ClientSet.CoreV1().ServiceAccounts(namespace).Get(context.TODO(), serviceaccount, metav1.GetOptions{})
+			sa, err := client.CoreV1().ServiceAccounts(namespace).Get(context.TODO(), serviceaccount, metav1.GetOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to get serviceaccount '%s' in namespace '%s': %v", serviceaccount, namespace, err)
 			}
@@ -110,14 +116,14 @@ func NewRegistryRmCommand(p *pkg.AdminParams) *cobra.Command {
 			}
 
 			desiredSa.ImagePullSecrets = imagePullSecrets
-			_, err = p.ClientSet.CoreV1().ServiceAccounts(namespace).Update(context.TODO(), desiredSa, metav1.UpdateOptions{})
+			_, err = client.CoreV1().ServiceAccounts(namespace).Update(context.TODO(), desiredSa, metav1.UpdateOptions{})
 			if err != nil {
 				return fmt.Errorf("failed to remove registry secret in serviceaccount '%s' in namespace '%s': %v", serviceaccount, namespace, err)
 			}
 			cmd.Printf("ImagePullSecrets of serviceaccount '%s' in namespace '%s' is updated\n", desiredSa.Name, desiredSa.Namespace)
 
 			deleteSecretsErrCh := make(chan error, len(secretsMap))
-			deleteSecrets(cmd, p.ClientSet, secretsMap, deleteSecretsErrCh)
+			deleteSecrets(cmd, client, secretsMap, deleteSecretsErrCh)
 
 			var deleteSecretsErr error
 			select {
