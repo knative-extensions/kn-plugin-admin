@@ -219,8 +219,8 @@ func TestNewAsUpdateSetCommand(t *testing.T) {
 		assert.Check(t, client != nil)
 		p.InstallationMethod = pkg.InstallationMethodStandalone
 		cmd := NewAutoscalingUpdateCommand(p)
-		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero-grace-period", "60")
-		assert.ErrorContains(t, err, "missing unit in duration 60", err)
+		_, err := testutil.ExecuteCommand(cmd, "--scale-to-zero-grace-period", "abc")
+		assert.ErrorContains(t, err, "invalid argument", err)
 	})
 
 	t.Run("update scale-to-zero-pod-retention-period successfully", func(t *testing.T) {

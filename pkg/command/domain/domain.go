@@ -29,6 +29,5 @@ func NewDomainCmd(p *pkg.AdminParams) *cobra.Command {
 	domainCmd.AddCommand(NewDomainSetCommand(p))
 	domainCmd.AddCommand(NewDomainUnSetCommand(p))
 	domainCmd.AddCommand(NewDomainListCommand(p))
-	domainCmd.InitDefaultHelpCmd()
 	return domainCmd
 }
