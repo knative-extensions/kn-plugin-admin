@@ -60,6 +60,5 @@ func NewPrivateRegistryCmd(p *pkg.AdminParams) *cobra.Command {
 	privateRegistryCmd.AddCommand(NewRegistryAddCommand(p))
 	privateRegistryCmd.AddCommand(NewRegistryRmCommand(p))
 	privateRegistryCmd.AddCommand(NewRegistryListCommand(p))
-	privateRegistryCmd.InitDefaultHelpCmd()
 	return privateRegistryCmd
 }

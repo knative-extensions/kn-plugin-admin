@@ -1,4 +1,4 @@
-// Copyright 2020 The Knative Authors
+// Copyright 2021 The Knative Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,18 +15,19 @@
 package autoscaling
 
 import (
-	"github.com/spf13/cobra"
-	"knative.dev/kn-plugin-admin/pkg"
+	"testing"
+
+	"gotest.tools/assert"
 )
 
-// domainCmd represents the domain command
-func NewAutoscalingCmd(p *pkg.AdminParams) *cobra.Command {
-	var AutoscalingCmd = &cobra.Command{
-		Use:   "autoscaling",
-		Short: "Manage autoscaling config",
-		Long:  `Manage autoscaling provided by Knative Pod Autoscaler (KPA)`,
-	}
-	AutoscalingCmd.AddCommand(NewAutoscalingUpdateCommand(p))
-	AutoscalingCmd.AddCommand(NewAutoscalingListCommand(p))
-	return AutoscalingCmd
+func TestNewAutoscalingCmd(t *testing.T) {
+	cmd := NewAutoscalingCmd(nil)
+	assert.Check(t, cmd.HasSubCommands(), "cmd autoscaling should have subcommands")
+	assert.Equal(t, 2, len(cmd.Commands()), "autoscaling command should have 2 subcommands")
+
+	_, _, err := cmd.Find([]string{"update"})
+	assert.NilError(t, err, "autoscaling command should have update subcommand")
+
+	_, _, err = cmd.Find([]string{"list"})
+	assert.NilError(t, err, "autoscaling command should have list subcommand")
 }

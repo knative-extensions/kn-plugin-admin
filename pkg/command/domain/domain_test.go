@@ -23,7 +23,7 @@ import (
 func TestNewDomainCmd(t *testing.T) {
 	cmd := NewDomainCmd(nil)
 	assert.Check(t, cmd.HasSubCommands(), "cmd domain should have subcommands")
-	assert.Equal(t, 4, len(cmd.Commands()), "domain command should have 4 subcommands")
+	assert.Equal(t, 3, len(cmd.Commands()), "domain command should have 3 subcommands")
 
 	_, _, err := cmd.Find([]string{"set"})
 	assert.NilError(t, err, "domain command should have set subcommand")
@@ -31,6 +31,6 @@ func TestNewDomainCmd(t *testing.T) {
 	_, _, err = cmd.Find([]string{"unset"})
 	assert.NilError(t, err, "domain command should have unset subcommand")
 
-	_, _, err = cmd.Find([]string{"help"})
-	assert.NilError(t, err, "domain command should have help subcommand")
+	_, _, err = cmd.Find([]string{"list"})
+	assert.NilError(t, err, "domain command should have list subcommand")
 }

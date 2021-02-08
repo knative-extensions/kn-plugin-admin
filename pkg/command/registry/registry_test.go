@@ -27,7 +27,7 @@ func TestNewPrivateRegistryCmd(t *testing.T) {
 	assert.Check(t, client != nil)
 	cmd := NewPrivateRegistryCmd(p)
 	assert.Check(t, cmd.HasSubCommands(), "cmd registry should have subcommands")
-	assert.Equal(t, 4, len(cmd.Commands()), "registry command should have 4 subcommands")
+	assert.Equal(t, 3, len(cmd.Commands()), "registry command should have 3 subcommands")
 
 	_, _, err := cmd.Find([]string{"add"})
 	assert.NilError(t, err, "registry command should have add subcommand")
@@ -37,7 +37,4 @@ func TestNewPrivateRegistryCmd(t *testing.T) {
 
 	_, _, err = cmd.Find([]string{"list"})
 	assert.NilError(t, err, "registry command should have list subcommand")
-
-	_, _, err = cmd.Find([]string{"help"})
-	assert.NilError(t, err, "registry command should have help subcommand")
 }
