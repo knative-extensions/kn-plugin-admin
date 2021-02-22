@@ -1,0 +1,8 @@
+  
+# Default owners are Networking WG leads and TOC
+* @knative-sandbox/technical-oversight-committee
+* @knative-sandbox/knative-release-leads
+* @knative-sandbox/client-wg-leads
+# Last match takes precedence for reviews
+* @knative-sandbox/kn-plugin-admin-approvers
+
