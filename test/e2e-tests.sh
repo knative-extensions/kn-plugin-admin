@@ -22,8 +22,8 @@ export PATH=$PATH:${REPO_ROOT_DIR}
 # Will create and delete this namespace (used for all tests, modify if you want a different one)
 export KN_E2E_NAMESPACE=kne2etests
 
-export KNATIVE_EVENTING_VERSION="0.19.2"
-export KNATIVE_SERVING_VERSION="0.19.0"
+export KNATIVE_EVENTING_VERSION="0.21.0"
+export KNATIVE_SERVING_VERSION="0.21.0"
 
 run() {
   # Create cluster

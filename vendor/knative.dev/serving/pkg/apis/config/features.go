@@ -23,6 +23,7 @@ import (
 	cm "knative.dev/pkg/configmap"
 )
 
+// Flag is a string value which can be either Enabled, Disabled, or Allowed.
 type Flag string
 
 const (
@@ -43,12 +44,12 @@ func defaultFeaturesConfig() *Features {
 		MultiContainer:          Enabled,
 		PodSpecAffinity:         Disabled,
 		PodSpecDryRun:           Allowed,
+		PodSpecHostAliases:      Disabled,
 		PodSpecFieldRef:         Disabled,
 		PodSpecNodeSelector:     Disabled,
 		PodSpecRuntimeClassName: Disabled,
 		PodSpecSecurityContext:  Disabled,
 		PodSpecTolerations:      Disabled,
-		ResponsiveRevisionGC:    Allowed,
 		TagHeaderBasedRouting:   Disabled,
 	}
 }
@@ -61,12 +62,12 @@ func NewFeaturesConfigFromMap(data map[string]string) (*Features, error) {
 		asFlag("multi-container", &nc.MultiContainer),
 		asFlag("kubernetes.podspec-affinity", &nc.PodSpecAffinity),
 		asFlag("kubernetes.podspec-dryrun", &nc.PodSpecDryRun),
+		asFlag("kubernetes.podspec-hostaliases", &nc.PodSpecHostAliases),
 		asFlag("kubernetes.podspec-fieldref", &nc.PodSpecFieldRef),
 		asFlag("kubernetes.podspec-nodeselector", &nc.PodSpecNodeSelector),
 		asFlag("kubernetes.podspec-runtimeclassname", &nc.PodSpecRuntimeClassName),
 		asFlag("kubernetes.podspec-securitycontext", &nc.PodSpecSecurityContext),
 		asFlag("kubernetes.podspec-tolerations", &nc.PodSpecTolerations),
-		asFlag("responsive-revision-gc", &nc.ResponsiveRevisionGC),
 		asFlag("tag-header-based-routing", &nc.TagHeaderBasedRouting)); err != nil {
 		return nil, err
 	}
@@ -84,11 +85,11 @@ type Features struct {
 	PodSpecAffinity         Flag
 	PodSpecDryRun           Flag
 	PodSpecFieldRef         Flag
+	PodSpecHostAliases      Flag
 	PodSpecNodeSelector     Flag
 	PodSpecRuntimeClassName Flag
 	PodSpecSecurityContext  Flag
 	PodSpecTolerations      Flag
-	ResponsiveRevisionGC    Flag
 	TagHeaderBasedRouting   Flag
 }
 

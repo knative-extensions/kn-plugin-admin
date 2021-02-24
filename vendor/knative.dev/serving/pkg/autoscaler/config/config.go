@@ -109,8 +109,8 @@ func NewConfigFromMap(data map[string]string) (*autoscalerconfig.Config, error) 
 }
 
 func validate(lc *autoscalerconfig.Config) (*autoscalerconfig.Config, error) {
-	if lc.ScaleToZeroGracePeriod < autoscaling.WindowMin {
-		return nil, fmt.Errorf("scale-to-zero-grace-period must be at least %v, was: %v", autoscaling.WindowMin, lc.ScaleToZeroGracePeriod)
+	if lc.ScaleToZeroGracePeriod <= 0 {
+		return nil, fmt.Errorf("scale-to-zero-grace-period must be positive, was: %v", lc.ScaleToZeroGracePeriod)
 	}
 
 	if lc.ScaleDownDelay < 0 {
@@ -154,7 +154,7 @@ func validate(lc *autoscalerconfig.Config) (*autoscalerconfig.Config, error) {
 	}
 
 	// We can't permit stable window be less than our aggregation window for correctness.
-	// Or too big, so that our desisions are too imprecise.
+	// Or too big, so that our decisions are too imprecise.
 	if lc.StableWindow < autoscaling.WindowMin || lc.StableWindow > autoscaling.WindowMax {
 		return nil, fmt.Errorf("stable-window = %v, must be in [%v; %v] range", lc.StableWindow,
 			autoscaling.WindowMin, autoscaling.WindowMax)

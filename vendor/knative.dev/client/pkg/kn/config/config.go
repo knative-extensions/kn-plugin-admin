@@ -15,13 +15,13 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 
 	homedir "github.com/mitchellh/go-homedir"
-	"github.com/pkg/errors"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -97,17 +97,17 @@ var globalConfig = config{}
 // GlobalConfig is the global configuration available for every sub-command
 var GlobalConfig Config = &globalConfig
 
-// bootstrapConfig reads in config file and boostrap options if set.
+// BootstrapConfig reads in config file and bootstrap options if set.
 func BootstrapConfig() error {
 
 	// Create a new FlagSet for the bootstrap flags and parse those. This will
 	// initialize the config file to use (obtained via GlobalConfig.ConfigFile())
 	bootstrapFlagSet := flag.NewFlagSet("kn", flag.ContinueOnError)
 	AddBootstrapFlags(bootstrapFlagSet)
-	bootstrapFlagSet.ParseErrorsWhitelist = flag.ParseErrorsWhitelist{UnknownFlags: true}
+	bootstrapFlagSet.ParseErrorsWhitelist = flag.ParseErrorsWhitelist{UnknownFlags: true} // wokeignore:rule=whitelist // TODO(#1031)
 	bootstrapFlagSet.Usage = func() {}
 	err := bootstrapFlagSet.Parse(os.Args)
-	if err != nil && err != flag.ErrHelp {
+	if err != nil && !errors.Is(err, flag.ErrHelp) {
 		return err
 	}
 
@@ -130,7 +130,7 @@ func BootstrapConfig() error {
 			// No config file to read
 			return nil
 		}
-		return errors.Wrap(err, fmt.Sprintf("cannot stat configfile %s", configFile))
+		return fmt.Errorf("cannot stat configfile %s: %w", configFile, err)
 	}
 
 	viper.SetConfigFile(GlobalConfig.ConfigFile())
@@ -249,8 +249,8 @@ func parseSinkMappings() error {
 	if key != "" {
 		err := viper.UnmarshalKey(key, &globalConfig.sinkMappings)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("error while parsing sink mappings in configuration file %s",
-				viper.ConfigFileUsed()))
+			return fmt.Errorf("error while parsing sink mappings in configuration file %s: %w",
+				viper.ConfigFileUsed(), err)
 		}
 	}
 	return nil
@@ -261,8 +261,8 @@ func parseChannelTypeMappings() error {
 	if viper.IsSet(keyChannelTypeMappings) {
 		err := viper.UnmarshalKey(keyChannelTypeMappings, &globalConfig.channelTypeMappings)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("error while parsing channel type mappings in configuration file %s",
-				viper.ConfigFileUsed()))
+			return fmt.Errorf("error while parsing channel type mappings in configuration file %s: %w",
+				viper.ConfigFileUsed(), err)
 		}
 	}
 	return nil

@@ -15,6 +15,7 @@
 package plugin
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -26,7 +27,6 @@ import (
 	"text/template"
 
 	homedir "github.com/mitchellh/go-homedir"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -93,7 +93,7 @@ func NewManager(pluginDir string, lookupInPath bool) *Manager {
 
 // FindPlugin checks if a plugin for the given parts exist and return it.
 // The args given must not contain any options and contain only
-// the comands (like in [ "source", "github" ] for a plugin called 'kn-source-github'
+// the commands (like in [ "source", "github" ] for a plugin called 'kn-source-github'
 // The plugin with the most specific (longest) name is returned or nil if non is found.
 // An error is returned if the lookup fails for some reason like an io error
 func (manager *Manager) FindPlugin(parts []string) (Plugin, error) {
@@ -232,6 +232,7 @@ func (manager *Manager) LookupInPath() bool {
 
 // Execute the plugin with the given arguments
 func (plugin *plugin) Execute(args []string) error {
+	//nolint:gosec // Passing the arguments through is expected, the plugins are trusted.
 	cmd := exec.Command(plugin.path, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -390,7 +391,7 @@ func findMostSpecificPluginInPath(dir string, parts []string, lookupInPath bool)
 		// Check for the name in plugin directory and PATH (if requested)
 		path, err := findInDirOrPath(name, dir, lookupInPath)
 		if err != nil {
-			return nil, errors.Wrap(err, fmt.Sprintf("cannot lookup plugin %s in directory %s (lookup in path: %t)", name, dir, lookupInPath))
+			return nil, fmt.Errorf("cannot lookup plugin %s in directory %s (lookup in path: %t): %w", name, dir, lookupInPath, err)
 		}
 
 		// Found, return it
@@ -440,7 +441,7 @@ func findInDirOrPath(name string, dir string, lookupInPath bool) (string, error)
 			return path, nil
 		}
 		if !os.IsNotExist(err) {
-			return "", errors.Wrap(err, fmt.Sprintf("i/o error while reading %s", path))
+			return "", fmt.Errorf("i/o error while reading %s: %w", path, err)
 		}
 
 		// Check in PATH if requested
@@ -450,8 +451,8 @@ func findInDirOrPath(name string, dir string, lookupInPath bool) (string, error)
 				// Found in path
 				return path, nil
 			}
-			if execErr, ok := err.(*exec.Error); !ok || execErr.Unwrap() != exec.ErrNotFound {
-				return "", errors.Wrap(err, fmt.Sprintf("error for looking up %s in path", name))
+			if !errors.Is(err, exec.ErrNotFound) {
+				return "", fmt.Errorf("error for looking up %s in path: %w", name, err)
 			}
 		}
 	}

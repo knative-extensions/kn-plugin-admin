@@ -1,20 +1,21 @@
 module knative.dev/kn-plugin-admin
 
-go 1.14
+go 1.15
 
 require (
-	github.com/maximilien/kn-source-pkg v0.4.8
+	github.com/googleapis/gnostic v0.5.4 // indirect
+	github.com/maximilien/kn-source-pkg v0.6.3
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.0.1-0.20200715031239-b95db644ed1c
-	github.com/spf13/viper v1.7.0
-	gopkg.in/yaml.v2 v2.3.0
-	gotest.tools v2.2.0+incompatible
-	k8s.io/api v0.18.8
-	k8s.io/apimachinery v0.18.8
-	k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible
-	knative.dev/client v0.18.0
-	knative.dev/hack v0.0.0-20201201234937-fddbf732e450
-	knative.dev/serving v0.18.0
+	github.com/spf13/cobra v1.1.3
+	github.com/spf13/viper v1.7.1
+	gopkg.in/yaml.v2 v2.4.0
+	gotest.tools/v3 v3.0.3
+	k8s.io/api v0.19.7
+	k8s.io/apimachinery v0.19.7
+	k8s.io/client-go v0.19.7
+	knative.dev/client v0.21.0
+	knative.dev/hack v0.0.0-20210203173706-8368e1f6eacf
+	knative.dev/serving v0.21.0
 )
 
-replace k8s.io/client-go => k8s.io/client-go v0.18.8
+replace github.com/go-openapi/spec => github.com/go-openapi/spec v0.19.3

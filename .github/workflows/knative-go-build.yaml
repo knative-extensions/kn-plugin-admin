@@ -27,7 +27,7 @@ jobs:
     name: Build
     strategy:
       matrix:
-        go-version: [1.14.x]
+        go-version: [1.15.x]
         platform: [ubuntu-latest]
 
     runs-on: ${{ matrix.platform }}
@@ -56,4 +56,3 @@ jobs:
 
           echo "Building with tags: ${tags}"
           go test -vet=off -tags "${tags}" -run=^$ ./... | grep -v "no test" || true
-

@@ -16,6 +16,11 @@ package flags
 
 import (
 	"errors"
+	"fmt"
+	"strings"
+
+	corev1 "k8s.io/api/core/v1"
+	"knative.dev/client/pkg/util"
 
 	"github.com/spf13/pflag"
 )
@@ -32,12 +37,11 @@ type PodSpecFlags struct {
 	Command string
 	Arg     []string
 
-	RequestsFlags, LimitsFlags ResourceFlags // TODO: Flag marked deprecated in release v0.15.0, remove in release v0.18.0
-	Resources                  ResourceOptions
-	Port                       string
-	ServiceAccountName         string
-	ImagePullSecrets           string
-	User                       int64
+	Resources          ResourceOptions
+	Port               string
+	ServiceAccountName string
+	ImagePullSecrets   string
+	User               int64
 }
 
 type ResourceFlags struct {
@@ -102,7 +106,7 @@ func (p *PodSpecFlags) AddFlags(flagset *pflag.FlagSet) []string {
 
 	flagset.StringVarP(&p.Command, "cmd", "", "",
 		"Specify command to be used as entrypoint instead of default one. "+
-			"Example: --cmd /app/start or --cmd /app/start --arg myArg to pass aditional arguments.")
+			"Example: --cmd /app/start or --cmd /app/start --arg myArg to pass additional arguments.")
 	flagNames = append(flagNames, "cmd")
 
 	flagset.StringArrayVarP(&p.Arg, "arg", "", []string{},
@@ -127,24 +131,6 @@ func (p *PodSpecFlags) AddFlags(flagset *pflag.FlagSet) []string {
 			"To unset a resource request, append \"-\" to the resource name, e.g. '--request cpu-'.")
 	flagNames = append(flagNames, "request")
 
-	flagset.StringVar(&p.RequestsFlags.CPU, "requests-cpu", "",
-		"DEPRECATED: please use --request instead. The requested CPU (e.g., 250m).")
-	flagNames = append(flagNames, "requests-cpu")
-
-	flagset.StringVar(&p.RequestsFlags.Memory, "requests-memory", "",
-		"DEPRECATED: please use --request instead. The requested memory (e.g., 64Mi).")
-	flagNames = append(flagNames, "requests-memory")
-
-	// TODO: Flag marked deprecated in release v0.15.0, remove in release v0.18.0
-	flagset.StringVar(&p.LimitsFlags.CPU, "limits-cpu", "",
-		"DEPRECATED: please use --limit instead. The limits on the requested CPU (e.g., 1000m).")
-	flagNames = append(flagNames, "limits-cpu")
-
-	// TODO: Flag marked deprecated in release v0.15.0, remove in release v0.18.0
-	flagset.StringVar(&p.LimitsFlags.Memory, "limits-memory", "",
-		"DEPRECATED: please use --limit instead. The limits on the requested memory (e.g., 1024Mi).")
-	flagNames = append(flagNames, "limits-memory")
-
 	flagset.StringVarP(&p.Port, "port", "p", "", "The port where application listens on, in the format 'NAME:PORT', where 'NAME' is optional. Examples: '--port h2c:8080' , '--port 8080'.")
 	flagNames = append(flagNames, "port")
 
@@ -162,4 +148,112 @@ func (p *PodSpecFlags) AddFlags(flagset *pflag.FlagSet) []string {
 	flagset.Int64VarP(&p.User, "user", "", 0, "The user ID to run the container (e.g., 1001).")
 	flagNames = append(flagNames, "user")
 	return flagNames
+}
+
+// ResolvePodSpec will create corev1.PodSpec based on the flag inputs
+func (p *PodSpecFlags) ResolvePodSpec(podSpec *corev1.PodSpec, flags *pflag.FlagSet) error {
+	var err error
+	if flags.Changed("env") {
+		envMap, err := util.MapFromArrayAllowingSingles(p.Env, "=")
+		if err != nil {
+			return fmt.Errorf("Invalid --env: %w", err)
+		}
+
+		envToRemove := util.ParseMinusSuffix(envMap)
+		err = UpdateEnvVars(podSpec, envMap, envToRemove)
+		if err != nil {
+			return err
+		}
+	}
+
+	if flags.Changed("env-from") {
+		envFromSourceToUpdate := []string{}
+		envFromSourceToRemove := []string{}
+		for _, name := range p.EnvFrom {
+			if name == "-" {
+				return fmt.Errorf("\"-\" is not a valid value for \"--env-from\"")
+			} else if strings.HasSuffix(name, "-") {
+				envFromSourceToRemove = append(envFromSourceToRemove, name[:len(name)-1])
+			} else {
+				envFromSourceToUpdate = append(envFromSourceToUpdate, name)
+			}
+		}
+
+		err := UpdateEnvFrom(podSpec, envFromSourceToUpdate, envFromSourceToRemove)
+		if err != nil {
+			return err
+		}
+	}
+
+	if flags.Changed("mount") || flags.Changed("volume") {
+		mountsToUpdate, mountsToRemove, err := util.OrderedMapAndRemovalListFromArray(p.Mount, "=")
+		if err != nil {
+			return fmt.Errorf("Invalid --mount: %w", err)
+		}
+
+		volumesToUpdate, volumesToRemove, err := util.OrderedMapAndRemovalListFromArray(p.Volume, "=")
+		if err != nil {
+			return fmt.Errorf("Invalid --volume: %w", err)
+		}
+
+		err = UpdateVolumeMountsAndVolumes(podSpec, mountsToUpdate, mountsToRemove, volumesToUpdate, volumesToRemove)
+		if err != nil {
+			return err
+		}
+	}
+
+	if flags.Changed("image") {
+		err = UpdateImage(podSpec, p.Image.String())
+		if err != nil {
+			return err
+		}
+	}
+
+	requestsToRemove, limitsToRemove, err := p.Resources.Validate()
+	if err != nil {
+		return err
+	}
+
+	err = UpdateResources(podSpec, p.Resources.ResourceRequirements, requestsToRemove, limitsToRemove)
+	if err != nil {
+		return err
+	}
+
+	if flags.Changed("cmd") {
+		err = UpdateContainerCommand(podSpec, p.Command)
+		if err != nil {
+			return err
+		}
+	}
+
+	if flags.Changed("arg") {
+		err = UpdateContainerArg(podSpec, p.Arg)
+		if err != nil {
+			return err
+		}
+	}
+
+	if flags.Changed("port") {
+		err = UpdateContainerPort(podSpec, p.Port)
+		if err != nil {
+			return err
+		}
+	}
+
+	if flags.Changed("service-account") {
+		UpdateServiceAccountName(podSpec, p.ServiceAccountName)
+	}
+
+	if flags.Changed("pull-secret") {
+		UpdateImagePullSecrets(podSpec, p.ImagePullSecrets)
+	}
+
+	if flags.Changed("user") {
+		err = UpdateUser(podSpec, p.User)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

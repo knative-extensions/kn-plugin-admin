@@ -25,7 +25,7 @@ import (
 	"testing"
 
 	testcommon "github.com/maximilien/kn-source-pkg/test/e2e"
-	"gotest.tools/assert"
+	"gotest.tools/v3/assert"
 	"knative.dev/client/lib/test"
 	"knative.dev/client/pkg/util"
 	"knative.dev/kn-plugin-admin/pkg/command/autoscaling"
@@ -141,7 +141,7 @@ func TestKnAdminPluginWithNoKubectlContext(t *testing.T) {
 	t.Log("run kn admin profiling subcommand with no kubectl context")
 	out := e2eTest.kn.Run(pluginName, "profiling", "--heap", "-t", "activator")
 	r.AssertError(out)
-	assert.Check(t, strings.Contains(out.Stdout, "Error: invalid configuration: no configuration has been provided"))
+	assert.Check(t, util.ContainsAll(out.Stderr, "Error", "invalid", "configuration", "no configuration", "provided"))
 
 	// uninstall admin plugin
 	assert.NilError(t, e2eTest.it.KnPlugin().Uninstall())

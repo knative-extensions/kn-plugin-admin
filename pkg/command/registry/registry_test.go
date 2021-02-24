@@ -19,7 +19,7 @@ import (
 
 	"knative.dev/kn-plugin-admin/pkg/testutil"
 
-	"gotest.tools/assert"
+	"gotest.tools/v3/assert"
 )
 
 func TestNewPrivateRegistryCmd(t *testing.T) {
