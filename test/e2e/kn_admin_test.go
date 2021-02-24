@@ -141,7 +141,7 @@ func TestKnAdminPluginWithNoKubectlContext(t *testing.T) {
 	t.Log("run kn admin profiling subcommand with no kubectl context")
 	out := e2eTest.kn.Run(pluginName, "profiling", "--heap", "-t", "activator")
 	r.AssertError(out)
-	assert.Check(t, util.ContainsAll(out.Stdout, "Error", "invalid", "configuration", "no configuration", "provided"))
+	assert.Check(t, util.ContainsAll(out.Stderr, "Error", "invalid", "configuration", "no configuration", "provided"))
 
 	// uninstall admin plugin
 	assert.NilError(t, e2eTest.it.KnPlugin().Uninstall())
