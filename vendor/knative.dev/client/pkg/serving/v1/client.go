@@ -16,6 +16,7 @@ package v1
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -61,12 +62,23 @@ type KnServingClient interface {
 
 	// UpdateService updates the given service. For a more robust variant with automatic
 	// conflict resolution see UpdateServiceWithRetry
-	UpdateService(service *servingv1.Service) error
+	UpdateService(service *servingv1.Service) (bool, error)
 
 	// UpdateServiceWithRetry updates service and retries if there is a version conflict.
 	// The updateFunc receives a deep copy of the existing service and can add update it in
-	// place.
-	UpdateServiceWithRetry(name string, updateFunc ServiceUpdateFunc, nrRetries int) error
+	// place. Return if the service creates a new generation or not
+	UpdateServiceWithRetry(name string, updateFunc ServiceUpdateFunc, nrRetries int) (bool, error)
+
+	// Apply a service's definition to the cluster. The full service declaration needs to be provided,
+	// which is different to UpdateService which can also do a partial update. If the given
+	// service does not already exists (identified by name) then the service is create.
+	// If the service exists, then a three-way merge will be performed between the original
+	// configuration given (from the last "apply" operation), the new configuration as given ]
+	// here and the current configuration as found on the cluster.
+	// The returned bool indicates whether the service has been changed or whether this operation
+	// was a no-op
+	// An error can indicate a general error or a conflict that occurred during the three way merge.
+	ApplyService(service *servingv1.Service) (bool, error)
 
 	// Delete a service by name
 	DeleteService(name string, timeout time.Duration) error
@@ -84,6 +96,12 @@ type KnServingClient interface {
 	// Get the "base" revision for a Service; the one that corresponds to the
 	// current template.
 	GetBaseRevision(service *servingv1.Service) (*servingv1.Revision, error)
+
+	// Create revision
+	CreateRevision(revision *servingv1.Revision) error
+
+	// Update revision
+	UpdateRevision(revision *servingv1.Revision) error
 
 	// List revisions
 	ListRevisions(opts ...ListConfig) (*servingv1.RevisionList, error)
@@ -138,6 +156,13 @@ func WithName(name string) ListConfig {
 func WithService(service string) ListConfig {
 	return func(lo *listConfigCollector) {
 		lo.Labels[apiserving.ServiceLabelKey] = service
+	}
+}
+
+// WithLabel filters on the provided label
+func WithLabel(labelKey, labelValue string) ListConfig {
+	return func(lo *listConfigCollector) {
+		lo.Labels[labelKey] = labelValue
 	}
 }
 
@@ -216,36 +241,37 @@ func (cl *knServingClient) CreateService(service *servingv1.Service) error {
 }
 
 // Update the given service
-func (cl *knServingClient) UpdateService(service *servingv1.Service) error {
-	_, err := cl.client.Services(cl.namespace).Update(context.TODO(), service, v1.UpdateOptions{})
+func (cl *knServingClient) UpdateService(service *servingv1.Service) (bool, error) {
+	updated, err := cl.client.Services(cl.namespace).Update(context.TODO(), service, v1.UpdateOptions{})
 	if err != nil {
-		return err
+		return false, err
 	}
-	return updateServingGvk(service)
+	changed := service.ObjectMeta.Generation != updated.ObjectMeta.Generation
+	return changed, updateServingGvk(service)
 }
 
 // Update the given service with a retry in case of a conflict
-func (cl *knServingClient) UpdateServiceWithRetry(name string, updateFunc ServiceUpdateFunc, nrRetries int) error {
+func (cl *knServingClient) UpdateServiceWithRetry(name string, updateFunc ServiceUpdateFunc, nrRetries int) (bool, error) {
 	return updateServiceWithRetry(cl, name, updateFunc, nrRetries)
 }
 
 // Extracted to be usable with the Mocking client
-func updateServiceWithRetry(cl KnServingClient, name string, updateFunc ServiceUpdateFunc, nrRetries int) error {
+func updateServiceWithRetry(cl KnServingClient, name string, updateFunc ServiceUpdateFunc, nrRetries int) (bool, error) {
 	var retries = 0
 	for {
 		service, err := cl.GetService(name)
 		if err != nil {
-			return err
+			return false, err
 		}
 		if service.GetDeletionTimestamp() != nil {
-			return fmt.Errorf("can't update service %s because it has been marked for deletion", name)
+			return false, fmt.Errorf("can't update service %s because it has been marked for deletion", name)
 		}
 		updatedService, err := updateFunc(service.DeepCopy())
 		if err != nil {
-			return err
+			return false, err
 		}
 
-		err = cl.UpdateService(updatedService)
+		changed, err := cl.UpdateService(updatedService)
 		if err != nil {
 			// Retry to update when a resource version conflict exists
 			if apierrors.IsConflict(err) && retries < nrRetries {
@@ -254,10 +280,36 @@ func updateServiceWithRetry(cl KnServingClient, name string, updateFunc ServiceU
 				time.Sleep(time.Second)
 				continue
 			}
-			return fmt.Errorf("giving up after %d retries: %w", nrRetries, err)
+			return false, fmt.Errorf("giving up after %d retries: %w", nrRetries, err)
 		}
-		return nil
+		return changed, nil
 	}
+}
+
+// ApplyService applies a service definition that contains the service's targer state
+func (cl *knServingClient) ApplyService(modifiedService *servingv1.Service) (bool, error) {
+	currentService, err := cl.GetService(modifiedService.Name)
+	if err != nil && !apierrors.IsNotFound(err) {
+		return false, err
+	}
+
+	containers := modifiedService.Spec.Template.Spec.Containers
+	if len(containers) == 0 || containers[0].Image == "" && currentService != nil {
+		return false, errors.New("'service apply' requires the image name to run provided with the --image option")
+	}
+
+	// No current service --> create a new service
+	if currentService == nil {
+		err := updateLastAppliedAnnotation(modifiedService)
+		if err != nil {
+			return false, err
+		}
+		return true, cl.CreateService(modifiedService)
+	}
+
+	// Merge with existing service
+	uOriginalService := getOriginalConfiguration(currentService)
+	return cl.patch(modifiedService, currentService, uOriginalService)
 }
 
 // Delete a service by name
@@ -268,12 +320,17 @@ func (cl *knServingClient) DeleteService(serviceName string, timeout time.Durati
 		return cl.deleteService(serviceName, v1.DeletePropagationBackground)
 	}
 	waitC := make(chan error)
+	watcher, err := cl.WatchService(serviceName, timeout)
+	if err != nil {
+		return nil
+	}
+	defer watcher.Stop()
 	go func() {
-		waitForEvent := wait.NewWaitForEvent("service", cl.WatchService, func(evt *watch.Event) bool { return evt.Type == watch.Deleted })
-		err, _ := waitForEvent.Wait(serviceName, wait.Options{Timeout: &timeout}, wait.NoopMessageCallback())
+		waitForEvent := wait.NewWaitForEvent("service", func(evt *watch.Event) bool { return evt.Type == watch.Deleted })
+		err, _ := waitForEvent.Wait(watcher, serviceName, wait.Options{Timeout: &timeout}, wait.NoopMessageCallback())
 		waitC <- err
 	}()
-	err := cl.deleteService(serviceName, v1.DeletePropagationForeground)
+	err = cl.deleteService(serviceName, v1.DeletePropagationForeground)
 	if err != nil {
 		return err
 	}
@@ -295,8 +352,13 @@ func (cl *knServingClient) deleteService(serviceName string, propagationPolicy v
 
 // Wait for a service to become ready, but not longer than provided timeout
 func (cl *knServingClient) WaitForService(name string, timeout time.Duration, msgCallback wait.MessageCallback) (error, time.Duration) {
-	waitForReady := wait.NewWaitForReady("service", cl.WatchService, serviceConditionExtractor)
-	return waitForReady.Wait(name, wait.Options{Timeout: &timeout}, msgCallback)
+	watcher, err := cl.WatchService(name, timeout)
+	if err != nil {
+		return err, timeout
+	}
+	defer watcher.Stop()
+	waitForReady := wait.NewWaitForReady("service", serviceConditionExtractor)
+	return waitForReady.Wait(watcher, name, wait.Options{Timeout: &timeout}, msgCallback)
 }
 
 // Get the configuration for a service
@@ -378,6 +440,24 @@ func getBaseRevision(cl KnServingClient, service *servingv1.Service) (*servingv1
 	return nil, noBaseRevisionError
 }
 
+// Create a revision
+func (cl *knServingClient) CreateRevision(revision *servingv1.Revision) error {
+	rev, err := cl.client.Revisions(cl.namespace).Create(context.TODO(), revision, v1.CreateOptions{})
+	if err != nil {
+		return clienterrors.GetError(err)
+	}
+	return updateServingGvk(rev)
+}
+
+// Update the given service
+func (cl *knServingClient) UpdateRevision(revision *servingv1.Revision) error {
+	_, err := cl.client.Revisions(cl.namespace).Update(context.TODO(), revision, v1.UpdateOptions{})
+	if err != nil {
+		return err
+	}
+	return updateServingGvk(revision)
+}
+
 // Delete a revision by name
 func (cl *knServingClient) DeleteRevision(name string, timeout time.Duration) error {
 	revision, err := cl.client.Revisions(cl.namespace).Get(context.TODO(), name, v1.GetOptions{})
@@ -391,9 +471,14 @@ func (cl *knServingClient) DeleteRevision(name string, timeout time.Duration) er
 		return cl.deleteRevision(name)
 	}
 	waitC := make(chan error)
+	watcher, err := cl.WatchRevision(name, timeout)
+	if err != nil {
+		return err
+	}
+	defer watcher.Stop()
 	go func() {
-		waitForEvent := wait.NewWaitForEvent("revision", cl.WatchRevision, func(evt *watch.Event) bool { return evt.Type == watch.Deleted })
-		err, _ := waitForEvent.Wait(name, wait.Options{Timeout: &timeout}, wait.NoopMessageCallback())
+		waitForEvent := wait.NewWaitForEvent("revision", func(evt *watch.Event) bool { return evt.Type == watch.Deleted })
+		err, _ := waitForEvent.Wait(watcher, name, wait.Options{Timeout: &timeout}, wait.NoopMessageCallback())
 		waitC <- err
 	}()
 	err = cl.deleteRevision(name)

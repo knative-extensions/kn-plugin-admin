@@ -17,7 +17,7 @@ package domain
 import (
 	"testing"
 
-	"gotest.tools/assert"
+	"gotest.tools/v3/assert"
 )
 
 func TestNewDomainCmd(t *testing.T) {

@@ -18,6 +18,8 @@ import (
 	"context"
 	"fmt"
 
+	knerrors "knative.dev/client/pkg/errors"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"knative.dev/eventing/pkg/apis/sources/v1alpha2"
 
@@ -74,27 +76,45 @@ func (c *pingSourcesClient) CreatePingSource(pingsource *v1alpha2.PingSource) er
 		return fmt.Errorf("a sink is required for creating a source")
 	}
 	_, err := c.client.Create(context.TODO(), pingsource, metav1.CreateOptions{})
-	return err
+	if err != nil {
+		return knerrors.GetError(err)
+	}
+	return nil
 }
 
 func (c *pingSourcesClient) UpdatePingSource(pingSource *v1alpha2.PingSource) error {
 	_, err := c.client.Update(context.TODO(), pingSource, metav1.UpdateOptions{})
-	return err
+	if err != nil {
+		return knerrors.GetError(err)
+	}
+	return nil
 }
 
 func (c *pingSourcesClient) DeletePingSource(name string) error {
-	return c.client.Delete(context.TODO(), name, metav1.DeleteOptions{})
+	err := c.client.Delete(context.TODO(), name, metav1.DeleteOptions{})
+	if err != nil {
+		return knerrors.GetError(err)
+	}
+	return nil
 }
 
 func (c *pingSourcesClient) GetPingSource(name string) (*v1alpha2.PingSource, error) {
-	return c.client.Get(context.TODO(), name, metav1.GetOptions{})
+	source, err := c.client.Get(context.TODO(), name, metav1.GetOptions{})
+	if err != nil {
+		return nil, knerrors.GetError(err)
+	}
+	err = updateSourceGVK(source)
+	if err != nil {
+		return nil, err
+	}
+	return source, nil
 }
 
 // ListPingSource returns the available Ping sources
 func (c *pingSourcesClient) ListPingSource() (*v1alpha2.PingSourceList, error) {
 	sourceList, err := c.client.List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		return nil, err
+		return nil, knerrors.GetError(err)
 	}
 
 	return updatePingSourceListGVK(sourceList)

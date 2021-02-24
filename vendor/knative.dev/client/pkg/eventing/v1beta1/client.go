@@ -97,6 +97,10 @@ func (c *knEventingClient) GetTrigger(name string) (*v1beta1.Trigger, error) {
 	if err != nil {
 		return nil, kn_errors.GetError(err)
 	}
+	err = updateEventingGVK(trigger)
+	if err != nil {
+		return nil, err
+	}
 	return trigger, nil
 }
 
@@ -183,10 +187,10 @@ func (b *TriggerBuilder) Broker(broker string) *TriggerBuilder {
 // InjectBroker to add annotation to setup default broker
 func (b *TriggerBuilder) InjectBroker(inject bool) *TriggerBuilder {
 	if inject {
-		meta_v1.SetMetaDataAnnotation(&b.trigger.ObjectMeta, v1beta1.DeprecatedInjectionAnnotation, "enabled")
+		meta_v1.SetMetaDataAnnotation(&b.trigger.ObjectMeta, v1beta1.InjectionAnnotation, "enabled")
 	} else {
-		if meta_v1.HasAnnotation(b.trigger.ObjectMeta, v1beta1.DeprecatedInjectionAnnotation) {
-			delete(b.trigger.ObjectMeta.Annotations, v1beta1.DeprecatedInjectionAnnotation)
+		if meta_v1.HasAnnotation(b.trigger.ObjectMeta, v1beta1.InjectionAnnotation) {
+			delete(b.trigger.ObjectMeta.Annotations, v1beta1.InjectionAnnotation)
 		}
 	}
 	return b
@@ -225,11 +229,15 @@ func (c *knEventingClient) CreateBroker(broker *v1beta1.Broker) error {
 
 // GetBroker is used to get an instance of broker
 func (c *knEventingClient) GetBroker(name string) (*v1beta1.Broker, error) {
-	trigger, err := c.client.Brokers(c.namespace).Get(context.TODO(), name, apis_v1.GetOptions{})
+	broker, err := c.client.Brokers(c.namespace).Get(context.TODO(), name, apis_v1.GetOptions{})
 	if err != nil {
 		return nil, kn_errors.GetError(err)
 	}
-	return trigger, nil
+	err = updateEventingGVK(broker)
+	if err != nil {
+		return nil, err
+	}
+	return broker, nil
 }
 
 // WatchBroker is used to create watcher object
@@ -245,12 +253,17 @@ func (c *knEventingClient) DeleteBroker(name string, timeout time.Duration) erro
 		return c.deleteBroker(name, apis_v1.DeletePropagationBackground)
 	}
 	waitC := make(chan error)
+	watcher, err := c.WatchBroker(name, timeout)
+	if err != nil {
+		return nil
+	}
+	defer watcher.Stop()
 	go func() {
-		waitForEvent := wait.NewWaitForEvent("broker", c.WatchBroker, func(evt *watch.Event) bool { return evt.Type == watch.Deleted })
-		err, _ := waitForEvent.Wait(name, wait.Options{Timeout: &timeout}, wait.NoopMessageCallback())
+		waitForEvent := wait.NewWaitForEvent("broker", func(evt *watch.Event) bool { return evt.Type == watch.Deleted })
+		err, _ := waitForEvent.Wait(watcher, name, wait.Options{Timeout: &timeout}, wait.NoopMessageCallback())
 		waitC <- err
 	}()
-	err := c.deleteBroker(name, apis_v1.DeletePropagationForeground)
+	err = c.deleteBroker(name, apis_v1.DeletePropagationForeground)
 	if err != nil {
 		return err
 	}

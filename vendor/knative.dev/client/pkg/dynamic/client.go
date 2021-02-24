@@ -165,9 +165,10 @@ func (c *knDynamicClient) ListSources(types ...WithType) (*unstructured.Unstruct
 	namespace := c.Namespace()
 	filters := WithTypes(types).List()
 	// For each source type available, find out each source types objects
-	for _, source := range sourceTypes.Items {
+	for i := range sourceTypes.Items {
+		source := &sourceTypes.Items[i]
 		// find source kind before hand to fail early
-		sourceKind, err := kindFromUnstructured(&source)
+		sourceKind, err := kindFromUnstructured(source)
 		if err != nil {
 			return nil, err
 		}
@@ -177,7 +178,7 @@ func (c *knDynamicClient) ListSources(types ...WithType) (*unstructured.Unstruct
 		}
 
 		// find source's GVR from unstructured source type object
-		gvr, err := gvrFromUnstructured(&source)
+		gvr, err := gvrFromUnstructured(source)
 		if err != nil {
 			return nil, err
 		}
@@ -254,7 +255,7 @@ func (c *knDynamicClient) ListChannelsUsingGVKs(gvks *[]schema.GroupVersionKind,
 
 		gvr := gvk.GroupVersion().WithResource(strings.ToLower(gvk.Kind) + "s")
 
-		// list objects of chaneel type with this GVR
+		// list objects of channel type with this GVR
 		cList, err := c.client.Resource(gvr).Namespace(namespace).List(context.TODO(), options)
 		if err != nil {
 			return nil, err

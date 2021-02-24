@@ -22,7 +22,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
-// ToUnstructuredList is to converts an object to unstructured.UnstructuredList.
+// ToUnstructuredList is to convert an object to unstructured.UnstructuredList.
 // If the object is not a list type, it will convert to a single item UnstructuredList.
 func ToUnstructuredList(obj runtime.Object) (*unstructured.UnstructuredList, error) {
 	unstructuredList := &unstructured.UnstructuredList{}
@@ -33,7 +33,7 @@ func ToUnstructuredList(obj runtime.Object) (*unstructured.UnstructuredList, err
 			return nil, err
 		}
 		for _, obji := range items {
-			ud, err := toUnstructured(obji)
+			ud, err := ToUnstructured(obji)
 			if err != nil {
 				return nil, err
 			}
@@ -41,7 +41,7 @@ func ToUnstructuredList(obj runtime.Object) (*unstructured.UnstructuredList, err
 		}
 
 	} else {
-		ud, err := toUnstructured(obj)
+		ud, err := ToUnstructured(obj)
 		if err != nil {
 			return nil, err
 		}
@@ -51,7 +51,7 @@ func ToUnstructuredList(obj runtime.Object) (*unstructured.UnstructuredList, err
 
 }
 
-func toUnstructured(obj runtime.Object) (*unstructured.Unstructured, error) {
+func ToUnstructured(obj runtime.Object) (*unstructured.Unstructured, error) {
 	b, err := json.Marshal(obj)
 	if err != nil {
 		return nil, err
