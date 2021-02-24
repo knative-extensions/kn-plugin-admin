@@ -3,6 +3,7 @@ module knative.dev/kn-plugin-admin
 go 1.15
 
 require (
+	github.com/googleapis/gnostic v0.5.4 // indirect
 	github.com/maximilien/kn-source-pkg v0.6.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.1.3
