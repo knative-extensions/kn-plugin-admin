@@ -19,5 +19,3 @@ require (
 )
 
 replace github.com/go-openapi/spec => github.com/go-openapi/spec v0.19.3
-
-replace github.com/maximilien/kn-source-pkg => github.com/rhuss/kn-source-pkg v0.0.0-20210224093942-712ccae658de

@@ -199,7 +199,7 @@ github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
 # github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369
 github.com/matttproud/golang_protobuf_extensions/pbutil
-# github.com/maximilien/kn-source-pkg v0.6.3 => github.com/rhuss/kn-source-pkg v0.0.0-20210224093942-712ccae658de
+# github.com/maximilien/kn-source-pkg v0.6.3
 ## explicit
 github.com/maximilien/kn-source-pkg/test/e2e
 # github.com/mitchellh/go-homedir v1.1.0
@@ -891,4 +891,3 @@ sigs.k8s.io/structured-merge-diff/v4/value
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
 # github.com/go-openapi/spec => github.com/go-openapi/spec v0.19.3
-# github.com/maximilien/kn-source-pkg => github.com/rhuss/kn-source-pkg v0.0.0-20210224093942-712ccae658de
