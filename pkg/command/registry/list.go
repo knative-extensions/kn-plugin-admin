@@ -48,7 +48,7 @@ func NewRegistryListCommand(p *pkg.AdminParams) *cobra.Command {
 			// retrieve namespaces
 			namespace := cmd.Flag("namespace").Value.String()
 			if namespace == "" && serviceaccount != "" {
-				return fmt.Errorf("cannot specifiy service account with empty namespace")
+				return fmt.Errorf("cannot specify service account with empty namespace")
 			}
 
 			client, err := p.NewKubeClient()
