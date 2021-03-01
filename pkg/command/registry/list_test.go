@@ -75,7 +75,7 @@ func TestNewRegistryListCommand(t *testing.T) {
 		cmd := NewRegistryListCommand(p)
 
 		_, err := testutil.ExecuteCommand(cmd, "--serviceaccount", "fakeServiceAccount")
-		assert.ErrorContains(t, err, "cannot specifiy service account with empty namespace")
+		assert.ErrorContains(t, err, "cannot specify service account with empty namespace")
 	})
 
 	t.Run("list registries with service account and namespace specified", func(t *testing.T) {
