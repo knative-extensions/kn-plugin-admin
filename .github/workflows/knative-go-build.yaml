@@ -19,7 +19,7 @@ name: Build
 
 on:
   pull_request:
-    branches: [ 'master', 'release-*' ]
+    branches: [ 'main', 'master', 'release-*' ]
 
 jobs:
 
@@ -56,3 +56,4 @@ jobs:
 
           echo "Building with tags: ${tags}"
           go test -vet=off -tags "${tags}" -run=^$ ./... | grep -v "no test" || true
+
