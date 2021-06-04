@@ -13,9 +13,9 @@ require (
 	k8s.io/api v0.19.7
 	k8s.io/apimachinery v0.19.7
 	k8s.io/client-go v0.19.7
-	knative.dev/client v0.23.1-0.20210601172337-67bbe37afa60
+	knative.dev/client v0.23.1-0.20210604063245-81cb343b4ea0
 	knative.dev/hack v0.0.0-20210601210329-de04b70e00d0
-	knative.dev/serving v0.23.1-0.20210602145637-966f01547a16
+	knative.dev/serving v0.23.1-0.20210603181344-68a1b38b50b0
 )
 
 replace github.com/go-openapi/spec => github.com/go-openapi/spec v0.19.3
