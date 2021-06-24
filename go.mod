@@ -10,12 +10,12 @@ require (
 	github.com/spf13/viper v1.7.1
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.0.3
-	k8s.io/api v0.19.7
-	k8s.io/apimachinery v0.19.7
-	k8s.io/client-go v0.19.7
-	knative.dev/client v0.23.1-0.20210608195241-217df5ccf53f
-	knative.dev/hack v0.0.0-20210609124042-e35bcb8f21ec
-	knative.dev/serving v0.23.1-0.20210609165542-8fab985c98ae
+	k8s.io/api v0.20.7
+	k8s.io/apimachinery v0.20.7
+	k8s.io/client-go v0.20.7
+	knative.dev/client v0.23.1-0.20210618090750-a54abbdfa1a2
+	knative.dev/hack v0.0.0-20210622141627-e28525d8d260
+	knative.dev/serving v0.23.1-0.20210623204144-c54eeabbb984
 )
 
 replace github.com/go-openapi/spec => github.com/go-openapi/spec v0.19.3

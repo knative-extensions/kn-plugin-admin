@@ -91,6 +91,10 @@ func (f *fakeConnection) SetIdleTimeout(timeout time.Duration) {
 	// no-op
 }
 
+func (f *fakeConnection) RemoveStreams(streams ...httpstream.Stream) {
+	// no-op
+}
+
 func TestProfileDownloader_connect(t *testing.T) {
 	t.Run("connect success", func(t *testing.T) {
 		d := &Downloader{
