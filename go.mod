@@ -1,6 +1,6 @@
 module knative.dev/kn-plugin-admin
 
-go 1.15
+go 1.16
 
 require (
 	github.com/googleapis/gnostic v0.5.4 // indirect
