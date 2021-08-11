@@ -666,7 +666,7 @@ k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# knative.dev/client v0.24.1-0.20210811011859-035150ec4cbf
+# knative.dev/client v0.25.0
 ## explicit
 knative.dev/client/lib/test
 knative.dev/client/pkg/apis/client
