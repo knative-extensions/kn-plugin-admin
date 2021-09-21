@@ -17,5 +17,3 @@ require (
 	knative.dev/hack v0.0.0-20210806075220-815cd312d65c
 	knative.dev/serving v0.25.1-0.20210920130135-1c335d7ce21c
 )
-
-replace github.com/go-openapi/spec => github.com/go-openapi/spec v0.19.3
