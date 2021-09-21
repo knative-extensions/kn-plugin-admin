@@ -703,7 +703,7 @@ k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# knative.dev/client v0.25.1-0.20210920074934-d66911115173
+# knative.dev/client v0.25.1-0.20210921123237-09f14b105638
 ## explicit
 knative.dev/client/lib/test
 knative.dev/client/pkg/apis/client
@@ -727,7 +727,7 @@ knative.dev/client/pkg/sources/v1beta2
 knative.dev/client/pkg/util
 knative.dev/client/pkg/util/mock
 knative.dev/client/pkg/wait
-# knative.dev/eventing v0.25.1-0.20210917075131-dcb0aea20724
+# knative.dev/eventing v0.25.1-0.20210920134735-f031ba23b23d
 knative.dev/eventing/pkg/apis/config
 knative.dev/eventing/pkg/apis/duck
 knative.dev/eventing/pkg/apis/duck/v1
