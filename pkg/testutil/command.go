@@ -22,6 +22,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
+    "k8s.io/client-go/tools/clientcmd"
+
 
 	"knative.dev/kn-plugin-admin/pkg"
 )
@@ -58,9 +60,16 @@ func NewTestAdminParams(objects ...runtime.Object) (*pkg.AdminParams, *k8sfake.C
 
 // NewTestAdminWithoutKubeConfig creates an AdminParams without kube config when create kubernetes clientset
 func NewTestAdminWithoutKubeConfig() *pkg.AdminParams {
+	clientConf, err := clientcmd.NewClientConfigFromBytes([]byte(ErrNoKubeConfiguration))
+	if err != nil {
+		return nil
+	}
 	return &pkg.AdminParams{
+		KubeCfgPath:  "",
+		ClientConfig: clientConf,
 		NewKubeClient: func() (kubernetes.Interface, error) {
 			return nil, errors.New(ErrNoKubeConfiguration)
 		},
+		InstallationMethod: 0,
 	}
 }
