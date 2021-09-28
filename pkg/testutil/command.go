@@ -65,6 +65,19 @@ func NewTestAdminParams(objects ...runtime.Object) (*pkg.AdminParams, *k8sfake.C
 	}, client
 }
 
+func NewTestAdminParamsWithNetworkingObjects(objects ...runtime.Object) *pkg.AdminParams {
+	client := k8sfake.NewSimpleClientset()
+	networkingClient := nwfake.NewSimpleClientset(objects...)
+	return &pkg.AdminParams{
+		NewNetworkingClient: func() (versioned.Interface, error) {
+			return networkingClient, nil
+		},
+		NewKubeClient: func() (kubernetes.Interface, error) {
+			return client, nil
+		},
+	}
+}
+
 // NewTestAdminWithoutKubeConfig creates an AdminParams without kube config when create kubernetes clientset
 func NewTestAdminWithoutKubeConfig() *pkg.AdminParams {
 	clientConf, err := clientcmd.NewClientConfigFromBytes([]byte(ErrNoKubeConfiguration))

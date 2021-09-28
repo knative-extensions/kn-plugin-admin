@@ -15,33 +15,40 @@
 package cdc
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
 	"gotest.tools/v3/assert"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"knative.dev/kn-plugin-admin/pkg/testutil"
+	"knative.dev/networking/pkg/apis/networking/v1alpha1"
 )
 
-func TestNewCdcCreateCommand(t *testing.T) {
-
+func TestCdcListCommandWithoutKubeContext(t *testing.T) {
 	t.Run("kubectl context is not set", func(t *testing.T) {
 		p := testutil.NewTestAdminWithoutKubeConfig()
-		cmd := NewCdcCreateCommand(p)
-		_, err := testutil.ExecuteCommand(cmd, testDomain, "--namespace", testNs)
-		assert.ErrorContains(t, err, testutil.ErrNoKubeConfiguration)
+		cmd := NewCdcListCommand(p)
+		_, err := testutil.ExecuteCommand(cmd)
+		assert.Error(t, err, testutil.ErrNoKubeConfiguration)
 	})
-	t.Run("incomplete args for cdc create", func(t *testing.T) {
-		p, _ := testutil.NewTestAdminParams()
-		cmd := NewCdcCreateCommand(p)
-		_, err := testutil.ExecuteCommand(cmd, testDomain)
-		assert.ErrorContains(t, err, "required flag", "namespace")
-	})
-	t.Run("successful cdc create", func(t *testing.T) {
-		p, _ := testutil.NewTestAdminParams()
-		cmd := NewCdcCreateCommand(p)
-		out, err := testutil.ExecuteCommand(cmd, testDomain, "--namespace", testNs)
+}
+
+func TestCdcListSuccess(t *testing.T) {
+	t.Run("list cdc", func(t *testing.T) {
+
+		cdc := &v1alpha1.ClusterDomainClaim{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: testDomain,
+			},
+			Spec: v1alpha1.ClusterDomainClaimSpec{
+				Namespace: testNs,
+			},
+		}
+		p := testutil.NewTestAdminParamsWithNetworkingObjects(cdc)
+		cmd := NewCdcListCommand(p)
+		out, err := testutil.ExecuteCommand(cmd)
 		assert.NilError(t, err)
-		assert.Check(t, strings.Contains(out, fmt.Sprintf("'%s' created", testDomain)))
+		assert.Check(t, strings.Contains(out, testDomain))
+		assert.Check(t, strings.Contains(out, testNs))
 	})
 }
