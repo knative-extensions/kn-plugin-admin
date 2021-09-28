@@ -22,6 +22,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -33,10 +35,11 @@ var LabelManagedBy = "app.kubernetes.io/managed-by"
 
 // AdminParams stores the configs for interacting with kube api
 type AdminParams struct {
-	KubeCfgPath        string
-	ClientConfig       clientcmd.ClientConfig
-	NewKubeClient      func() (kubernetes.Interface, error)
-	InstallationMethod InstallationMethod
+	KubeCfgPath         string
+	ClientConfig        clientcmd.ClientConfig
+	NewNetworkingClient func() (v1alpha1.NetworkingV1alpha1Interface, error)
+	NewKubeClient       func() (kubernetes.Interface, error)
+	InstallationMethod  InstallationMethod
 }
 
 // InstallationMethod identify how knative get installed
@@ -61,6 +64,9 @@ var ErrorInstallationMethodUnknown = errors.New("Cannot detect current installat
 func (params *AdminParams) Initialize() error {
 	if params.NewKubeClient == nil {
 		params.NewKubeClient = params.newKubeClient
+	}
+	if params.NewNetworkingClient == nil {
+		params.NewNetworkingClient = params.newNetworkingClient
 	}
 	if params.InstallationMethod == InstallationMethodUnknown {
 		im, err := params.installationMethod()
@@ -155,4 +161,12 @@ func (params *AdminParams) newKubeClient() (kubernetes.Interface, error) {
 	}
 
 	return kubernetes.NewForConfig(restConfig)
+}
+
+func (params *AdminParams) newNetworkingClient() (v1alpha1.NetworkingV1alpha1Interface, error) {
+	restConfig, err := params.RestConfig()
+	if err != nil {
+		return nil, err
+	}
+	return v1alpha1.NewForConfig(restConfig)
 }

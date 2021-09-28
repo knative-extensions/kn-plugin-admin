@@ -21,7 +21,6 @@ import (
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"knative.dev/kn-plugin-admin/pkg"
-	"knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1"
 )
 
 // NewCdcDeleteCommand to delete a cluster domain claims
@@ -34,11 +33,7 @@ func NewCdcDeleteCommand(p *pkg.AdminParams) *cobra.Command {
   # To delete a cluster domain claim
   kn admin cdc delete domain.name`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			restConfig, err := p.RestConfig()
-			if err != nil {
-				return err
-			}
-			client, err := v1alpha1.NewForConfig(restConfig)
+			client, err := p.NewNetworkingClient()
 			if err != nil {
 				return err
 			}
