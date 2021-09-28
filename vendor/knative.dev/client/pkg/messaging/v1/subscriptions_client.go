@@ -18,6 +18,9 @@ package v1
 
 import (
 	"context"
+	"fmt"
+
+	"k8s.io/client-go/util/retry"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	eventingduckv1 "knative.dev/eventing/pkg/apis/duck/v1"
@@ -28,17 +31,22 @@ import (
 	knerrors "knative.dev/client/pkg/errors"
 )
 
+type SubscriptionUpdateFunc func(origSub *messagingv1.Subscription) (*messagingv1.Subscription, error)
+
 // KnSubscriptionsClient for interacting with Subscriptions
 type KnSubscriptionsClient interface {
 
 	// GetSubscription returns a Subscription by its name
 	GetSubscription(ctx context.Context, name string) (*messagingv1.Subscription, error)
 
-	// CreteSubscription creates a Subscription with given spec
+	// CreateSubscription creates a Subscription with given spec
 	CreateSubscription(ctx context.Context, subscription *messagingv1.Subscription) error
 
 	// UpdateSubscription updates a Subscription with given spec
 	UpdateSubscription(ctx context.Context, subscription *messagingv1.Subscription) error
+
+	// UpdateSubscriptionWithRetry updates a Subscription and retries on conflict error
+	UpdateSubscriptionWithRetry(ctx context.Context, name string, updateFunc SubscriptionUpdateFunc, nrRetries int) error
 
 	// DeleteSubscription deletes a Subscription by its name
 	DeleteSubscription(ctx context.Context, name string) error
@@ -94,6 +102,35 @@ func (c *subscriptionsClient) UpdateSubscription(ctx context.Context, subscripti
 	return knerrors.GetError(err)
 }
 
+func (c *subscriptionsClient) UpdateSubscriptionWithRetry(ctx context.Context, name string, updateFunc SubscriptionUpdateFunc, nrRetries int) error {
+	return updateSubscriptionWithRetry(ctx, c, name, updateFunc, nrRetries)
+}
+
+func updateSubscriptionWithRetry(ctx context.Context, c KnSubscriptionsClient, name string, updateFunc SubscriptionUpdateFunc, nrRetries int) error {
+	b := retry.DefaultRetry
+	b.Steps = nrRetries
+	err := retry.RetryOnConflict(b, func() error {
+		return updateSubscription(ctx, c, name, updateFunc)
+	})
+	return err
+}
+
+func updateSubscription(ctx context.Context, c KnSubscriptionsClient, name string, updateFunc SubscriptionUpdateFunc) error {
+	sub, err := c.GetSubscription(ctx, name)
+	if err != nil {
+		return err
+	}
+	if sub.GetDeletionTimestamp() != nil {
+		return fmt.Errorf("can't update subscription %s because it has been marked for deletion", name)
+	}
+	updatedSub, err := updateFunc(sub.DeepCopy())
+	if err != nil {
+		return err
+	}
+
+	return c.UpdateSubscription(ctx, updatedSub)
+}
+
 // DeleteSubscription deletes Subscription by its name
 func (c *subscriptionsClient) DeleteSubscription(ctx context.Context, name string) error {
 	return knerrors.GetError(c.client.Delete(ctx, name, metav1.DeleteOptions{}))
@@ -136,6 +173,10 @@ type SubscriptionBuilder struct {
 // NewSubscriptionBuilder for building Subscription object
 func NewSubscriptionBuilder(name string) *SubscriptionBuilder {
 	return &SubscriptionBuilder{subscription: &messagingv1.Subscription{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: messagingv1.SchemeGroupVersion.String(),
+			Kind:       "Subscription",
+		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name: name,
 		},
