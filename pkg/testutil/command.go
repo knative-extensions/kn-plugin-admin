@@ -18,11 +18,15 @@ import (
 	"bytes"
 	"errors"
 
+	"knative.dev/networking/pkg/client/clientset/versioned"
+
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/tools/clientcmd"
+
+	nwfake "knative.dev/networking/pkg/client/clientset/versioned/fake"
 
 	"knative.dev/kn-plugin-admin/pkg"
 )
@@ -50,7 +54,11 @@ func ExecuteCommand(root *cobra.Command, args ...string) (output string, err err
 // NewTestAdminParams creates an AdminParams and kubernetes clientset for testing
 func NewTestAdminParams(objects ...runtime.Object) (*pkg.AdminParams, *k8sfake.Clientset) {
 	client := k8sfake.NewSimpleClientset(objects...)
+	networkingClient := nwfake.NewSimpleClientset(objects...)
 	return &pkg.AdminParams{
+		NewNetworkingClient: func() (versioned.Interface, error) {
+			return networkingClient, nil
+		},
 		NewKubeClient: func() (kubernetes.Interface, error) {
 			return client, nil
 		},

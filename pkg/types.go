@@ -22,7 +22,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1"
+	"knative.dev/networking/pkg/client/clientset/versioned"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -37,7 +37,7 @@ var LabelManagedBy = "app.kubernetes.io/managed-by"
 type AdminParams struct {
 	KubeCfgPath         string
 	ClientConfig        clientcmd.ClientConfig
-	NewNetworkingClient func() (v1alpha1.NetworkingV1alpha1Interface, error)
+	NewNetworkingClient func() (versioned.Interface, error)
 	NewKubeClient       func() (kubernetes.Interface, error)
 	InstallationMethod  InstallationMethod
 }
@@ -163,10 +163,10 @@ func (params *AdminParams) newKubeClient() (kubernetes.Interface, error) {
 	return kubernetes.NewForConfig(restConfig)
 }
 
-func (params *AdminParams) newNetworkingClient() (v1alpha1.NetworkingV1alpha1Interface, error) {
+func (params *AdminParams) newNetworkingClient() (versioned.Interface, error) {
 	restConfig, err := params.RestConfig()
 	if err != nil {
 		return nil, err
 	}
-	return v1alpha1.NewForConfig(restConfig)
+	return versioned.NewForConfig(restConfig)
 }

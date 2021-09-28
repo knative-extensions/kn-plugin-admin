@@ -38,7 +38,7 @@ func NewCdcDeleteCommand(p *pkg.AdminParams) *cobra.Command {
 				return err
 			}
 			name := args[0]
-			err = client.ClusterDomainClaims().Delete(context.TODO(), name, metav1.DeleteOptions{})
+			err = client.NetworkingV1alpha1().ClusterDomainClaims().Delete(context.TODO(), name, metav1.DeleteOptions{})
 			if err != nil {
 				return err
 			}

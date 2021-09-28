@@ -49,7 +49,7 @@ func NewCdcCreateCommand(p *pkg.AdminParams) *cobra.Command {
 					Namespace: namespace,
 				},
 			}
-			_, err = client.ClusterDomainClaims().Create(context.TODO(), &cdc, metav1.CreateOptions{})
+			_, err = client.NetworkingV1alpha1().ClusterDomainClaims().Create(context.TODO(), &cdc, metav1.CreateOptions{})
 			if err != nil {
 				return err
 			}

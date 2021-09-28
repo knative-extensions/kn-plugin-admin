@@ -37,4 +37,6 @@ func TestNewCdcCreateCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, name)
 		assert.ErrorContains(t, err, "required flag", "namespace")
 	})
+	t.Run("successful cdc create", func(t *testing.T) {
+	})
 }

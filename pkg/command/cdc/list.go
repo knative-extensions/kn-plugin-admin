@@ -62,7 +62,7 @@ func NewCdcListCommand(p *pkg.AdminParams) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			cdcList, err := client.ClusterDomainClaims().List(context.TODO(), metav1.ListOptions{})
+			cdcList, err := client.NetworkingV1alpha1().ClusterDomainClaims().List(context.TODO(), metav1.ListOptions{})
 			if err != nil {
 				return err
 			}
