@@ -54,7 +54,7 @@ func ExecuteCommand(root *cobra.Command, args ...string) (output string, err err
 // NewTestAdminParams creates an AdminParams and kubernetes clientset for testing
 func NewTestAdminParams(objects ...runtime.Object) (*pkg.AdminParams, *k8sfake.Clientset) {
 	client := k8sfake.NewSimpleClientset(objects...)
-	networkingClient := nwfake.NewSimpleClientset(objects...)
+	networkingClient := nwfake.NewSimpleClientset()
 	return &pkg.AdminParams{
 		NewNetworkingClient: func() (versioned.Interface, error) {
 			return networkingClient, nil
@@ -74,6 +74,9 @@ func NewTestAdminWithoutKubeConfig() *pkg.AdminParams {
 	return &pkg.AdminParams{
 		KubeCfgPath:  "",
 		ClientConfig: clientConf,
+		NewNetworkingClient: func() (versioned.Interface, error) {
+			return nil, errors.New(ErrNoKubeConfiguration)
+		},
 		NewKubeClient: func() (kubernetes.Interface, error) {
 			return nil, errors.New(ErrNoKubeConfiguration)
 		},

@@ -15,11 +15,17 @@
 package cdc
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"gotest.tools/v3/assert"
 	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
+
+const testDomain = "test.com"
+
+const testNs = "test-ns"
 
 func TestNewCdcCreateCommand(t *testing.T) {
 	name := "test.com"
@@ -38,5 +44,10 @@ func TestNewCdcCreateCommand(t *testing.T) {
 		assert.ErrorContains(t, err, "required flag", "namespace")
 	})
 	t.Run("successful cdc create", func(t *testing.T) {
+		p, _ := testutil.NewTestAdminParams()
+		cmd := NewCdcCreateCommand(p)
+		out, err := testutil.ExecuteCommand(cmd, testDomain, "--namespace", testNs)
+		assert.NilError(t, err)
+		assert.Check(t, strings.Contains(out, fmt.Sprintf("'%s' created", testDomain)))
 	})
 }
