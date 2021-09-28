@@ -22,8 +22,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	k8sfake "k8s.io/client-go/kubernetes/fake"
-    "k8s.io/client-go/tools/clientcmd"
-
+	"k8s.io/client-go/tools/clientcmd"
 
 	"knative.dev/kn-plugin-admin/pkg"
 )
