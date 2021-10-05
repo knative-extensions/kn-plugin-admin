@@ -32,7 +32,7 @@ func NewCdcCreateCommand(p *pkg.AdminParams) *cobra.Command {
 		Short: "create cluster domain claim",
 		Long:  "Create Knative cluster domain claim",
 		Example: `
-  # To create a cluster domain claim
+  # To create a cluster domain claim object for a domainmapping in ns1 namespace
   kn admin cdc create domain.name --namespace ns1`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			client, err := p.NewNetworkingClient()
@@ -40,6 +40,12 @@ func NewCdcCreateCommand(p *pkg.AdminParams) *cobra.Command {
 				return err
 			}
 
+			if len(args) == 0 {
+				return fmt.Errorf("name of the cluster domain claim required")
+			}
+			if len(args) > 1 {
+				return fmt.Errorf("cluster domain claim can have only 1 name")
+			}
 			name := args[0]
 			cdc := typev1alpha1.ClusterDomainClaim{
 				ObjectMeta: metav1.ObjectMeta{
@@ -57,7 +63,7 @@ func NewCdcCreateCommand(p *pkg.AdminParams) *cobra.Command {
 			return nil
 		},
 	}
-	cdcCreateCommand.Flags().StringVarP(&namespace, "namespace", "n", "", "Namespace which is allowed to create a DomainMapping using this ClusterDomainClaim's name.")
+	cdcCreateCommand.Flags().StringVar(&namespace, "namespace", "", "Namespace which is allowed to create a DomainMapping using this ClusterDomainClaim's name.")
 	cdcCreateCommand.MarkFlagRequired("namespace")
 	return cdcCreateCommand
 }

@@ -31,11 +31,19 @@ func TestNewCdcCreateCommand(t *testing.T) {
 		_, err := testutil.ExecuteCommand(cmd, testDomain, "--namespace", testNs)
 		assert.ErrorContains(t, err, testutil.ErrNoKubeConfiguration)
 	})
-	t.Run("incomplete args for cdc create", func(t *testing.T) {
+	t.Run("incomplete flag for cdc create", func(t *testing.T) {
 		p, _ := testutil.NewTestAdminParams()
 		cmd := NewCdcCreateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, testDomain)
 		assert.ErrorContains(t, err, "required flag", "namespace")
+	})
+	t.Run("incomplete arg for cdc create", func(t *testing.T) {
+		p, _ := testutil.NewTestAdminParams()
+		cmd := NewCdcCreateCommand(p)
+		_, err := testutil.ExecuteCommand(cmd, "--namespace", testNs)
+		assert.ErrorContains(t, err, "name", "required")
+		_, err = testutil.ExecuteCommand(cmd, "abc.com", "xyz.com", "--namespace", testNs)
+		assert.ErrorContains(t, err, "only 1 name")
 	})
 	t.Run("successful cdc create", func(t *testing.T) {
 		p, _ := testutil.NewTestAdminParams()

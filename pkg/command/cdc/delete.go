@@ -37,6 +37,12 @@ func NewCdcDeleteCommand(p *pkg.AdminParams) *cobra.Command {
 			if err != nil {
 				return err
 			}
+			if len(args) == 0 {
+				return fmt.Errorf("name of the cluster domain claim required")
+			}
+			if len(args) > 1 {
+				return fmt.Errorf("cluster domain claim can have only 1 name")
+			}
 			name := args[0]
 			err = client.NetworkingV1alpha1().ClusterDomainClaims().Delete(context.TODO(), name, metav1.DeleteOptions{})
 			if err != nil {
