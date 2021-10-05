@@ -48,6 +48,27 @@ Flags:
 Use "kn admin [command] --help" for more information about a command.
 ----
 
+#### `kn admin cdc`
+----
+Manage custom domain claim
+
+Usage:
+  kn admin cdc [command]
+
+Available Commands:
+  create      create cluster domain claim
+  delete      delete cluster domain claim
+  list        List cluster domain claims
+
+Flags:
+  -h, --help   help for cdc
+
+Global Flags:
+      --config string   config file (default is $HOME/.config/kn/plugins/admin.yaml)
+
+Use "kn admin cdc [command] --help" for more information about a command.
+----
+
 #### `kn admin domain`
 
 ----
@@ -290,24 +311,3 @@ Handling connection for 18008
 =====
 After you get the profiling data file, you need to use https://blog.golang.org/pprof[pprof] to open it.
 
-
-#### `kn admin cdc`
-----
-Manage custom domain claim
-
-Usage:
-  kn admin cdc [command]
-
-Available Commands:
-  create      create cluster domain claim
-  delete      delete cluster domain claim
-  list        List cluster domain claims
-
-Flags:
-  -h, --help   help for cdc
-
-Global Flags:
-      --config string   config file (default is $HOME/.config/kn/plugins/admin.yaml)
-
-Use "kn admin cdc [command] --help" for more information about a command.
-----
