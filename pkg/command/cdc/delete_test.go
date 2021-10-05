@@ -62,9 +62,9 @@ func TestCdcDeleteCommand(t *testing.T) {
 	t.Run("incomplete arg for cdc delete", func(t *testing.T) {
 		p, _ := testutil.NewTestAdminParams()
 		cmd := NewCdcDeleteCommand(p)
-		_, err := testutil.ExecuteCommand(cmd, "--namespace", testNs)
-		assert.ErrorContains(t, err, "name", "required")
+		_, err := testutil.ExecuteCommand(cmd)
+		assert.ErrorContains(t, err, "cdc delete", "single argument")
 		_, err = testutil.ExecuteCommand(cmd, "abc.com", "xyz.com")
-		assert.ErrorContains(t, err, "only 1 name")
+		assert.ErrorContains(t, err, "cdc delete", "single argument")
 	})
 }

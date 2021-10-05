@@ -16,6 +16,7 @@ package cdc
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -37,11 +38,9 @@ func NewCdcDeleteCommand(p *pkg.AdminParams) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			if len(args) == 0 {
-				return fmt.Errorf("name of the cluster domain claim required")
-			}
-			if len(args) > 1 {
-				return fmt.Errorf("cluster domain claim can have only 1 name")
+
+			if len(args) != 1 {
+				return errors.New("'cdc delete' requires the cdc name given as single argument")
 			}
 			name := args[0]
 			err = client.NetworkingV1alpha1().ClusterDomainClaims().Delete(context.TODO(), name, metav1.DeleteOptions{})

@@ -16,6 +16,7 @@ package cdc
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -40,11 +41,8 @@ func NewCdcCreateCommand(p *pkg.AdminParams) *cobra.Command {
 				return err
 			}
 
-			if len(args) == 0 {
-				return fmt.Errorf("name of the cluster domain claim required")
-			}
-			if len(args) > 1 {
-				return fmt.Errorf("cluster domain claim can have only 1 name")
+			if len(args) != 1 {
+				return errors.New("'cdc create' requires the cdc name given as single argument")
 			}
 			name := args[0]
 			cdc := typev1alpha1.ClusterDomainClaim{

@@ -41,9 +41,9 @@ func TestNewCdcCreateCommand(t *testing.T) {
 		p, _ := testutil.NewTestAdminParams()
 		cmd := NewCdcCreateCommand(p)
 		_, err := testutil.ExecuteCommand(cmd, "--namespace", testNs)
-		assert.ErrorContains(t, err, "name", "required")
+		assert.ErrorContains(t, err, "cdc create", "single argument")
 		_, err = testutil.ExecuteCommand(cmd, "abc.com", "xyz.com", "--namespace", testNs)
-		assert.ErrorContains(t, err, "only 1 name")
+		assert.ErrorContains(t, err, "cdc create", "single argument")
 	})
 	t.Run("successful cdc create", func(t *testing.T) {
 		p, _ := testutil.NewTestAdminParams()
