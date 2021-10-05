@@ -18,6 +18,8 @@ import (
 	"fmt"
 	"os"
 
+	"knative.dev/kn-plugin-admin/pkg/command/cdc"
+
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -53,6 +55,7 @@ func NewAdminCommand() *cobra.Command {
 	rootCmd.AddCommand(autoscaling.NewAutoscalingCmd(p))
 	rootCmd.AddCommand(profiling.NewProfilingCommand(p))
 	rootCmd.AddCommand(command.NewVersionCommand())
+	rootCmd.AddCommand(cdc.NewCdcCommand(p))
 
 	// Add default help page if there's unknown command
 	rootCmd.InitDefaultHelpCmd()
