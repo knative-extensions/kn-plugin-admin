@@ -1,5 +1,7 @@
 # kn-admin
 
+**[This component is ALPHA](https://github.com/knative/community/tree/main/mechanics/MATURITY-LEVELS.md)**
+
 The `kn admin` is a plugin of Knative client and it is designed to help administrators and operators better manage a Knative platform installation with kn CLI.
 This plugin’s main objective is to make administration and operation workflows easier, for instance by making it easy to accomplish
 tasks such as feature flags enablement or disablement with one command, instead of many manual steps like modifying ConfigMaps or yaml files.
