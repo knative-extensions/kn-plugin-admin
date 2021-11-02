@@ -39,7 +39,6 @@ var bootstrapDefaults = initDefaults()
 const configContentDefaults = `# Taken from https://github.com/knative/client/blob/main/docs/README.md#options
 #
 #plugins:
-#  path-lookup: true
 #  directory: ~/.config/kn/plugins
 #eventing:
 #  sink-mappings:
@@ -89,13 +88,7 @@ func (c *config) PluginsDir() string {
 
 // LookupPluginsInPath returns true if plugins should be also checked in the pat
 func (c *config) LookupPluginsInPath() bool {
-	if viper.IsSet(deprecatedKeyPluginsLookupInPath) {
-		return viper.GetBool(deprecatedKeyPluginsLookupInPath)
-	} else {
-		// If legacy branch is removed, switch to setting the default to viper
-		// See TODO comment below.
-		return bootstrapDefaults.lookupPluginsInPath
-	}
+	return bootstrapDefaults.lookupPluginsInPath
 }
 
 func (c *config) SinkMappings() []SinkMapping {
@@ -132,10 +125,6 @@ func BootstrapConfig() error {
 	if err != nil {
 		return err
 	}
-	err = viper.BindPFlag(deprecatedKeyPluginsLookupInPath, bootstrapFlagSet.Lookup(flagPluginsLookupInPath))
-	if err != nil {
-		return err
-	}
 
 	viper.SetConfigFile(GlobalConfig.ConfigFile())
 	configFile := GlobalConfig.ConfigFile()
@@ -145,10 +134,12 @@ func BootstrapConfig() error {
 			return fmt.Errorf("cannot stat configfile %s: %w", configFile, err)
 		}
 		if err := os.MkdirAll(filepath.Dir(viper.ConfigFileUsed()), 0775); err != nil {
-			return err
+			// Can't create config directory, proceed silently without reading the config
+			return nil
 		}
 		if err := os.WriteFile(viper.ConfigFileUsed(), []byte(configContentDefaults), 0600); err != nil {
-			fmt.Fprintf(os.Stderr, "WARNING: failed writing config file to %q: %s\n", configFile, err)
+			// Can't create config file, proceed silently without reading the config
+			return nil
 		}
 	}
 
@@ -158,7 +149,6 @@ func BootstrapConfig() error {
 	// TODO: Re-enable when legacy handling for plugin config has been removed
 	// For now default handling is happening directly in the getter of GlobalConfig
 	// viper.SetDefault(keyPluginsDirectory, bootstrapDefaults.pluginsDir)
-	// viper.SetDefault(deprecatedKeyPluginsLookupInPath, bootstrapDefaults.lookupPluginsInPath)
 
 	// If a config file is found, read it in.
 	err = viper.ReadInConfig()
@@ -181,10 +171,8 @@ func BootstrapConfig() error {
 func AddBootstrapFlags(flags *flag.FlagSet) {
 	flags.StringVar(&globalConfig.configFile, "config", "", fmt.Sprintf("kn configuration file (default: %s)", defaultConfigFileForUsageMessage()))
 	flags.String(flagPluginsDir, "", "Directory holding kn plugins")
-	flags.Bool(flagPluginsLookupInPath, false, "Search kn plugins also in $PATH")
 
 	// Let's try that and mark the flags as hidden: (as those configuration is a permanent choice of operation)
-	flags.MarkHidden(flagPluginsLookupInPath)
 	flags.MarkHidden(flagPluginsDir)
 }
 
