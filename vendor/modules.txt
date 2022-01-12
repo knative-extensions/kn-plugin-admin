@@ -8,6 +8,8 @@ contrib.go.opencensus.io/exporter/prometheus
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
+# github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211221011931-643d94fcab96
+github.com/antlr/antlr4/runtime/Go/antlr
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
 # github.com/blendle/zapdriver v1.3.1
@@ -21,7 +23,15 @@ github.com/census-instrumentation/opencensus-proto/gen-go/resource/v1
 github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
-# github.com/cloudevents/sdk-go/v2 v2.7.0
+# github.com/cloudevents/sdk-go/sql/v2 v2.8.0
+github.com/cloudevents/sdk-go/sql/v2
+github.com/cloudevents/sdk-go/sql/v2/expression
+github.com/cloudevents/sdk-go/sql/v2/function
+github.com/cloudevents/sdk-go/sql/v2/gen
+github.com/cloudevents/sdk-go/sql/v2/parser
+github.com/cloudevents/sdk-go/sql/v2/runtime
+github.com/cloudevents/sdk-go/sql/v2/utils
+# github.com/cloudevents/sdk-go/v2 v2.8.0
 github.com/cloudevents/sdk-go/v2
 github.com/cloudevents/sdk-go/v2/binding
 github.com/cloudevents/sdk-go/v2/binding/format
@@ -38,7 +48,7 @@ github.com/cloudevents/sdk-go/v2/protocol/http
 github.com/cloudevents/sdk-go/v2/types
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
-# github.com/evanphx/json-patch v4.9.0+incompatible
+# github.com/evanphx/json-patch v4.11.0+incompatible
 github.com/evanphx/json-patch
 # github.com/evanphx/json-patch/v5 v5.6.0
 github.com/evanphx/json-patch/v5
@@ -51,7 +61,7 @@ github.com/go-kit/log
 github.com/go-kit/log/level
 # github.com/go-logfmt/logfmt v0.5.0
 github.com/go-logfmt/logfmt
-# github.com/go-logr/logr v0.4.0
+# github.com/go-logr/logr v1.2.2
 github.com/go-logr/logr
 # github.com/go-openapi/jsonpointer v0.19.5
 github.com/go-openapi/jsonpointer
@@ -76,7 +86,7 @@ github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 github.com/golang/protobuf/ptypes/wrappers
-# github.com/google/btree v1.0.0
+# github.com/google/btree v1.0.1
 github.com/google/btree
 # github.com/google/go-cmp v0.5.6
 github.com/google/go-cmp/cmp
@@ -94,8 +104,7 @@ github.com/google/gofuzz/bytesource
 github.com/google/shlex
 # github.com/google/uuid v1.3.0
 github.com/google/uuid
-# github.com/googleapis/gnostic v0.5.4
-## explicit
+# github.com/googleapis/gnostic v0.5.5
 github.com/googleapis/gnostic/compiler
 github.com/googleapis/gnostic/extensions
 github.com/googleapis/gnostic/jsonschema
@@ -250,7 +259,7 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/net v0.0.0-20211205041911-012df41ee64c
+# golang.org/x/net v0.0.0-20211209124913-491a49abca63
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts
@@ -411,7 +420,7 @@ gotest.tools/v3/internal/assert
 gotest.tools/v3/internal/difflib
 gotest.tools/v3/internal/format
 gotest.tools/v3/internal/source
-# k8s.io/api v0.21.4
+# k8s.io/api v0.22.5
 ## explicit
 k8s.io/api/admissionregistration/v1
 k8s.io/api/admissionregistration/v1beta1
@@ -456,10 +465,10 @@ k8s.io/api/scheduling/v1beta1
 k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
-# k8s.io/apiextensions-apiserver v0.21.4
+# k8s.io/apiextensions-apiserver v0.22.5
 k8s.io/apiextensions-apiserver/pkg/apis/apiextensions
 k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1
-# k8s.io/apimachinery v0.21.4
+# k8s.io/apimachinery v0.22.5
 ## explicit
 k8s.io/apimachinery/pkg/api/equality
 k8s.io/apimachinery/pkg/api/errors
@@ -519,7 +528,7 @@ k8s.io/apimachinery/third_party/forked/golang/reflect
 k8s.io/cli-runtime/pkg/genericclioptions
 k8s.io/cli-runtime/pkg/printers
 k8s.io/cli-runtime/pkg/resource
-# k8s.io/client-go v0.21.4
+# k8s.io/client-go v0.22.5
 ## explicit
 k8s.io/client-go/applyconfigurations/admissionregistration/v1
 k8s.io/client-go/applyconfigurations/admissionregistration/v1beta1
@@ -657,6 +666,8 @@ k8s.io/client-go/kubernetes/typed/storage/v1alpha1/fake
 k8s.io/client-go/kubernetes/typed/storage/v1beta1
 k8s.io/client-go/kubernetes/typed/storage/v1beta1/fake
 k8s.io/client-go/pkg/apis/clientauthentication
+k8s.io/client-go/pkg/apis/clientauthentication/install
+k8s.io/client-go/pkg/apis/clientauthentication/v1
 k8s.io/client-go/pkg/apis/clientauthentication/v1alpha1
 k8s.io/client-go/pkg/apis/clientauthentication/v1beta1
 k8s.io/client-go/pkg/version
@@ -693,18 +704,16 @@ k8s.io/client-go/util/jsonpath
 k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/retry
 k8s.io/client-go/util/workqueue
-# k8s.io/klog v1.0.0
-k8s.io/klog
-# k8s.io/klog/v2 v2.8.0
+# k8s.io/klog/v2 v2.40.1
 k8s.io/klog/v2
-# k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7
+# k8s.io/kube-openapi v0.0.0-20211109043538-20434351676c
 k8s.io/kube-openapi/pkg/util/proto
-# k8s.io/utils v0.0.0-20210111153108-fddb29f9d009
+# k8s.io/utils v0.0.0-20210819203725-bdf08cb9a70a
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# knative.dev/client v0.28.1-0.20220104123133-63142983acd3
+# knative.dev/client v0.28.1-0.20220111130713-1fcab77a0876
 ## explicit
 knative.dev/client/lib/test
 knative.dev/client/pkg/apis/client
@@ -729,7 +738,7 @@ knative.dev/client/pkg/sources/v1beta2
 knative.dev/client/pkg/util
 knative.dev/client/pkg/util/mock
 knative.dev/client/pkg/wait
-# knative.dev/eventing v0.28.1-0.20211222204918-d8297456d455
+# knative.dev/eventing v0.28.1-0.20220107145225-eb4c06c8009d
 knative.dev/eventing/pkg/apis/config
 knative.dev/eventing/pkg/apis/duck
 knative.dev/eventing/pkg/apis/duck/v1
@@ -752,10 +761,10 @@ knative.dev/eventing/pkg/client/clientset/versioned/typed/messaging/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1/fake
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1beta2
-# knative.dev/hack v0.0.0-20211222071919-abd085fc43de
+# knative.dev/hack v0.0.0-20220111151514-59b0cf17578e
 ## explicit
 knative.dev/hack
-# knative.dev/networking v0.0.0-20211223134928-e40187c3026d
+# knative.dev/networking v0.0.0-20220112013650-eac673fb5c49
 ## explicit
 knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
@@ -765,7 +774,7 @@ knative.dev/networking/pkg/client/clientset/versioned/fake
 knative.dev/networking/pkg/client/clientset/versioned/scheme
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1/fake
-# knative.dev/pkg v0.0.0-20211216142117-79271798f696
+# knative.dev/pkg v0.0.0-20220111210214-785eb637f693
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
 knative.dev/pkg/apis/duck/ducktypes
@@ -806,7 +815,7 @@ knative.dev/pkg/tracing/config
 knative.dev/pkg/tracing/propagation
 knative.dev/pkg/tracing/propagation/tracecontextb3
 knative.dev/pkg/tracker
-# knative.dev/serving v0.28.1-0.20220104122631-278af32f24ce
+# knative.dev/serving v0.28.1-0.20220112024650-39af71665e8f
 ## explicit
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
