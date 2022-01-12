@@ -29,7 +29,10 @@ type completionConfig struct {
 
 var (
 	resourceToFuncMap = map[string]func(config *completionConfig) []string{
-		"service": completeService,
+		"service":  completeService,
+		"revision": completeRevision,
+		"broker":   completeBroker,
+		"route":    completeRoute,
 	}
 )
 
@@ -116,6 +119,84 @@ func completeService(config *completionConfig) (suggestions []string) {
 		return
 	}
 	for _, sug := range serviceList.Items {
+		if !strings.HasPrefix(sug.Name, config.toComplete) {
+			continue
+		}
+		suggestions = append(suggestions, sug.Name)
+	}
+	return
+}
+
+func completeBroker(config *completionConfig) (suggestions []string) {
+	suggestions = make([]string, 0)
+	if len(config.args) != 0 {
+		return
+	}
+	namespace, err := config.params.GetNamespace(config.command)
+	if err != nil {
+		return
+	}
+	client, err := config.params.NewEventingClient(namespace)
+	if err != nil {
+		return
+	}
+	brokerList, err := client.ListBrokers(config.command.Context())
+	if err != nil {
+		return
+	}
+	for _, sug := range brokerList.Items {
+		if !strings.HasPrefix(sug.Name, config.toComplete) {
+			continue
+		}
+		suggestions = append(suggestions, sug.Name)
+	}
+	return
+}
+
+func completeRevision(config *completionConfig) (suggestions []string) {
+	suggestions = make([]string, 0)
+	if len(config.args) != 0 {
+		return
+	}
+	namespace, err := config.params.GetNamespace(config.command)
+	if err != nil {
+		return
+	}
+	client, err := config.params.NewServingClient(namespace)
+	if err != nil {
+		return
+	}
+	revisionList, err := client.ListRevisions(config.command.Context())
+	if err != nil {
+		return
+	}
+	for _, sug := range revisionList.Items {
+		if !strings.HasPrefix(sug.Name, config.toComplete) {
+			continue
+		}
+		suggestions = append(suggestions, sug.Name)
+	}
+	return
+}
+
+func completeRoute(config *completionConfig) (suggestions []string) {
+	suggestions = make([]string, 0)
+	if len(config.args) != 0 {
+		return
+	}
+	namespace, err := config.params.GetNamespace(config.command)
+	if err != nil {
+		return
+	}
+	client, err := config.params.NewServingClient(namespace)
+	if err != nil {
+		return
+	}
+	routeList, err := client.ListRoutes(config.command.Context())
+	if err != nil {
+		return
+	}
+	for _, sug := range routeList.Items {
 		if !strings.HasPrefix(sug.Name, config.toComplete) {
 			continue
 		}
