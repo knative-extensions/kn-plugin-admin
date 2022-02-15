@@ -717,7 +717,7 @@ k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# knative.dev/client v0.29.1-0.20220204171521-6690a20e8f56
+# knative.dev/client v0.29.1-0.20220215133458-37f21bcbf15d
 ## explicit
 knative.dev/client/lib/test
 knative.dev/client/pkg/apis/client
@@ -742,7 +742,7 @@ knative.dev/client/pkg/sources/v1beta2
 knative.dev/client/pkg/util
 knative.dev/client/pkg/util/mock
 knative.dev/client/pkg/wait
-# knative.dev/eventing v0.29.1-0.20220203222422-fb092415eb36
+# knative.dev/eventing v0.29.1-0.20220214155047-0326f92dd5b7
 knative.dev/eventing/pkg/apis/config
 knative.dev/eventing/pkg/apis/duck
 knative.dev/eventing/pkg/apis/duck/v1
@@ -765,10 +765,10 @@ knative.dev/eventing/pkg/client/clientset/versioned/typed/messaging/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1/fake
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1beta2
-# knative.dev/hack v0.0.0-20220203160821-9b303d690fc9
+# knative.dev/hack v0.0.0-20220209225905-7331bb16ba00
 ## explicit
 knative.dev/hack
-# knative.dev/networking v0.0.0-20220208184716-c9e708231c88
+# knative.dev/networking v0.0.0-20220215054657-a70f23cc46a5
 ## explicit
 knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
@@ -778,7 +778,7 @@ knative.dev/networking/pkg/client/clientset/versioned/fake
 knative.dev/networking/pkg/client/clientset/versioned/scheme
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1/fake
-# knative.dev/pkg v0.0.0-20220203020920-51be315ed160
+# knative.dev/pkg v0.0.0-20220210201907-fc93ac76d0b6
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
 knative.dev/pkg/apis/duck/ducktypes
@@ -819,7 +819,7 @@ knative.dev/pkg/tracing/config
 knative.dev/pkg/tracing/propagation
 knative.dev/pkg/tracing/propagation/tracecontextb3
 knative.dev/pkg/tracker
-# knative.dev/serving v0.29.1-0.20220208184517-52f07b02254b
+# knative.dev/serving v0.29.1-0.20220214180547-26992d3d048d
 ## explicit
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
