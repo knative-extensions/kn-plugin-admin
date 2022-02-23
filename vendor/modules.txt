@@ -175,7 +175,7 @@ github.com/peterbourgon/diskv
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/prometheus/client_golang v1.11.0
+# github.com/prometheus/client_golang v1.11.1
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
 github.com/prometheus/client_golang/prometheus/promhttp
@@ -281,6 +281,7 @@ golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
 # golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
 golang.org/x/sys/internal/unsafeheader
@@ -765,7 +766,7 @@ knative.dev/eventing/pkg/client/clientset/versioned/typed/messaging/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1/fake
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1beta2
-# knative.dev/hack v0.0.0-20220218190734-a8ef7b67feec
+# knative.dev/hack v0.0.0-20220222192704-cf8cbc0e9165
 ## explicit
 knative.dev/hack
 # knative.dev/networking v0.0.0-20220221080803-193442233437
@@ -778,7 +779,7 @@ knative.dev/networking/pkg/client/clientset/versioned/fake
 knative.dev/networking/pkg/client/clientset/versioned/scheme
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1/fake
-# knative.dev/pkg v0.0.0-20220217155112-d48172451966
+# knative.dev/pkg v0.0.0-20220222211204-80c511aa340f
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
 knative.dev/pkg/apis/duck/ducktypes
@@ -819,7 +820,7 @@ knative.dev/pkg/tracing/config
 knative.dev/pkg/tracing/propagation
 knative.dev/pkg/tracing/propagation/tracecontextb3
 knative.dev/pkg/tracker
-# knative.dev/serving v0.29.1-0.20220217223834-b28062cdc4c7
+# knative.dev/serving v0.29.1-0.20220223060438-394536435a2a
 ## explicit
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
