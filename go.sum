@@ -2407,11 +2407,11 @@ k8s.io/utils v0.0.0-20211208161948-7d6a63dca704/go.mod h1:jPW/WVKK9YHAvNhRxK0md/
 knative.dev/caching v0.0.0-20210215030244-1212288570f0/go.mod h1:rAPalJe9Lx3jHffJpackk5WjZYl3j2QvXUgw0GPllxQ=
 knative.dev/caching v0.0.0-20220302153644-5a6403ef2de5/go.mod h1:52//2yvw0iO3Nu2duAMI5BzfQKHWiXZuvRvzaypoGkU=
 knative.dev/client v0.21.0/go.mod h1:1En9uxMhk62EReWR1d66/d3tnpkot/D3vBRfmuidFNc=
-knative.dev/client v0.29.1-0.20220308195105-c2fe56c83038 h1:+0kw69WxpFhkRV74Dtj9f9pbh9lYOqCm5/aRIBfqP48=
-knative.dev/client v0.29.1-0.20220308195105-c2fe56c83038/go.mod h1:JnBNwSzBsH4k32Br63sqcWFWCTJLZE+dRDjm7mCw0po=
+knative.dev/client v0.30.0 h1:vuVGMAAH/pdhrUZ7gTlwelz7Mbe3DAoJoMXksbxVCYs=
+knative.dev/client v0.30.0/go.mod h1:j+eP1X09QnA1PmT3J+n3aUtvvXrrn8bvJ/3OHaYKwWI=
 knative.dev/eventing v0.21.0/go.mod h1:JjbVEOTJJHqo9CTxbTfrMn018hG8fOr3UfBoCJ7KWaA=
-knative.dev/eventing v0.29.1-0.20220307200636-9590bc3a96a3 h1:RWDEEbt3LdhbFYOFPs2udE8X9TtrgZkcbAKaRH8Cv3k=
-knative.dev/eventing v0.29.1-0.20220307200636-9590bc3a96a3/go.mod h1:JCqC8evTls1WiBTmYhPEGME6OQD8HFnLQjFPImwOEOg=
+knative.dev/eventing v0.30.0 h1:Hdcith4luu0DJ0wvtFcT67gl2bsGaIgZlfxK4pp7REs=
+knative.dev/eventing v0.30.0/go.mod h1:JCqC8evTls1WiBTmYhPEGME6OQD8HFnLQjFPImwOEOg=
 knative.dev/hack v0.0.0-20210203173706-8368e1f6eacf/go.mod h1:PHt8x8yX5Z9pPquBEfIj0X66f8iWkWfR0S/sarACJrI=
 knative.dev/hack v0.0.0-20220224013837-e1785985d364 h1:wOysRDkzacHlM2OEQoM5ayNT+s/Zymzk5Tv17RL++3g=
 knative.dev/hack v0.0.0-20220224013837-e1785985d364/go.mod h1:PHt8x8yX5Z9pPquBEfIj0X66f8iWkWfR0S/sarACJrI=
@@ -2429,7 +2429,6 @@ knative.dev/pkg v0.0.0-20220301181942-2fdd5f232e77/go.mod h1:SsH9J6Gz+CvrHmoL0TE
 knative.dev/reconciler-test v0.0.0-20210216030508-77f50054d024/go.mod h1:RP/K5xJylB72Go6eAsXYEsQHp4zCCNMNjmsqhvq7wko=
 knative.dev/reconciler-test v0.0.0-20220303141206-84821d26ed1f/go.mod h1:K5pZJkenonlT9o+MtRaNsBP7BazGwjhqYPepuV1zdnU=
 knative.dev/serving v0.21.0/go.mod h1:PU9k1Y6YMG27XQldEu5agNkcebvSafUXKXPircQYCsE=
-knative.dev/serving v0.29.1-0.20220308061505-604cd185315d/go.mod h1:UwsKXK4LnkM+e8/hhgJq2LtyzmzHD6UsrGPFe5JOBS8=
 knative.dev/serving v0.30.0 h1:i+2Jz2UHVTKQjsBz2lgTaNHb0aLDhclysaGjODVIS5k=
 knative.dev/serving v0.30.0/go.mod h1:UwsKXK4LnkM+e8/hhgJq2LtyzmzHD6UsrGPFe5JOBS8=
 modernc.org/cc v1.0.0/go.mod h1:1Sk4//wdnYJiUIxnW8ddKpaOJCF37yAdqYnkxUpaYxw=
