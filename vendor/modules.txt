@@ -771,7 +771,7 @@ knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1beta2
 # knative.dev/hack v0.0.0-20220314052818-c9c3ea17a2e9
 ## explicit
 knative.dev/hack
-# knative.dev/networking v0.0.0-20220315020002-1890039ae107
+# knative.dev/networking v0.0.0-20220316064759-31d0d3ffe54c
 ## explicit
 knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
@@ -781,7 +781,7 @@ knative.dev/networking/pkg/client/clientset/versioned/fake
 knative.dev/networking/pkg/client/clientset/versioned/scheme
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1/fake
-# knative.dev/pkg v0.0.0-20220314170718-721abec0a377
+# knative.dev/pkg v0.0.0-20220316002959-3a4cc56708b9
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
 knative.dev/pkg/apis/duck/ducktypes
@@ -822,7 +822,7 @@ knative.dev/pkg/tracing/config
 knative.dev/pkg/tracing/propagation
 knative.dev/pkg/tracing/propagation/tracecontextb3
 knative.dev/pkg/tracker
-# knative.dev/serving v0.30.1-0.20220315121703-b5996a729dc5
+# knative.dev/serving v0.30.1-0.20220315154224-8fe13873eb54
 ## explicit
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
