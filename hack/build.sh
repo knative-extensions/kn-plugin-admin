@@ -117,22 +117,6 @@ codegen() {
   check_license
 }
 
-# Run a go tool, get it first if necessary.
-run_go_tool() {
-  local tool=$2
-  local install_failed=0
-  if [ -z "$(which ${tool})" ]; then
-    local temp_dir="$(mktemp -d)"
-    pushd "${temp_dir}" > /dev/null 2>&1
-    GOFLAGS="" go get "$1" || install_failed=1
-    popd > /dev/null 2>&1
-    rm -rf "${temp_dir}"
-  fi
-  (( install_failed )) && return ${install_failed}
-  shift 2
-  ${tool} "$@"
-}
-
 source_format() {
   set +e
   run_go_tool golang.org/x/tools/cmd/goimports goimports -w $(echo $SOURCE_DIRS)
@@ -342,6 +326,9 @@ if $(has_flag --debug); then
     export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
     set -x
 fi
+
+# Shared funcs from hack repo
+source $(basedir)/vendor/knative.dev/hack/library.sh
 
 # Shared funcs with CI
 source $(basedir)/hack/build-flags.sh
