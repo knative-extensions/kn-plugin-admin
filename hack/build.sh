@@ -107,12 +107,6 @@ run() {
 
 
 codegen() {
-  #TODO: Workaround to update go-licenses until prow-tests image is updated
-  local temp_dir="$(mktemp -d)"
-  pushd "${temp_dir}" > /dev/null 2>&1
-  GO111MODULE=on go get github.com/google/go-licenses@latest || return 1
-  popd > /dev/null 2>&1
-
   # Update dependencies
   update_deps
 
@@ -121,22 +115,6 @@ codegen() {
 
   # Check for license headers
   check_license
-}
-
-# Run a go tool, get it first if necessary.
-run_go_tool() {
-  local tool=$2
-  local install_failed=0
-  if [ -z "$(which ${tool})" ]; then
-    local temp_dir="$(mktemp -d)"
-    pushd "${temp_dir}" > /dev/null 2>&1
-    GOFLAGS="" go get "$1" || install_failed=1
-    popd > /dev/null 2>&1
-    rm -rf "${temp_dir}"
-  fi
-  (( install_failed )) && return ${install_failed}
-  shift 2
-  ${tool} "$@"
 }
 
 source_format() {
@@ -348,6 +326,9 @@ if $(has_flag --debug); then
     export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
     set -x
 fi
+
+# Shared funcs from hack repo
+source $(basedir)/vendor/knative.dev/hack/library.sh
 
 # Shared funcs with CI
 source $(basedir)/hack/build-flags.sh
