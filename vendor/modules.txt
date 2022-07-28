@@ -359,7 +359,7 @@ golang.org/x/oauth2/google/internal/externalaccount
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+# golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 ## explicit
 golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
@@ -835,7 +835,7 @@ k8s.io/utils/lru
 k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/trace
-# knative.dev/client v0.33.0
+# knative.dev/client v0.33.1-0.20220728013938-526d680cf6f9
 ## explicit; go 1.17
 knative.dev/client/lib/test
 knative.dev/client/pkg/apis/client
@@ -861,7 +861,7 @@ knative.dev/client/pkg/sources/v1beta2
 knative.dev/client/pkg/util
 knative.dev/client/pkg/util/mock
 knative.dev/client/pkg/wait
-# knative.dev/eventing v0.33.0
+# knative.dev/eventing v0.33.1-0.20220722122720-c8435ed74ba8
 ## explicit; go 1.17
 knative.dev/eventing/pkg/apis/config
 knative.dev/eventing/pkg/apis/duck
@@ -886,10 +886,10 @@ knative.dev/eventing/pkg/client/clientset/versioned/typed/messaging/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1/fake
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1beta2
-# knative.dev/hack v0.0.0-20220701014203-65c463ac8c98
-## explicit; go 1.14
+# knative.dev/hack v0.0.0-20220728013938-9dabf7cf62e3
+## explicit; go 1.17
 knative.dev/hack
-# knative.dev/networking v0.0.0-20220705142707-f087178076e4
+# knative.dev/networking v0.0.0-20220728135938-8baa0ac39a58
 ## explicit; go 1.17
 knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
@@ -906,8 +906,8 @@ knative.dev/networking/pkg/http/probe
 knative.dev/networking/pkg/http/proxy
 knative.dev/networking/pkg/http/stats
 knative.dev/networking/pkg/k8s
-# knative.dev/pkg v0.0.0-20220705130606-e60d250dc637
-## explicit; go 1.17
+# knative.dev/pkg v0.0.0-20220728013737-449f7e6dab63
+## explicit; go 1.18
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
 knative.dev/pkg/apis/duck/ducktypes
@@ -948,7 +948,7 @@ knative.dev/pkg/tracing/config
 knative.dev/pkg/tracing/propagation
 knative.dev/pkg/tracing/propagation/tracecontextb3
 knative.dev/pkg/tracker
-# knative.dev/serving v0.33.0
+# knative.dev/serving v0.33.1-0.20220728013938-d0887e7c3a99
 ## explicit; go 1.17
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
