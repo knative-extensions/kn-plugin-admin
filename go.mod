@@ -3,6 +3,8 @@ module knative.dev/kn-plugin-admin
 go 1.18
 
 require (
+	github.com/hashicorp/golang-lru v0.5.4
+	github.com/hashicorp/hcl v1.0.0
 	github.com/maximilien/kn-source-pkg v0.6.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.6.0
@@ -15,7 +17,7 @@ require (
 	knative.dev/client v0.34.1-0.20221013140753-be74c58ae0e5
 	knative.dev/hack v0.0.0-20221010154335-3fdc50b9c24a
 	knative.dev/networking v0.0.0-20221012062251-58f3e6239b4f
-	knative.dev/serving v0.34.1-0.20221017132158-e95e99d6c188
+	knative.dev/serving v0.34.1-0.20221017152058-6264c1b6f8bf
 )
 
 require (
@@ -27,7 +29,7 @@ require (
 	github.com/blendle/zapdriver v1.3.1 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/cloudevents/sdk-go/sql/v2 v2.8.0 // indirect
+	github.com/cloudevents/sdk-go/sql/v2 v2.0.0-20220930150014-52b12276cc4a // indirect
 	github.com/cloudevents/sdk-go/v2 v2.12.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.8.0 // indirect
@@ -53,8 +55,6 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
-	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -116,7 +116,7 @@ require (
 	k8s.io/klog/v2 v2.70.2-0.20220707122935-0990e81f1a8f // indirect
 	k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1 // indirect
 	k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed // indirect
-	knative.dev/eventing v0.34.1 // indirect
+	knative.dev/eventing v0.34.1-0.20221017145257-53a186d7d92e // indirect
 	knative.dev/pkg v0.0.0-20221011175852-714b7630a836 // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/kustomize/api v0.12.1 // indirect
