@@ -54,7 +54,7 @@ func printKDomainList(domainCM *corev1.ConfigMap, options hprinters.PrintOptions
 	return rows, nil
 }
 
-//format change for selector from "selector:\n  key1: value1\n  key2: value2\n" to "key1=value1; key2=value2;
+// format change for selector from "selector:\n  key1: value1\n  key2: value2\n" to "key1=value1; key2=value2;
 func formatSelectorForPrint(selector string) string {
 	parts := strings.Split(strings.ReplaceAll(strings.TrimSpace(selector), ":", "="), "\n")
 	selectorForPrint := ""
