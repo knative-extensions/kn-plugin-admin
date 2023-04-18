@@ -108,7 +108,9 @@ func TestKnAdminPlugin(t *testing.T) {
 }
 
 func TestKnAdminPluginWithNoKubectlContext(t *testing.T) {
-	if strings.Contains(os.Getenv("JOB_NAME"), "release") {
+	if strings.Contains(os.Getenv("JOB_NAME"), "release") ||
+		strings.Contains(os.Getenv("JOB_NAME"), "periodic") ||
+		strings.Contains(os.Getenv("JOB_NAME"), "nightly") {
 		t.Skip("Skip in release job, due to serviceAccount clash.")
 	}
 	e2eTest := newE2ETest(t)
