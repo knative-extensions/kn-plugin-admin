@@ -193,9 +193,6 @@ github.com/mailru/easyjson/jwriter
 # github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369
 ## explicit; go 1.9
 github.com/matttproud/golang_protobuf_extensions/pbutil
-# github.com/maximilien/kn-source-pkg v0.6.3
-## explicit; go 1.15
-github.com/maximilien/kn-source-pkg/test/e2e
 # github.com/mitchellh/go-homedir v1.1.0
 ## explicit
 github.com/mitchellh/go-homedir
@@ -861,32 +858,33 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
-# knative.dev/client v0.36.1-0.20230413134553-7e90298d926d
+# knative.dev/client-pkg v0.0.0-20230406095919-30a17e519723
 ## explicit; go 1.18
-knative.dev/client/lib/test
-knative.dev/client/pkg/apis/client
-knative.dev/client/pkg/apis/client/v1alpha1
-knative.dev/client/pkg/config
-knative.dev/client/pkg/dynamic
-knative.dev/client/pkg/dynamic/fake
-knative.dev/client/pkg/errors
-knative.dev/client/pkg/eventing/v1
-knative.dev/client/pkg/eventing/v1beta1
-knative.dev/client/pkg/kn/commands
-knative.dev/client/pkg/kn/commands/flags
-knative.dev/client/pkg/kn/config
-knative.dev/client/pkg/kn/flags
-knative.dev/client/pkg/kn/plugin
-knative.dev/client/pkg/messaging/v1
-knative.dev/client/pkg/printers
-knative.dev/client/pkg/serving
-knative.dev/client/pkg/serving/v1
-knative.dev/client/pkg/serving/v1alpha1
-knative.dev/client/pkg/sources/v1
-knative.dev/client/pkg/sources/v1beta2
-knative.dev/client/pkg/util
-knative.dev/client/pkg/util/mock
-knative.dev/client/pkg/wait
+knative.dev/client-pkg/pkg/apis/client
+knative.dev/client-pkg/pkg/apis/client/v1alpha1
+knative.dev/client-pkg/pkg/config
+knative.dev/client-pkg/pkg/dynamic
+knative.dev/client-pkg/pkg/dynamic/fake
+knative.dev/client-pkg/pkg/errors
+knative.dev/client-pkg/pkg/eventing/v1
+knative.dev/client-pkg/pkg/eventing/v1beta1
+knative.dev/client-pkg/pkg/kn-source-pkg/test/e2e
+knative.dev/client-pkg/pkg/kn/commands
+knative.dev/client-pkg/pkg/kn/commands/flags
+knative.dev/client-pkg/pkg/kn/config
+knative.dev/client-pkg/pkg/kn/flags
+knative.dev/client-pkg/pkg/kn/plugin
+knative.dev/client-pkg/pkg/messaging/v1
+knative.dev/client-pkg/pkg/printers
+knative.dev/client-pkg/pkg/serving
+knative.dev/client-pkg/pkg/serving/v1
+knative.dev/client-pkg/pkg/serving/v1alpha1
+knative.dev/client-pkg/pkg/sources/v1
+knative.dev/client-pkg/pkg/sources/v1beta2
+knative.dev/client-pkg/pkg/util
+knative.dev/client-pkg/pkg/util/mock
+knative.dev/client-pkg/pkg/util/test
+knative.dev/client-pkg/pkg/wait
 # knative.dev/eventing v0.36.1-0.20230411013349-3224e50c7263
 ## explicit; go 1.18
 knative.dev/eventing/pkg/apis/config

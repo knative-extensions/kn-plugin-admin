@@ -5,7 +5,6 @@ go 1.18
 require (
 	github.com/hashicorp/golang-lru v0.5.4
 	github.com/hashicorp/hcl v1.0.0
-	github.com/maximilien/kn-source-pkg v0.6.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.6.0
 	github.com/spf13/viper v1.13.0
@@ -14,7 +13,7 @@ require (
 	k8s.io/api v0.25.4
 	k8s.io/apimachinery v0.25.4
 	k8s.io/client-go v0.25.4
-	knative.dev/client v0.36.1-0.20230413134553-7e90298d926d
+	knative.dev/client-pkg v0.0.0-20230406095919-30a17e519723
 	knative.dev/hack v0.0.0-20230417170854-f591fea109b3
 	knative.dev/networking v0.0.0-20230412014752-750a9e4f13f1
 	knative.dev/serving v0.36.1-0.20230418170156-b38ef3a7ff2c

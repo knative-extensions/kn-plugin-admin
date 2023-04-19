@@ -21,7 +21,7 @@ import (
 	"gotest.tools/v3/assert"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"knative.dev/client/pkg/util"
+	"knative.dev/client-pkg/pkg/util"
 
 	"knative.dev/kn-plugin-admin/pkg/testutil"
 )
