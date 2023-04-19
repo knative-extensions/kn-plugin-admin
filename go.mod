@@ -13,17 +13,10 @@ require (
 	k8s.io/api v0.25.4
 	k8s.io/apimachinery v0.25.4
 	k8s.io/client-go v0.25.4
-<<<<<<< Updated upstream
-	knative.dev/client v0.36.1-0.20230413134553-7e90298d926d
+	knative.dev/client-pkg v0.0.0-20230406095919-30a17e519723
 	knative.dev/hack v0.0.0-20230417170854-f591fea109b3
 	knative.dev/networking v0.0.0-20230412014752-750a9e4f13f1
 	knative.dev/serving v0.36.1-0.20230418170156-b38ef3a7ff2c
-=======
-	knative.dev/client-pkg v0.0.0-20230406095919-30a17e519723
-	knative.dev/hack v0.0.0-20230330174700-1421f120c36b
-	knative.dev/networking v0.0.0-20230404121338-8174d2bd3ef5
-	knative.dev/serving v0.36.1-0.20230405152938-23f7e2bc5ce4
->>>>>>> Stashed changes
 )
 
 require (
@@ -122,13 +115,8 @@ require (
 	k8s.io/klog/v2 v2.80.2-0.20221028030830-9ae4992afb54 // indirect
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280 // indirect
 	k8s.io/utils v0.0.0-20221108210102-8e77b1f39fe2 // indirect
-<<<<<<< Updated upstream
 	knative.dev/eventing v0.36.1-0.20230411013349-3224e50c7263 // indirect
 	knative.dev/pkg v0.0.0-20230414154551-53f04b373cc9 // indirect
-=======
-	knative.dev/eventing v0.36.1-0.20230405220638-d9910407d0f4 // indirect
-	knative.dev/pkg v0.0.0-20230404101938-ee73c9355c9d // indirect
->>>>>>> Stashed changes
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
 	sigs.k8s.io/kustomize/api v0.12.1 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.13.9 // indirect
