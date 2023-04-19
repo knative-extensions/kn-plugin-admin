@@ -21,7 +21,7 @@ import (
 	metav1beta1 "k8s.io/apimachinery/pkg/apis/meta/v1beta1"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	hprinters "knative.dev/client/pkg/printers"
+	hprinters "knative.dev/client-pkg/pkg/printers"
 )
 
 // RegistryListHandlers adds print handlers for registry list command

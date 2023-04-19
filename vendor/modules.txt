@@ -193,9 +193,6 @@ github.com/mailru/easyjson/jwriter
 # github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369
 ## explicit; go 1.9
 github.com/matttproud/golang_protobuf_extensions/pbutil
-# github.com/maximilien/kn-source-pkg v0.6.3
-## explicit; go 1.15
-github.com/maximilien/kn-source-pkg/test/e2e
 # github.com/mitchellh/go-homedir v1.1.0
 ## explicit
 github.com/mitchellh/go-homedir
@@ -861,6 +858,7 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
+<<<<<<< Updated upstream
 # knative.dev/client v0.36.1-0.20230413134553-7e90298d926d
 ## explicit; go 1.18
 knative.dev/client/lib/test
@@ -888,6 +886,36 @@ knative.dev/client/pkg/util
 knative.dev/client/pkg/util/mock
 knative.dev/client/pkg/wait
 # knative.dev/eventing v0.36.1-0.20230411013349-3224e50c7263
+=======
+# knative.dev/client-pkg v0.0.0-20230406095919-30a17e519723
+## explicit; go 1.18
+knative.dev/client-pkg/pkg/apis/client
+knative.dev/client-pkg/pkg/apis/client/v1alpha1
+knative.dev/client-pkg/pkg/config
+knative.dev/client-pkg/pkg/dynamic
+knative.dev/client-pkg/pkg/dynamic/fake
+knative.dev/client-pkg/pkg/errors
+knative.dev/client-pkg/pkg/eventing/v1
+knative.dev/client-pkg/pkg/eventing/v1beta1
+knative.dev/client-pkg/pkg/kn-source-pkg/test/e2e
+knative.dev/client-pkg/pkg/kn/commands
+knative.dev/client-pkg/pkg/kn/commands/flags
+knative.dev/client-pkg/pkg/kn/config
+knative.dev/client-pkg/pkg/kn/flags
+knative.dev/client-pkg/pkg/kn/plugin
+knative.dev/client-pkg/pkg/messaging/v1
+knative.dev/client-pkg/pkg/printers
+knative.dev/client-pkg/pkg/serving
+knative.dev/client-pkg/pkg/serving/v1
+knative.dev/client-pkg/pkg/serving/v1alpha1
+knative.dev/client-pkg/pkg/sources/v1
+knative.dev/client-pkg/pkg/sources/v1beta2
+knative.dev/client-pkg/pkg/util
+knative.dev/client-pkg/pkg/util/mock
+knative.dev/client-pkg/pkg/util/test
+knative.dev/client-pkg/pkg/wait
+# knative.dev/eventing v0.36.1-0.20230405220638-d9910407d0f4
+>>>>>>> Stashed changes
 ## explicit; go 1.18
 knative.dev/eventing/pkg/apis/config
 knative.dev/eventing/pkg/apis/duck
@@ -912,10 +940,17 @@ knative.dev/eventing/pkg/client/clientset/versioned/typed/messaging/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1/fake
 knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1beta2
+<<<<<<< Updated upstream
 # knative.dev/hack v0.0.0-20230417170854-f591fea109b3
 ## explicit; go 1.18
 knative.dev/hack
 # knative.dev/networking v0.0.0-20230412014752-750a9e4f13f1
+=======
+# knative.dev/hack v0.0.0-20230330174700-1421f120c36b
+## explicit; go 1.18
+knative.dev/hack
+# knative.dev/networking v0.0.0-20230404121338-8174d2bd3ef5
+>>>>>>> Stashed changes
 ## explicit; go 1.18
 knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
@@ -932,7 +967,11 @@ knative.dev/networking/pkg/http/probe
 knative.dev/networking/pkg/http/proxy
 knative.dev/networking/pkg/http/stats
 knative.dev/networking/pkg/k8s
+<<<<<<< Updated upstream
 # knative.dev/pkg v0.0.0-20230414154551-53f04b373cc9
+=======
+# knative.dev/pkg v0.0.0-20230404101938-ee73c9355c9d
+>>>>>>> Stashed changes
 ## explicit; go 1.18
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
@@ -974,7 +1013,11 @@ knative.dev/pkg/tracing/config
 knative.dev/pkg/tracing/propagation
 knative.dev/pkg/tracing/propagation/tracecontextb3
 knative.dev/pkg/tracker
+<<<<<<< Updated upstream
 # knative.dev/serving v0.36.1-0.20230418170156-b38ef3a7ff2c
+=======
+# knative.dev/serving v0.36.1-0.20230405152938-23f7e2bc5ce4
+>>>>>>> Stashed changes
 ## explicit; go 1.18
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
