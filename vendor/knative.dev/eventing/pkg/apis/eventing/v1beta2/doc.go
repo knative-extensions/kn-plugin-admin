@@ -1,11 +1,11 @@
 /*
-Copyright 2020 The Knative Authors
+Copyright 2021 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,16 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1beta1
-
-import "context"
-
-func (et *EventType) SetDefaults(ctx context.Context) {
-	et.Spec.SetDefaults(ctx)
-}
-
-func (ets *EventTypeSpec) SetDefaults(ctx context.Context) {
-	if ets.Reference == nil && ets.Broker == "" {
-		ets.Broker = "default"
-	}
-}
+// Package v1beta2 is the v1beta2 version of the API.
+// +k8s:deepcopy-gen=package
+// +groupName=eventing.knative.dev
+package v1beta2
