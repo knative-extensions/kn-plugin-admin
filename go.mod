@@ -2,8 +2,6 @@ module knative.dev/kn-plugin-admin
 
 go 1.21
 
-toolchain go1.21.6
-
 require (
 	github.com/hashicorp/golang-lru v1.0.2
 	github.com/hashicorp/hcl v1.0.0
