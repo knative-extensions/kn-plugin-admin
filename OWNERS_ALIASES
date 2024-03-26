@@ -50,12 +50,10 @@ aliases:
   - tzununbekov
   eventing-kafka-approvers:
   - aliok
-  - eric-sap
   - lberk
   - matzew
   - pierDipi
   - steven0711dong
-  - travis-minke-sap
   eventing-kafka-broker-approvers:
   - aliok
   - matzew
@@ -65,10 +63,8 @@ aliases:
   - cali0707
   eventing-kafka-mtsource-approvers:
   - steven0711dong
-  eventing-kafka-wg-leads:
-  - travis-minke-sap
-  eventing-kafka-writers:
-  - travis-minke-sap
+  eventing-kafka-wg-leads: []
+  eventing-kafka-writers: []
   eventing-kogito-approvers:
   - ricardozanini
   - spolti
@@ -81,8 +77,9 @@ aliases:
   - lberk
   - matzew
   eventing-rabbitmq-approvers:
-  - gabo1208
-  - tcnghia
+  - Zerpet
+  - ikavgo
+  - mkuratczyk
   eventing-redis-approvers:
   - aavarghese
   - lionelvillard
@@ -188,7 +185,6 @@ aliases:
   - nainaz
   - pierDipi
   - psschwei
-  - puerco
   - salaboy
   - skonto
   - upodroid
@@ -271,7 +267,6 @@ aliases:
   - aliok
   - evankanderson
   - nainaz
-  - puerco
   - salaboy
   technical-oversight-committee:
   - davidhadas
