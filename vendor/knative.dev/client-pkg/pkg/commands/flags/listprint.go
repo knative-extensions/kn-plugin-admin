@@ -20,8 +20,8 @@ import (
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
+	"knative.dev/client-pkg/pkg/commands"
 
-	"knative.dev/client-pkg/pkg/kn/commands"
 	hprinters "knative.dev/client-pkg/pkg/printers"
 	"knative.dev/client-pkg/pkg/util"
 )

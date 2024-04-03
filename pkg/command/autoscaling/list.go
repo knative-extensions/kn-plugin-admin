@@ -26,7 +26,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	metav1beta1 "k8s.io/apimachinery/pkg/apis/meta/v1beta1"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
-	"knative.dev/client-pkg/pkg/kn/commands/flags"
+	"knative.dev/client-pkg/pkg/commands/flags"
 	hprinters "knative.dev/client-pkg/pkg/printers"
 	"knative.dev/kn-plugin-admin/pkg"
 	"knative.dev/serving/pkg/autoscaler/config"

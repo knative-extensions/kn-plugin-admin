@@ -27,7 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 
-	"knative.dev/client-pkg/pkg/kn/commands"
+	"knative.dev/client-pkg/pkg/commands"
 	"knative.dev/kn-plugin-admin/pkg"
 
 	"github.com/spf13/cobra"

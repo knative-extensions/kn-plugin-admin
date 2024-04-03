@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	metav1beta1 "k8s.io/apimachinery/pkg/apis/meta/v1beta1"
-	"knative.dev/client-pkg/pkg/kn/commands/flags"
+	"knative.dev/client-pkg/pkg/commands/flags"
 	"knative.dev/client-pkg/pkg/printers"
 	hprinters "knative.dev/client-pkg/pkg/printers"
 	"knative.dev/kn-plugin-admin/pkg"

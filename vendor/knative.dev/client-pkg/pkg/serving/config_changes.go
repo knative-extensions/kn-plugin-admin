@@ -22,7 +22,7 @@ import (
 	"strings"
 	"time"
 
-	"knative.dev/client-pkg/pkg/kn/flags"
+	"knative.dev/client-pkg/pkg/flags"
 	"knative.dev/pkg/ptr"
 	"knative.dev/serving/pkg/apis/autoscaling"
 	servingconfig "knative.dev/serving/pkg/apis/config"
