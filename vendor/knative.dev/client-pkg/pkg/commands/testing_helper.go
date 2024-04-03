@@ -18,13 +18,13 @@ import (
 	"bytes"
 
 	"knative.dev/client-pkg/pkg/dynamic/fake"
+	"knative.dev/client-pkg/pkg/flags"
 
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/runtime"
 	clienttesting "k8s.io/client-go/testing"
 	servingv1fake "knative.dev/serving/pkg/client/clientset/versioned/typed/serving/v1/fake"
 
-	"knative.dev/client-pkg/pkg/kn/flags"
 	clientservingv1 "knative.dev/client-pkg/pkg/serving/v1"
 	v1 "knative.dev/client-pkg/pkg/sources/v1"
 

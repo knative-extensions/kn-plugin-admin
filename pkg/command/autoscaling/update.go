@@ -30,7 +30,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
 
-	"knative.dev/client-pkg/pkg/kn/flags"
+	"knative.dev/client-pkg/pkg/flags"
 
 	as "knative.dev/serving/pkg/apis/autoscaling"
 )

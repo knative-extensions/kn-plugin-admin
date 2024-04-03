@@ -22,11 +22,11 @@ import (
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"knative.dev/client-pkg/pkg/config"
 	"knative.dev/pkg/apis"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
 
 	clientdynamic "knative.dev/client-pkg/pkg/dynamic"
-	"knative.dev/client-pkg/pkg/kn/config"
 )
 
 type SinkFlags struct {
