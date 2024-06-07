@@ -1,4 +1,6 @@
 # kn-admin
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-admin.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-admin?ref=badge_shield)
+
 
 **[This component is ALPHA](https://github.com/knative/community/tree/main/mechanics/MATURITY-LEVELS.md)**
 
@@ -313,3 +315,7 @@ Handling connection for 18008
 =====
 After you get the profiling data file, you need to use https://blog.golang.org/pprof[pprof] to open it.
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-admin.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-admin?ref=badge_large)
