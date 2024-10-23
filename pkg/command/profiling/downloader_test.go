@@ -31,6 +31,7 @@ import (
 	"gotest.tools/v3/assert"
 	"k8s.io/apimachinery/pkg/util/httpstream"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/portforward"
 	"k8s.io/client-go/transport/spdy"
 )
 
@@ -68,7 +69,7 @@ func (f *fakeDialer) Dial(protocols ...string) (httpstream.Connection, string, e
 	return &fakeConnection{
 		closed:    false,
 		closeChan: make(chan bool),
-	}, "", nil
+	}, portforward.PortForwardProtocolV1Name, nil
 }
 
 func (f *fakeConnection) CreateStream(headers http.Header) (httpstream.Stream, error) {
