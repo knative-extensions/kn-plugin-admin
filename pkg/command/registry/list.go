@@ -25,8 +25,8 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/kubernetes"
 
-	"knative.dev/client-pkg/pkg/commands"
-	"knative.dev/client-pkg/pkg/commands/flags"
+	"knative.dev/client/pkg/commands"
+	"knative.dev/client/pkg/commands/flags"
 	"knative.dev/kn-plugin-admin/pkg"
 )
 

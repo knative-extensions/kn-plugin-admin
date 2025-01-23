@@ -19,7 +19,7 @@ import (
 
 	"knative.dev/kn-plugin-admin/core"
 
-	"knative.dev/client-pkg/pkg/plugin"
+	"knative.dev/client/pkg/plugin"
 )
 
 func init() {
