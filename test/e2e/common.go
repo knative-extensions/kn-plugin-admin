@@ -16,12 +16,13 @@ package e2e
 
 import (
 	"fmt"
-	"github.com/mitchellh/go-homedir"
-	"knative.dev/client/pkg/util/test"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/mitchellh/go-homedir"
+	"knative.dev/client/pkg/util/test"
 )
 
 type E2ETest struct {
