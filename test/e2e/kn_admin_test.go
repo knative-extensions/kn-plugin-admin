@@ -26,9 +26,8 @@ import (
 	"testing"
 
 	"gotest.tools/v3/assert"
-	testcommon "knative.dev/client-pkg/pkg/kn-source-pkg/test/e2e"
-	"knative.dev/client-pkg/pkg/util"
-	"knative.dev/client-pkg/pkg/util/test"
+	"knative.dev/client/pkg/util"
+	"knative.dev/client/pkg/util/test"
 	"knative.dev/kn-plugin-admin/pkg/command/autoscaling"
 	"knative.dev/serving/pkg/autoscaler/config"
 )
@@ -36,7 +35,7 @@ import (
 const pluginName string = "admin"
 
 type e2eTest struct {
-	it         *testcommon.E2ETest
+	it         *E2ETest
 	kn         *test.Kn
 	kubectl    *test.Kubectl
 	backupData map[string]string
@@ -48,7 +47,7 @@ func newE2ETest(t *testing.T) *e2eTest {
 		return nil
 	}
 
-	it, err := testcommon.NewE2ETest("kn-admin", filepath.Join(currentDir, "../.."), false)
+	it, err := NewE2ETest("kn-admin", filepath.Join(currentDir, "../.."), false)
 	if err != nil {
 		return nil
 	}

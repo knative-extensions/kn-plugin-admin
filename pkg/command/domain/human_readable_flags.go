@@ -21,7 +21,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1beta1 "k8s.io/apimachinery/pkg/apis/meta/v1beta1"
 
-	hprinters "knative.dev/client-pkg/pkg/printers"
+	hprinters "knative.dev/client/pkg/printers"
 )
 
 // DomainListHandlers adds print handlers for domain list command
