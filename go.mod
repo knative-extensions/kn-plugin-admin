@@ -13,10 +13,10 @@ require (
 	k8s.io/api v0.33.4
 	k8s.io/apimachinery v0.33.4
 	k8s.io/client-go v0.33.4
-	knative.dev/client/pkg v0.0.0-20250911140123-0ae283a88fdb
+	knative.dev/client/pkg v0.0.0-20250912140321-80160fcc0d3d
 	knative.dev/hack v0.0.0-20250902153942-1499de21e119
-	knative.dev/networking v0.0.0-20250909015233-e3b68fc57bea
-	knative.dev/serving v0.46.1-0.20250910032334-93577e9cb30c
+	knative.dev/networking v0.0.0-20250916015400-8cc248b445a0
+	knative.dev/serving v0.46.1-0.20250912121022-973fcba826c5
 )
 
 require (
@@ -75,7 +75,7 @@ require (
 	github.com/spf13/afero v1.10.0 // indirect
 	github.com/spf13/cast v1.5.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
-	github.com/spf13/pflag v1.0.7 // indirect
+	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/xlab/treeprint v1.2.0 // indirect
@@ -88,12 +88,12 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
-	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/net v0.44.0 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sync v0.17.0 // indirect
-	golang.org/x/sys v0.35.0 // indirect
-	golang.org/x/term v0.34.0 // indirect
-	golang.org/x/text v0.28.0 // indirect
+	golang.org/x/sys v0.36.0 // indirect
+	golang.org/x/term v0.35.0 // indirect
+	golang.org/x/text v0.29.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.5.0 // indirect
 	google.golang.org/protobuf v1.36.8 // indirect
@@ -108,7 +108,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff // indirect
 	k8s.io/utils v0.0.0-20241210054802-24370beab758 // indirect
 	knative.dev/eventing v0.46.1-0.20250911120720-1c920ca1452d // indirect
-	knative.dev/pkg v0.0.0-20250909010931-8c9c1d368e4b // indirect
+	knative.dev/pkg v0.0.0-20250915135827-db4c336acdbe // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
 	sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8 // indirect
 	sigs.k8s.io/kustomize/api v0.13.5-0.20230601165947-6ce0bf390ce3 // indirect
