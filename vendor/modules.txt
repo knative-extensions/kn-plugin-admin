@@ -1005,7 +1005,7 @@ knative.dev/networking/pkg/http/proxy
 knative.dev/networking/pkg/http/stats
 knative.dev/networking/pkg/ingress
 knative.dev/networking/pkg/k8s
-# knative.dev/pkg v0.0.0-20251118173915-745990698d3c
+# knative.dev/pkg v0.0.0-20251119125415-ab67eb7f8660
 ## explicit; go 1.24.0
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
@@ -1048,7 +1048,7 @@ knative.dev/pkg/test/ingress
 knative.dev/pkg/test/logging
 knative.dev/pkg/test/spoof
 knative.dev/pkg/tracker
-# knative.dev/serving v0.47.1-0.20251119122515-0fcf7624a4ff
+# knative.dev/serving v0.47.1-0.20251119233814-e038fc481adb
 ## explicit; go 1.24.0
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
