@@ -987,9 +987,8 @@ knative.dev/eventing/pkg/eventingtls
 # knative.dev/hack v0.0.0-20251126013634-1484a9e9b641
 ## explicit; go 1.24
 knative.dev/hack
-# knative.dev/networking v0.0.0-20251126213812-ebe48fd53262
+# knative.dev/networking v0.0.0-20251127091615-8b5dda1b2229
 ## explicit; go 1.24.0
-knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
 knative.dev/networking/pkg/apis/networking/v1alpha1
 knative.dev/networking/pkg/client/clientset/versioned
@@ -998,13 +997,8 @@ knative.dev/networking/pkg/client/clientset/versioned/scheme
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1
 knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1/fake
 knative.dev/networking/pkg/config
-knative.dev/networking/pkg/http
 knative.dev/networking/pkg/http/header
-knative.dev/networking/pkg/http/probe
-knative.dev/networking/pkg/http/proxy
-knative.dev/networking/pkg/http/stats
 knative.dev/networking/pkg/ingress
-knative.dev/networking/pkg/k8s
 # knative.dev/pkg v0.0.0-20251126013532-e853b1d1d6bb
 ## explicit; go 1.24.0
 knative.dev/pkg/apis
@@ -1048,7 +1042,7 @@ knative.dev/pkg/test/ingress
 knative.dev/pkg/test/logging
 knative.dev/pkg/test/spoof
 knative.dev/pkg/tracker
-# knative.dev/serving v0.47.1-0.20251127004612-9674f29eeab6
+# knative.dev/serving v0.47.1-0.20251127121713-895fbc46eaf3
 ## explicit; go 1.24.0
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
