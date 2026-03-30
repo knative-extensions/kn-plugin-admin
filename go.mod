@@ -10,13 +10,13 @@ require (
 	github.com/spf13/viper v1.21.0
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.5.2
-	k8s.io/api v0.35.2
-	k8s.io/apimachinery v0.35.2
-	k8s.io/client-go v0.35.2
-	knative.dev/client/pkg v0.0.0-20260316143226-2e05393c4f67
-	knative.dev/hack v0.0.0-20260310014051-c448fdb867e2
-	knative.dev/networking v0.0.0-20260317015751-91b576b3d619
-	knative.dev/serving v0.48.1-0.20260316224151-10d950c3a0d7
+	k8s.io/api v0.35.3
+	k8s.io/apimachinery v0.35.3
+	k8s.io/client-go v0.35.3
+	knative.dev/client/pkg v0.0.0-20260330024304-f389dba1a27b
+	knative.dev/hack v0.0.0-20260318014029-7eede7fdcbad
+	knative.dev/networking v0.0.0-20260320015802-dd06704493e2
+	knative.dev/serving v0.48.1-0.20260330140907-cd28f75a1728
 )
 
 require (
@@ -98,14 +98,14 @@ require (
 	gopkg.in/evanphx/json-patch.v4 v4.13.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apiextensions-apiserver v0.35.2 // indirect
-	k8s.io/apiserver v0.35.2 // indirect
+	k8s.io/apiextensions-apiserver v0.35.3 // indirect
+	k8s.io/apiserver v0.35.3 // indirect
 	k8s.io/cli-runtime v0.34.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912 // indirect
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4 // indirect
-	knative.dev/eventing v0.48.1-0.20260316031422-ce3fe6b62f97 // indirect
-	knative.dev/pkg v0.0.0-20260316154451-5d1c12d99335 // indirect
+	knative.dev/eventing v0.48.1-0.20260320031001-c6be563d196d // indirect
+	knative.dev/pkg v0.0.0-20260329160701-396dbaacd652 // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/kustomize/api v0.20.1 // indirect
