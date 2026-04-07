@@ -13,10 +13,10 @@ require (
 	k8s.io/api v0.35.3
 	k8s.io/apimachinery v0.35.3
 	k8s.io/client-go v0.35.3
-	knative.dev/client/pkg v0.0.0-20260403023255-a3a4d5ba8c81
+	knative.dev/client/pkg v0.0.0-20260406143302-75dbeb4ac2bc
 	knative.dev/hack v0.0.0-20260318014029-7eede7fdcbad
-	knative.dev/networking v0.0.0-20260405224958-4d3f1a4897bc
-	knative.dev/serving v0.48.1-0.20260405234958-722ed8568f9a
+	knative.dev/networking v0.0.0-20260407015926-cc2f0572b3c2
+	knative.dev/serving v0.48.1-0.20260406161726-28ed823c890a
 )
 
 require (
@@ -79,12 +79,12 @@ require (
 	github.com/xlab/treeprint v1.2.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.67.0 // indirect
-	go.opentelemetry.io/otel v1.42.0 // indirect
-	go.opentelemetry.io/otel/metric v1.42.0 // indirect
-	go.opentelemetry.io/otel/trace v1.42.0 // indirect
+	go.opentelemetry.io/otel v1.43.0 // indirect
+	go.opentelemetry.io/otel/metric v1.43.0 // indirect
+	go.opentelemetry.io/otel/trace v1.43.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.1 // indirect
-	go.yaml.in/yaml/v2 v2.4.3 // indirect
+	go.yaml.in/yaml/v2 v2.4.4 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/net v0.52.0 // indirect
 	golang.org/x/oauth2 v0.35.0 // indirect
@@ -105,7 +105,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912 // indirect
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4 // indirect
 	knative.dev/eventing v0.48.1-0.20260402142557-263a3a52c638 // indirect
-	knative.dev/pkg v0.0.0-20260329160701-396dbaacd652 // indirect
+	knative.dev/pkg v0.0.0-20260406140200-cb58ae50e894 // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/kustomize/api v0.20.1 // indirect
