@@ -1001,7 +1001,7 @@ knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1/
 knative.dev/networking/pkg/config
 knative.dev/networking/pkg/http/header
 knative.dev/networking/pkg/ingress
-# knative.dev/pkg v0.0.0-20260415140041-388556d5c488
+# knative.dev/pkg v0.0.0-20260416015135-a395c1078b3d
 ## explicit; go 1.25.0
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
@@ -1045,7 +1045,7 @@ knative.dev/pkg/test/ingress
 knative.dev/pkg/test/logging
 knative.dev/pkg/test/spoof
 knative.dev/pkg/tracker
-# knative.dev/serving v0.48.1-0.20260416140545-998f0dae4187
+# knative.dev/serving v0.48.1-0.20260419201526-1a28dadcd8dc
 ## explicit; go 1.25.0
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
