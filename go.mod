@@ -10,13 +10,13 @@ require (
 	github.com/spf13/viper v1.21.0
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.5.2
-	k8s.io/api v0.35.3
-	k8s.io/apimachinery v0.35.3
-	k8s.io/client-go v0.35.3
-	knative.dev/client/pkg v0.0.0-20260416140638-89c2f233d6b4
+	k8s.io/api v0.35.4
+	k8s.io/apimachinery v0.35.4
+	k8s.io/client-go v0.35.4
+	knative.dev/client/pkg v0.0.0-20260420202211-51eb6e9bece0
 	knative.dev/hack v0.0.0-20260416140237-504af4d2178f
-	knative.dev/networking v0.0.0-20260414015937-f29b24983488
-	knative.dev/serving v0.48.1-0.20260420102226-4a744332fc99
+	knative.dev/networking v0.0.0-20260421015711-652da006c95d
+	knative.dev/serving v0.48.1-0.20260420155328-d8e0f47b61d2
 )
 
 require (
@@ -55,7 +55,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
-	github.com/moby/spdystream v0.5.0 // indirect
+	github.com/moby/spdystream v0.5.1 // indirect
 	github.com/moby/term v0.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee // indirect
@@ -98,14 +98,14 @@ require (
 	gopkg.in/evanphx/json-patch.v4 v4.13.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apiextensions-apiserver v0.35.3 // indirect
-	k8s.io/apiserver v0.35.3 // indirect
+	k8s.io/apiextensions-apiserver v0.35.4 // indirect
+	k8s.io/apiserver v0.35.4 // indirect
 	k8s.io/cli-runtime v0.34.1 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912 // indirect
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4 // indirect
-	knative.dev/eventing v0.48.1-0.20260414191034-3b3ea1d037e6 // indirect
-	knative.dev/pkg v0.0.0-20260416015135-a395c1078b3d // indirect
+	knative.dev/eventing v0.48.1-0.20260420100227-c76e74eeff85 // indirect
+	knative.dev/pkg v0.0.0-20260420135127-3cd6d6017a35 // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
 	sigs.k8s.io/json v0.0.0-20250730193827-2d320260d730 // indirect
 	sigs.k8s.io/kustomize/api v0.20.1 // indirect
