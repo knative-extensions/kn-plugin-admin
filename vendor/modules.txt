@@ -926,7 +926,7 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/ptr
 k8s.io/utils/trace
-# knative.dev/client/pkg v0.0.0-20260428220709-8ddae2cae492
+# knative.dev/client/pkg v0.0.0-20260429013708-479f2162b627
 ## explicit; go 1.25.0
 knative.dev/client/pkg/apis/client
 knative.dev/client/pkg/apis/client/v1alpha1
