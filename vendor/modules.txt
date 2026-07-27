@@ -301,10 +301,10 @@ go.uber.org/zap/zapcore
 # go.yaml.in/yaml/v2 v2.4.4
 ## explicit; go 1.15
 go.yaml.in/yaml/v2
-# go.yaml.in/yaml/v3 v3.0.4
+# go.yaml.in/yaml/v3 v3.0.5
 ## explicit; go 1.16
 go.yaml.in/yaml/v3
-# golang.org/x/net v0.56.0
+# golang.org/x/net v0.57.0
 ## explicit; go 1.25.0
 golang.org/x/net/html
 golang.org/x/net/html/atom
@@ -322,18 +322,18 @@ golang.org/x/net/websocket
 ## explicit; go 1.25.0
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
-# golang.org/x/sync v0.21.0
+# golang.org/x/sync v0.22.0
 ## explicit; go 1.25.0
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.46.0
+# golang.org/x/sys v0.47.0
 ## explicit; go 1.25.0
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/term v0.44.0
+# golang.org/x/term v0.45.0
 ## explicit; go 1.25.0
 golang.org/x/term
-# golang.org/x/text v0.38.0
+# golang.org/x/text v0.40.0
 ## explicit; go 1.25.0
 golang.org/x/text/encoding
 golang.org/x/text/encoding/internal
@@ -351,7 +351,7 @@ golang.org/x/time/rate
 # gomodules.xyz/jsonpatch/v2 v2.5.0
 ## explicit; go 1.20
 gomodules.xyz/jsonpatch/v2
-# google.golang.org/protobuf v1.36.11
+# google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af
 ## explicit; go 1.23
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
@@ -402,7 +402,7 @@ gotest.tools/v3/internal/assert
 gotest.tools/v3/internal/difflib
 gotest.tools/v3/internal/format
 gotest.tools/v3/internal/source
-# k8s.io/api v0.35.6
+# k8s.io/api v0.35.7
 ## explicit; go 1.25.0
 k8s.io/api/admissionregistration/v1
 k8s.io/api/admissionregistration/v1alpha1
@@ -462,11 +462,11 @@ k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
 k8s.io/api/storagemigration/v1beta1
-# k8s.io/apiextensions-apiserver v0.35.6
+# k8s.io/apiextensions-apiserver v0.35.7
 ## explicit; go 1.25.0
 k8s.io/apiextensions-apiserver/pkg/apis/apiextensions
 k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1
-# k8s.io/apimachinery v0.35.6
+# k8s.io/apimachinery v0.35.7
 ## explicit; go 1.25.0
 k8s.io/apimachinery/pkg/api/equality
 k8s.io/apimachinery/pkg/api/errors
@@ -538,7 +538,7 @@ k8s.io/apimachinery/pkg/watch
 k8s.io/apimachinery/third_party/forked/golang/json
 k8s.io/apimachinery/third_party/forked/golang/netutil
 k8s.io/apimachinery/third_party/forked/golang/reflect
-# k8s.io/apiserver v0.35.6
+# k8s.io/apiserver v0.35.7
 ## explicit; go 1.25.0
 k8s.io/apiserver/pkg/storage/names
 # k8s.io/cli-runtime v0.34.1
@@ -547,7 +547,7 @@ k8s.io/cli-runtime/pkg/genericclioptions
 k8s.io/cli-runtime/pkg/genericiooptions
 k8s.io/cli-runtime/pkg/printers
 k8s.io/cli-runtime/pkg/resource
-# k8s.io/client-go v0.35.6
+# k8s.io/client-go v0.35.7
 ## explicit; go 1.25.0
 k8s.io/client-go/applyconfigurations
 k8s.io/client-go/applyconfigurations/admissionregistration/v1
@@ -926,7 +926,7 @@ k8s.io/utils/net
 k8s.io/utils/pointer
 k8s.io/utils/ptr
 k8s.io/utils/trace
-# knative.dev/client/pkg v0.0.0-20260615160251-b41d413e7071
+# knative.dev/client/pkg v0.0.0-20260727023356-00c078d88aff
 ## explicit; go 1.25.0
 knative.dev/client/pkg/apis/client
 knative.dev/client/pkg/apis/client/v1alpha1
@@ -953,7 +953,7 @@ knative.dev/client/pkg/util/errors
 knative.dev/client/pkg/util/mock
 knative.dev/client/pkg/util/test
 knative.dev/client/pkg/wait
-# knative.dev/eventing v0.49.1-0.20260611075324-69b976f7fd56
+# knative.dev/eventing v0.49.1-0.20260724130631-defbb5343203
 ## explicit; go 1.25.0
 knative.dev/eventing/pkg/apis/common/integration/v1alpha1
 knative.dev/eventing/pkg/apis/config
@@ -989,7 +989,7 @@ knative.dev/eventing/pkg/eventingtls
 # knative.dev/hack v0.0.0-20260428014158-b2a37f1b6e7b
 ## explicit; go 1.24
 knative.dev/hack
-# knative.dev/networking v0.0.0-20260616021346-d4e13b76b133
+# knative.dev/networking v0.0.0-20260727140700-c60e1484d528
 ## explicit; go 1.25.0
 knative.dev/networking/pkg/apis/networking
 knative.dev/networking/pkg/apis/networking/v1alpha1
@@ -1001,7 +1001,7 @@ knative.dev/networking/pkg/client/clientset/versioned/typed/networking/v1alpha1/
 knative.dev/networking/pkg/config
 knative.dev/networking/pkg/http/header
 knative.dev/networking/pkg/ingress
-# knative.dev/pkg v0.0.0-20260615201544-6300c57a9e78
+# knative.dev/pkg v0.0.0-20260727095757-76601dd085d0
 ## explicit; go 1.25.0
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
@@ -1045,7 +1045,7 @@ knative.dev/pkg/test/ingress
 knative.dev/pkg/test/logging
 knative.dev/pkg/test/spoof
 knative.dev/pkg/tracker
-# knative.dev/serving v0.49.1-0.20260615163344-394d3f959991
+# knative.dev/serving v0.49.1-0.20260724135632-cef8d7e092bf
 ## explicit; go 1.25.0
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
