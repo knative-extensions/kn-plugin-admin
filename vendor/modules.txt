@@ -1061,7 +1061,7 @@ knative.dev/pkg/test/ingress
 knative.dev/pkg/test/logging
 knative.dev/pkg/test/spoof
 knative.dev/pkg/tracker
-# knative.dev/serving v0.51.1-0.20261112230022-bd5953c7d730
+# knative.dev/serving v0.51.1-0.20261116055254-7f1183ec4749
 ## explicit; go 1.26.0
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
