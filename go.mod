@@ -16,7 +16,7 @@ require (
 	knative.dev/client/pkg v0.0.0-20261110135620-8f0ac119c59f
 	knative.dev/hack v0.0.0-20261106011541-9aee2b079953
 	knative.dev/networking v0.0.0-20261116011956-7b3328a04ce7
-	knative.dev/serving v0.51.1-0.20261112230022-bd5953c7d730
+	knative.dev/serving v0.51.1-0.20261116055254-7f1183ec4749
 )
 
 require (
